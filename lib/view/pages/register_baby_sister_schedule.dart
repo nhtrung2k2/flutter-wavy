@@ -35,10 +35,11 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
   final employee = const Employee(
       id: '1',
       name: "Nguyen Thi Nhan",
-      age: 18,
+      age: "18",
       city: "Ho Chi Minh",
       avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png");
+          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png",
+      shiftId: 3);
   @override
   Widget build(BuildContext context) {
     return Padding(

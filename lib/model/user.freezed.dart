@@ -20,9 +20,10 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  @JsonKey(name: 'user_id')
   String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
   String get name => throw _privateConstructorUsedError;
-  String get role => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +36,10 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({String id, String name, String role, String avatar});
+  $Res call(
+      {@JsonKey(name: 'user_id') String id,
+      @JsonKey(name: 'name') String name,
+      String avatar});
 }
 
 /// @nodoc
@@ -53,7 +57,6 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? role = null,
     Object? avatar = null,
   }) {
     return _then(_value.copyWith(
@@ -64,10 +67,6 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: null == avatar
           ? _value.avatar
@@ -83,7 +82,10 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$_UserCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, String role, String avatar});
+  $Res call(
+      {@JsonKey(name: 'user_id') String id,
+      @JsonKey(name: 'name') String name,
+      String avatar});
 }
 
 /// @nodoc
@@ -97,7 +99,6 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? role = null,
     Object? avatar = null,
   }) {
     return _then(_$_User(
@@ -108,10 +109,6 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: null == avatar
           ? _value.avatar
@@ -125,27 +122,26 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 @JsonSerializable()
 class _$_User implements _User {
   const _$_User(
-      {required this.id,
-      required this.name,
-      required this.role,
+      {@JsonKey(name: 'user_id') required this.id,
+      @JsonKey(name: 'name') required this.name,
       this.avatar =
           "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
   @override
+  @JsonKey(name: 'user_id')
   final String id;
   @override
+  @JsonKey(name: 'name')
   final String name;
-  @override
-  final String role;
   @override
   @JsonKey()
   final String avatar;
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, role: $role, avatar: $avatar)';
+    return 'User(id: $id, name: $name, avatar: $avatar)';
   }
 
   @override
@@ -155,13 +151,12 @@ class _$_User implements _User {
             other is _$_User &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.role, role) || other.role == role) &&
             (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, role, avatar);
+  int get hashCode => Object.hash(runtimeType, id, name, avatar);
 
   @JsonKey(ignore: true)
   @override
@@ -179,19 +174,18 @@ class _$_User implements _User {
 
 abstract class _User implements User {
   const factory _User(
-      {required final String id,
-      required final String name,
-      required final String role,
+      {@JsonKey(name: 'user_id') required final String id,
+      @JsonKey(name: 'name') required final String name,
       final String avatar}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
   @override
+  @JsonKey(name: 'user_id')
   String get id;
   @override
+  @JsonKey(name: 'name')
   String get name;
-  @override
-  String get role;
   @override
   String get avatar;
   @override

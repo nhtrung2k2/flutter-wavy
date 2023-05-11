@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/model/employee.dart';
@@ -40,9 +41,8 @@ class MainApp extends StatelessWidget {
             path: '/login',
             pageBuilder: (context, state) => MaterialPage(
                 key: state.pageKey,
-                child: BlocProvider(
-                    lazy: false,
-                    create: (context) => LoginBloc(),
+                child: BlocProvider.value(
+                    value: ServiceLocator.locator.get<LoginBloc>(),
                     child: const LoginPage()))),
         ShellRoute(
             navigatorKey: _shellNavigator,
@@ -51,8 +51,11 @@ class MainApp extends StatelessWidget {
               GoRoute(
                   path: '/home',
                   name: 'homePage',
-                  pageBuilder: (context, state) =>
-                      const NoTransitionPage(child: HomePage()),
+                  pageBuilder: (context, state) => NoTransitionPage(
+                          child: BlocProvider.value(
+                        value: ServiceLocator.locator.get<EmployeeBloc>(),
+                        child: const HomePage(),
+                      )),
                   routes: [
                     GoRoute(
                         path: 'register_baby_sister_detail',
@@ -75,10 +78,11 @@ class MainApp extends StatelessWidget {
                                     employee: Employee(
                                         id: '1',
                                         name: "Nguyen Thi Nhan",
-                                        age: 18,
+                                        age: "12",
                                         city: "Ho Chi Minh",
                                         avatar:
-                                            "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"))),
+                                            "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png",
+                                        shiftId: 3))),
                             routes: [
                               GoRoute(
                                   path: 'register_baby_sister_schedule',

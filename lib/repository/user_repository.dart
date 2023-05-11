@@ -1,4 +1,4 @@
-import 'package:wavy/service/AuthApi.dart';
+import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 
 import '../model/User.dart';

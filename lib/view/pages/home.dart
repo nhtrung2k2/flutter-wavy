@@ -1,97 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_bloc.dart';
+import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/event/employees_event.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/view/components/card_infor_home.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 
-import '../../model/employee.dart';
 import '../components/custom_button.dart';
 
-List<Employee> employees = const [
-  Employee(
-      id: '1',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '2',
-      name: 'Truong Quan Nhi',
-      age: 30,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '3',
-      name: 'Truong Quan Nhi Nhi',
-      age: 30,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '4',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-];
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late EmployeeBloc employeeBloc;
+  @override
+  void initState() {
+    super.initState();
+    employeeBloc = context.read<EmployeeBloc>();
+    employeeBloc.add(FetchEmployees());
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final employees =
+        context.select((EmployeeBloc bloc) => bloc.state.employees);
+
     return Scaffold(
         appBar: const CustomAppBar(
             textColor: CustomColors.blueDark,

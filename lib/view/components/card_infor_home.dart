@@ -4,7 +4,7 @@ import 'package:wavy/utils/colors/custom_colors.dart';
 class CardInforHome extends StatelessWidget {
   final String avatar;
   final String name;
-  final int age;
+  final String age;
   final String city;
   final Function onPressed;
   const CardInforHome(
@@ -47,7 +47,7 @@ class CardInforHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "$age years old",
+                  age,
                   style: const TextStyle(
                       color: CustomColors.grayLight,
                       fontSize: 14,
