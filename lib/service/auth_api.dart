@@ -16,15 +16,12 @@ class AuthApi {
   Future<User?> login(String email, String password, String language) async {
     final loginUrl = '$baseUrl/api/login';
     try {
-      final response = await baseApi.post(
-          loginUrl,
-          {
-            'email': email,
-            'password': password,
-            'language': language,
-          },
-          null);
-
+      final response = await baseApi.post(loginUrl, {
+        'email': email,
+        'password': password,
+      }, {
+        'X-Localization': language,
+      });
       if (response.statusCode == 200) {
         final data = response.data;
         final user = User.fromJson(data['user']);

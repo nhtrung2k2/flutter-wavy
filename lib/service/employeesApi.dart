@@ -18,11 +18,12 @@ class EmployeesApi {
   Future<List<Employee>?> fetchEmloyees() async {
     final loginUrl = '$baseUrl/api/home';
     try {
-      devtool.log('api');
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
-      final response = await baseAPI.get(loginUrl, token);
-      devtool.log(response.toString());
+
+      final response =
+          await baseAPI.get(loginUrl, {'Authorization': 'Bearer $token'});
+
       if (response.statusCode == 200) {
         final data = response.data;
         final jsonList = json.decode(data);

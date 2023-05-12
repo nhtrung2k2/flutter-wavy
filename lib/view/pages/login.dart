@@ -155,7 +155,11 @@ class LoginForm extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return IconButton(
                       iconSize: 50,
-                      onPressed: () {},
+                      onPressed: () {
+                        bloc.add(LanguageChanged(
+                            language:
+                                convertFlagToLanguage(languageimages[index])));
+                      },
                       icon: Image.asset(
                         languageimages[index],
                       ));
@@ -164,6 +168,19 @@ class LoginForm extends StatelessWidget {
         ),
       )
     ]));
+  }
+}
+
+String convertFlagToLanguage(flag) {
+  switch (flag) {
+    case "assets/images/england-flag.png":
+      return "en-US";
+    case "assets/images/japan-flag.png":
+      return "ja-JP";
+    case "assets/images/vietnam-flag.png":
+      return "vi-VN";
+    default:
+      return "en-US";
   }
 }
 

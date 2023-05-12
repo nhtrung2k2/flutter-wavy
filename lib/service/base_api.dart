@@ -9,17 +9,12 @@ class BaseAPI {
     dio.options.headers['Accept'] = 'application/json';
   }
 
-  // Helper method to set an authorization token
-  void setAuthorizationToken(String token) {
-    dio.options.headers['Authorization'] = 'Bearer $token';
-  }
-
   final dio = ServiceLocator.locator.get<Dio>();
   // Helper method to make a GET request
-  Future<Response> get(String url, String? token) async {
+  Future<Response> get(String url, Map<String, dynamic>? headers) async {
     try {
-      if (token != null) {
-        setAuthorizationToken(token);
+      if (headers != null) {
+        dio.options.headers.addAll(headers);
       }
       return await dio.get(url);
     } catch (e) {
@@ -28,13 +23,12 @@ class BaseAPI {
   }
 
   // Helper method to make a POST request
-  Future<Response> post(
-      String url, Map<String, dynamic> data, String? token) async {
+  Future<Response> post(String url, Map<String, dynamic> data,
+      Map<String, dynamic>? headers) async {
     try {
-      if (token != null) {
-        setAuthorizationToken(token);
+      if (headers != null) {
+        dio.options.headers.addAll(headers);
       }
-
       return await dio.post(url, data: data);
     } catch (e) {
       throw Exception('Failed to make POST request: ${e.toString()}');
@@ -42,8 +36,12 @@ class BaseAPI {
   }
 
   // Helper method to make a PUT request
-  Future<Response> put(String url, Map<String, dynamic> data) async {
+  Future<Response> put(String url, Map<String, dynamic> data,
+      Map<String, dynamic>? headers) async {
     try {
+      if (headers != null) {
+        dio.options.headers.addAll(headers);
+      }
       return await dio.put(url, data: data);
     } catch (e) {
       throw Exception('Failed to make PUT request: ${e.toString()}');
@@ -51,8 +49,11 @@ class BaseAPI {
   }
 
   // Helper method to make a DELETE request
-  Future<Response> delete(String url) async {
+  Future<Response> delete(String url, Map<String, dynamic>? headers) async {
     try {
+      if (headers != null) {
+        dio.options.headers.addAll(headers);
+      }
       return await dio.delete(url);
     } catch (e) {
       throw Exception('Failed to make DELETE request: ${e.toString()}');
