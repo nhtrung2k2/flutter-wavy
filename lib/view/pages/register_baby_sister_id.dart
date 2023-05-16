@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_button.dart';
 
@@ -29,7 +30,8 @@ class RegisterBabySisterIdForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+      padding: EdgeInsets.symmetric(
+          vertical: 0, horizontal: 16.resizewidth(context)),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,21 +42,21 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                 fontFamily: "Roboto",
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
-                height: 19 / 16,
+                height: (19 / 16),
                 color: CustomColors.bluetext,
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.resizeheight(context)),
             const Text(
               "Please input the babysister ID",
               style: TextStyle(
                   fontFamily: "Roboto",
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  height: 16 / 14,
+                  height: (16 / 14),
                   color: CustomColors.gray),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.resizeheight(context)),
             Row(
               children: [
                 Expanded(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/state/schedule.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_checkbox.dart';
 import 'package:wavy/view/components/custom_ouline_button.dart';
@@ -19,8 +20,8 @@ class RegisterBabySisterSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
+    return const Scaffold(
+      appBar: CustomAppBar(
           nameTitle: "Register new babysister",
           haveBackButton: true,
           textColor: CustomColors.blueDark,
@@ -32,52 +33,62 @@ class RegisterBabySisterSchedulePage extends StatelessWidget {
 
 class RegisterBabySisterScheduleInfor extends StatelessWidget {
   const RegisterBabySisterScheduleInfor({super.key});
-  final employee = const Employee(
-      id: '1',
-      name: "Nguyen Thi Nhan",
-      age: "18",
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png",
-      shiftId: 3);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        const Expanded(flex: 1, child: BeginToMatchBabySister()),
-        const CustomText(
-            title: "Please input shift",
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            lineHeight: 18 / 16,
-            colorText: CustomColors.blacktext),
-        const Align(
-          alignment: Alignment.centerRight,
-          child: CustomText(
-              title: "Not available",
-              fontWeight: FontWeight.normal,
-              fontSize: 14,
-              lineHeight: 18 / 14,
+      child: SingleChildScrollView(
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const BeginToMatchBabySister(),
+          SizedBox(
+            height: 20.resizeheight(context),
+          ),
+          CustomText(
+              title: "Please input shift",
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              lineHeight: (18 / 16).resizeheight(context),
               colorText: CustomColors.blacktext),
-        ),
-        const Expanded(flex: 2, child: RegisterBabySisterScheduleForm()),
-        BackNext(
-          horizontalPadding: 10,
-          firstButton: "Back",
-          secondButton: "Next",
-          verticalfirstButton: 16,
-          horizontalfirstButton: 38.5,
-          verticalsecondButton: 16,
-          horizontalsecondButton: 38.5,
-          onPressedButtonFirst: () {
-            GoRouter.of(context).pop();
-          },
-          onPressedButtonSecond: () {
-            context.goNamed("register_baby_sister_schedule");
-          },
-        ),
-      ]),
+          SizedBox(
+            height: 16.resizeheight(context),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Column(children: [
+              CustomText(
+                  title: "Not available",
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                  lineHeight: (18 / 14).resizeheight(context),
+                  colorText: CustomColors.blacktext),
+              SizedBox(
+                height: 10.resizeheight(context),
+              ),
+            ]),
+          ),
+          const RegisterBabySisterScheduleForm(),
+          SizedBox(
+            height: 36.resizeheight(context),
+          ),
+          BackNext(
+            horizontalPadding: 10.resizewidth(context),
+            firstButton: "Back",
+            secondButton: "Next",
+            verticalfirstButton: 16,
+            horizontalfirstButton: 38.5,
+            verticalsecondButton: 16,
+            horizontalsecondButton: 38.5,
+            onPressedButtonFirst: () {
+              GoRouter.of(context).pop();
+            },
+            onPressedButtonSecond: () {
+              // context.goNamed("register_baby_sister_input_salary");
+            },
+          ),
+        ]),
+      ),
     );
   }
 }
@@ -110,6 +121,7 @@ Future<TimeOfDay?> _showTimePicker(BuildContext context) async {
   return time;
 }
 
+@immutable
 class TimePickerRow extends StatelessWidget {
   TimePickerRow({super.key, required this.day});
   final DayOfWeek day;
@@ -130,27 +142,28 @@ class TimePickerRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         SizedBox(
-          height: 18,
-          width: 80,
+          height: 18.resizeheight(context),
+          width: 80.resizewidth(context),
           child: Align(
             alignment: Alignment.centerLeft,
             child: CustomText(
                 title: day.name,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                lineHeight: 18 / 14,
+                lineHeight: (18 / 14).resizeheight(context),
                 colorText: CustomColors.blacktext),
           ),
         ),
-        const SizedBox(
-          width: 10,
+        SizedBox(
+          width: 10.resizewidth(context),
         ),
         Expanded(
           flex: 1,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 64),
+              SizedBox(
+                width: 70.resizewidth(context),
                 child: CustomOutLineButton(
                     title: row.timeStart,
                     vertical: 15,
@@ -175,10 +188,10 @@ class TimePickerRow extends StatelessWidget {
                       title: "~",
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
-                      lineHeight: 18 / 14,
+                      lineHeight: (18 / 14),
                       colorText: CustomColors.blacktext)),
-              ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 64),
+              SizedBox(
+                width: 70.resizewidth(context),
                 child: CustomOutLineButton(
                     title: row.timeEnd,
                     vertical: 15,
@@ -202,7 +215,7 @@ class TimePickerRow extends StatelessWidget {
           ),
         ),
         SizedBox(
-            width: 81,
+            width: 80.resizewidth(context),
             child: Align(
                 alignment: Alignment.center, child: CustomCheckBox(day: day)))
       ]),

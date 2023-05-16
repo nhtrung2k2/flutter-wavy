@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/utils/resize.dart';
 
 import '../../utils/colors/custom_colors.dart';
 import 'custom_elevated_button.dart';
@@ -32,7 +33,7 @@ class BackNext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         CustomOutLineButton(
           title: firstButton,

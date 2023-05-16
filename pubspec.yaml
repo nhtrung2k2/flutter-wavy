@@ -22,6 +22,7 @@ dependencies:
   shared_preferences: ^2.1.1
   freezed_annotation: any
   get_it: ^7.5.0
+  flutter_launcher_icons: ^0.13.1
   
 dev_dependencies:
   flutter_test:
@@ -29,7 +30,12 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
   json_serializable: any
- 
+  json_annotation: any 
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/wavy-logo.png"
 
 flutter:
   uses-material-design: true

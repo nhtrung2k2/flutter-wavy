@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/service/base_api.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 
 import 'dart:convert';
 
-import 'package:wavy/view/pages/home.dart';
 import 'dart:developer' as devtool;
 
 class EmployeesApi {
@@ -16,13 +16,13 @@ class EmployeesApi {
       : baseUrl = "https://wavy-api.starboardasiavn.com",
         baseAPI = BaseAPI();
   Future<List<Employee>?> fetchEmloyees() async {
-    final loginUrl = '$baseUrl/api/home';
+    final url = '$baseUrl/api/home';
     try {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
 
       final response =
-          await baseAPI.get(loginUrl, {'Authorization': 'Bearer $token'});
+          await baseAPI.get(url, {'Authorization': 'Bearer $token'});
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -32,6 +32,29 @@ class EmployeesApi {
         return employees;
       } else if (response.statusCode == 404) {
         throw Exception("Can't get list employees");
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<Employee_Detail?> fetchEmployeDetail(String babySisterId) async {
+    final url = '$baseUrl/api/babysistter_detail';
+    try {
+      final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
+      final token = prefs.getString('token');
+      final language = prefs.getString('language');
+      final response = await baseAPI.post(
+          url,
+          {'babysistter_id': babySisterId, 'shift_id': null},
+          {'Authorization': 'Bearer $token', 'X-Localization': language});
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final employeeDetail = Employee_Detail.fromJson(data);
+        return employeeDetail;
+      } else if (response.statusCode == 400) {
+        throw Exception("Token could not be parsed from the request.");
       }
     } catch (e) {
       throw e.toString();

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:wavy/utils/resize.dart';
 
 import '../../utils/colors/custom_colors.dart';
 import 'custom_card_infor.dart';
@@ -11,17 +12,20 @@ class BeginToMatchBabySister extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: const [
-        CustomText(
+      children: [
+        SizedBox(
+          height: 4.resizeheight(context),
+        ),
+        const CustomText(
             title: "Begin to match new babysister",
             fontWeight: FontWeight.bold,
             fontSize: 16,
             lineHeight: 19 / 16,
             colorText: CustomColors.bluetext),
         SizedBox(
-          height: 16,
+          height: 28.resizeheight(context),
         ),
-        CustomCardInfor()
+        const CustomCardInfor()
       ],
     );
   }

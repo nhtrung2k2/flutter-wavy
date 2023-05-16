@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
+import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/model/employee.dart';
@@ -68,31 +69,33 @@ class MainApp extends StatelessWidget {
                       name: 'register-babysister-id',
                       pageBuilder: (context, state) => MaterialPage(
                           key: state.pageKey,
-                          child: const RegisterBabySisterId()),
+                          child: BlocProvider.value(
+                            value: ServiceLocator.locator
+                                .get<EmployeeSearchBloc>(),
+                            child: const RegisterBabySisterId(),
+                          )),
                       routes: [
                         GoRoute(
                             path: 'register_baby_sister_infor',
                             name: "register_baby_sister_infor",
                             pageBuilder: (context, state) => const MaterialPage(
-                                child: RegisterBabySisterInforPage(
-                                    employee: Employee(
-                                        id: '1',
-                                        name: "Nguyen Thi Nhan",
-                                        age: "12",
-                                        city: "Ho Chi Minh",
-                                        avatar:
-                                            "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png",
-                                        shiftId: 3))),
+                                child: RegisterBabySisterInforPage()),
                             routes: [
                               GoRoute(
-                                  path: 'register_baby_sister_schedule',
-                                  name: 'register_baby_sister_schedule',
-                                  pageBuilder: (context, state) => MaterialPage(
-                                          child: BlocProvider(
-                                        create: (context) => ScheduleCubic(),
-                                        child:
-                                            const RegisterBabySisterSchedulePage(),
-                                      )))
+                                path: 'register_baby_sister_schedule',
+                                name: 'register_baby_sister_schedule',
+                                pageBuilder: (context, state) => MaterialPage(
+                                    child: BlocProvider.value(
+                                  value: ScheduleCubic(),
+                                  child: const RegisterBabySisterSchedulePage(),
+                                )),
+                                // routes: GoRoute(path: 'register_baby_sister_input_salary',
+                                // name:'register_baby_sister_input_salary',
+                                // pageBuilder: (context, state) => MaterialPage(child:
+
+                                // ),
+                                // )
+                              )
                             ]),
                       ],
                     )

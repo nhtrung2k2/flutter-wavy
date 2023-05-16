@@ -28,6 +28,7 @@ class AuthApi {
         final prefs =
             await ServiceLocator.locator.getAsync<SharedPreferences>();
         prefs.setString('token', data['token']);
+        prefs.setString('language', language);
         return user;
       } else if (response.statusCode == 401) {
         throw Exception(response.statusMessage);

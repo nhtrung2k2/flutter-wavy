@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wavy/event/login_event.dart';
 import 'package:wavy/state/login_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/utils/svg/CustomPaintIcon.dart';
 import 'package:wavy/view/components/custom_button.dart';
 import 'package:wavy/view/components/loadingOverlay.dart';
@@ -41,7 +42,8 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: Container(
             constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.fromLTRB(40, 159.5, 40, 0),
+            padding: EdgeInsets.fromLTRB(40.resizewidth(context),
+                159.5.resizeheight(context), 40.resizewidth(context), 0),
             child: BlocListener<LoginBloc, LoginState>(
               listener: (context, state) {
                 if (state.formStatus ==
@@ -93,7 +95,7 @@ class LoginForm extends StatelessWidget {
         size: const Size(70, 50),
         painter: RPSCustomPainter(),
       ),
-      const SizedBox(height: 23.25),
+      SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
           title: "Email",
           hintText: "Enter email",
@@ -104,7 +106,7 @@ class LoginForm extends StatelessWidget {
               bloc.add(LoginEmailChanged(email: value));
             }
           }),
-      const SizedBox(height: 23.25),
+      SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
           title: "Password",
           hintText: "Text",
@@ -115,14 +117,14 @@ class LoginForm extends StatelessWidget {
               bloc.add(LoginPasswordChanged(password: value));
             }
           }),
-      const SizedBox(height: 16),
+      SizedBox(height: 16.resizeheight(context)),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CustomTextButton(content: "Forgot password?", onPressed: () {})
         ],
       ),
-      const SizedBox(height: 8),
+      SizedBox(height: 8.resizeheight(context)),
       CustomButton(
         onPressed: () async {
           bloc.add(Validate(
@@ -137,7 +139,7 @@ class LoginForm extends StatelessWidget {
         horizontal: 50,
         vertical: 10,
       ),
-      const SizedBox(height: 16),
+      SizedBox(height: 16.resizeheight(context)),
       CustomTextButton(
         content: "Create new account",
         onPressed: () {},
@@ -250,7 +252,7 @@ class _CustomInputState extends State<CustomInput> {
                 color: CustomColors.gray,
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.resizeheight(context)),
         Stack(alignment: Alignment.topRight, children: [
           TextField(
             onChanged: (value) {
@@ -262,8 +264,9 @@ class _CustomInputState extends State<CustomInput> {
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
               errorText: widget.validator(),
-              suffixIconConstraints:
-                  const BoxConstraints(minHeight: 16, minWidth: 16),
+              suffixIconConstraints: BoxConstraints(
+                  minHeight: 16.resizeheight(context),
+                  minWidth: 16.resizewidth(context)),
               isCollapsed: true,
               contentPadding: widget.title == "Password"
                   ? const EdgeInsets.fromLTRB(16.0, 16, 50, 16)

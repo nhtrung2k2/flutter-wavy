@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/event/employees_event.dart';
+import 'package:wavy/model/employee.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/card_infor_home.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 
@@ -28,9 +30,58 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final employees =
-        context.select((EmployeeBloc bloc) => bloc.state.employees);
-
+    // final employees =
+    //     context.select((EmployeeBloc bloc) => bloc.state.employees);
+    final employees = [
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Truong Quan Nhi',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1)
+    ];
     return Scaffold(
         appBar: const CustomAppBar(
             textColor: CustomColors.blueDark,
@@ -47,10 +98,10 @@ class _HomePageState extends State<HomePage> {
                   context.goNamed("register-babysister-id");
                 },
                 title: "Register new babysister",
-                vertical: 8,
-                horizontal: 16,
+                vertical: 8.resizeheight(context),
+                horizontal: 16.resizewidth(context),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.resizeheight(context)),
               Flexible(
                 child: ListView.builder(
                     itemCount: employees.length,
@@ -64,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                             name: employees[index].name,
                             age: employees[index].age,
                             city: employees[index].city),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.resizeheight(context)),
                       ]);
                     }),
               )

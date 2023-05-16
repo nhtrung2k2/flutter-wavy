@@ -8,6 +8,8 @@ import 'package:wavy/repository/user_repository.dart';
 import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/employeesApi.dart';
 
+import '../../bloc/employee_search_bloc.dart';
+
 class ServiceLocator {
   static final locator = GetIt.instance;
   static void registerAll() {
@@ -20,5 +22,6 @@ class ServiceLocator {
     locator.registerSingleton<EmployeeBloc>(EmployeeBloc());
     locator.registerLazySingletonAsync<SharedPreferences>(
         () async => await SharedPreferences.getInstance());
+    locator.registerSingleton<EmployeeSearchBloc>(EmployeeSearchBloc());
   }
 }
