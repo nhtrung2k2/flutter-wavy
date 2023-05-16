@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -42,7 +43,7 @@ class CustomElevatedButton extends StatelessWidget {
             title: title,
             fontWeight: FontWeight.w400,
             fontSize: 14,
-            lineHeight: 16.41 / 14,
+            lineHeight: (16 / 14),
             colorText: textColor)
         //  Text(
         //   title,

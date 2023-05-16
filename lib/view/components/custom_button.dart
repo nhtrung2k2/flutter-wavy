@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wavy/utils/resize.dart';
 
 import '../../utils/colors/custom_colors.dart';
 

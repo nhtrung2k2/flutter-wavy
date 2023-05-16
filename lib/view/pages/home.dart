@@ -1,97 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_bloc.dart';
+import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/event/employees_event.dart';
+import 'package:wavy/model/employee.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/card_infor_home.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 
-import '../../model/employee.dart';
 import '../components/custom_button.dart';
 
-List<Employee> employees = const [
-  Employee(
-      id: '1',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '2',
-      name: 'Truong Quan Nhi',
-      age: 30,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '3',
-      name: 'Truong Quan Nhi Nhi',
-      age: 30,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '4',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-  Employee(
-      id: '5',
-      name: 'Nguyen Thi Nhan',
-      age: 32,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"),
-];
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late EmployeeBloc employeeBloc;
+  @override
+  void initState() {
+    super.initState();
+    employeeBloc = context.read<EmployeeBloc>();
+    employeeBloc.add(FetchEmployees());
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // final employees =
+    //     context.select((EmployeeBloc bloc) => bloc.state.employees);
+    final employees = [
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Truong Quan Nhi',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1),
+      const Employee(
+          id: '1',
+          name: 'Nguyen Thi Nhan',
+          age: '32 years old',
+          city: 'Ho Chi Minh',
+          shiftId: 1)
+    ];
     return Scaffold(
         appBar: const CustomAppBar(
             textColor: CustomColors.blueDark,
@@ -108,10 +98,10 @@ class HomePage extends StatelessWidget {
                   context.goNamed("register-babysister-id");
                 },
                 title: "Register new babysister",
-                vertical: 8,
-                horizontal: 16,
+                vertical: 8.resizeheight(context),
+                horizontal: 16.resizewidth(context),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.resizeheight(context)),
               Flexible(
                 child: ListView.builder(
                     itemCount: employees.length,
@@ -125,7 +115,7 @@ class HomePage extends StatelessWidget {
                             name: employees[index].name,
                             age: employees[index].age,
                             city: employees[index].city),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.resizeheight(context)),
                       ]);
                     }),
               )

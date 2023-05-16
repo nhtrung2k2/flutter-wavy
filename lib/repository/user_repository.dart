@@ -1,4 +1,4 @@
-import 'package:wavy/service/AuthApi.dart';
+import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 
 import '../model/User.dart';
@@ -9,6 +9,7 @@ class UserRepository {
   Future<User?> login(String email, String password, String language) async {
     try {
       final user = await _authApi.login(email, password, language);
+
       return user;
     } catch (e) {
       throw e.toString();

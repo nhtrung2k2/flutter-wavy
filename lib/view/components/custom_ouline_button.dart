@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wavy/utils/resize.dart';
 
 import 'custom_text.dart';
 
@@ -42,7 +43,7 @@ class CustomOutLineButton extends StatelessWidget {
             title: title,
             fontWeight: FontWeight.w400,
             fontSize: 14,
-            lineHeight: 16 / 14,
+            lineHeight: (16 / 14),
             colorText: textColor));
   }
 }

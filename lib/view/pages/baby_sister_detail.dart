@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
@@ -32,9 +36,9 @@ class BabySisterDetailForm extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const Expanded(flex: 3, child: CardContactDetail()),
-          const SizedBox(
-            height: 20,
+          const CardContactDetail(),
+          SizedBox(
+            height: 32.resizeheight(context),
           ),
           Expanded(
             flex: 4,
@@ -71,8 +75,8 @@ class CardInforDetail extends StatelessWidget {
               fontSize: 14,
               lineHeight: 16 / 14,
               colorText: CustomColors.bluetext),
-          const SizedBox(
-            height: 4,
+          SizedBox(
+            height: 4.resizeheight(context),
           ),
           ListView.builder(
               shrinkWrap: true,
@@ -181,8 +185,8 @@ class CardContactDetail extends StatelessWidget {
           child: Column(
             children: [
               const ColumnInfor(),
-              const SizedBox(
-                height: 12,
+              SizedBox(
+                height: 12.resizeheight(context),
               ),
               CardContact()
             ],
@@ -215,8 +219,8 @@ class CardContact extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(
-          height: 18,
+        SizedBox(
+          height: 18.resizeheight(context),
         ),
         const CustomText(
             title: "Contacts",
@@ -224,14 +228,19 @@ class CardContact extends StatelessWidget {
             fontSize: 14,
             lineHeight: 16 / 14,
             colorText: CustomColors.bluetext),
+        SizedBox(
+          height: 20.resizeheight(context),
+        ),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
-          childAspectRatio: 6 / 2,
+          childAspectRatio: 6.5.resizewidth(context),
+          mainAxisSpacing: 16,
           children: contacts
               .map(
                 (contact) => TextButton.icon(
                   style: ButtonStyle(
+                      alignment: Alignment.centerRight,
                       padding: MaterialStateProperty.all<EdgeInsets>(
                           const EdgeInsets.all(0)),
                       backgroundColor:
@@ -249,6 +258,9 @@ class CardContact extends StatelessWidget {
               )
               .toList(),
         ),
+        SizedBox(
+          height: 20.resizeheight(context),
+        ),
       ],
     );
   }
@@ -256,15 +268,17 @@ class CardContact extends StatelessWidget {
 
 class ColumnInfor extends StatelessWidget {
   const ColumnInfor({super.key});
-  final employee = const Employee(
-      id: '1',
-      name: "Nguyen Thi Nhan",
-      age: 18,
-      city: "Ho Chi Minh",
-      avatar:
-          "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png");
+
   @override
   Widget build(BuildContext context) {
+    const employee = Employee(
+        id: '1',
+        name: 'Nguyen Thi Nhan',
+        age: '32 years old',
+        city: 'Ho Chi Minh',
+        shiftId: 1);
+    // final employee = context.select(
+    //     (LoginBloc bloc) => (bloc.state as SubmittedSuccess).employeeDetail);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -273,22 +287,22 @@ class ColumnInfor extends StatelessWidget {
           height: 64,
           width: 64,
         ),
-        const SizedBox(
-          width: 10,
+        SizedBox(
+          width: 10.resizewidth(context),
         ),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CustomText(
               title: employee.name,
               fontWeight: FontWeight.bold,
               fontSize: 14,
-              lineHeight: 16 / 14,
+              lineHeight: (16 / 14),
               colorText: CustomColors.blueTextDark),
           const SizedBox(height: 4),
           CustomText(
               title: "ID: ${employee.id}",
               fontWeight: FontWeight.normal,
               fontSize: 14,
-              lineHeight: 16 / 14,
+              lineHeight: (16 / 14),
               colorText: CustomColors.gray)
         ])
       ],

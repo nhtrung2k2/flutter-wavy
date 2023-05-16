@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 
 class CardInforHome extends StatelessWidget {
   final String avatar;
   final String name;
-  final int age;
+  final String age;
   final String city;
   final Function onPressed;
   const CardInforHome(
@@ -29,10 +30,10 @@ class CardInforHome extends StatelessWidget {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Image.network(
               avatar,
-              width: 64,
-              height: 64,
+              width: 64.resizewidth(context),
+              height: 64.resizeheight(context),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10.resizewidth(context)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -41,21 +42,21 @@ class CardInforHome extends StatelessWidget {
                   style: const TextStyle(
                       color: CustomColors.blueTextDark,
                       fontSize: 14,
-                      height: 0.75,
+                      height: (16 / 14),
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.resizeheight(context)),
                 Text(
-                  "$age years old",
+                  age,
                   style: const TextStyle(
                       color: CustomColors.grayLight,
                       fontSize: 14,
                       fontFamily: "Roboto",
-                      height: 0.75,
+                      height: (16 / 14),
                       fontWeight: FontWeight.normal),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.resizeheight(context)),
                 FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
@@ -63,7 +64,7 @@ class CardInforHome extends StatelessWidget {
                     style: const TextStyle(
                         color: CustomColors.blackLight,
                         fontSize: 14,
-                        height: 0.75,
+                        height: (16 / 14),
                         fontFamily: "Roboto",
                         fontWeight: FontWeight.normal),
                   ),
