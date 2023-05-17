@@ -38,9 +38,6 @@ class ServiceLocator {
         () => LoginBloc(locator.get<UserRepository>()),
         dependsOn: [UserRepository]);
     locator.registerSingleton<EmployeesApi>(EmployeesApi());
-    locator.registerSingleton<ScheduleConfirmApi>(ScheduleConfirmApi());
-    locator.registerSingleton<ConfirmTheScheduleRepository>(ConfirmTheScheduleRepository());
-
     locator.registerSingletonWithDependencies<EmployeesRepository>(
         () => EmployeesRepository(locator.get<SharedPreferences>()),
         dependsOn: [SharedPreferences]);
@@ -58,6 +55,8 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<SalaryBloc>(
         () => SalaryBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
+    locator.registerSingleton<ScheduleConfirmApi>(ScheduleConfirmApi());
+    locator.registerSingleton<ConfirmTheScheduleRepository>(ConfirmTheScheduleRepository());
     locator.registerSingleton<ConfirmTheScheduleBloc>(ConfirmTheScheduleBloc());
     locator.registerSingleton<CostListApi>(CostListApi());
     locator.registerSingleton<CostListRepository>(CostListRepository());
