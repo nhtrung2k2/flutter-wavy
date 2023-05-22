@@ -14,6 +14,7 @@ class CustomColors {
   static const Color bluetext = Color.fromRGBO(61, 178, 193, 1);
   static const Color blacktext = Color.fromRGBO(15, 23, 42, 1);
   static const Color redText = Color.fromRGBO(255, 6, 6, 1);
+  static const Color grayText = Color.fromRGBO(148, 148, 148, 1);
   static const Color blueNextIcon = Color.fromRGBO(0, 149, 212, 1);
   static const Color yellowIcon = Color.fromRGBO(252, 211, 77, 1);
 }

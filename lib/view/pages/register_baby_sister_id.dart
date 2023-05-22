@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_search_bloc.dart';
+import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_button.dart';
 
+import '../../event/search_event.dart';
 import '../../utils/colors/custom_colors.dart';
 
 class RegisterBabySisterId extends StatelessWidget {
@@ -29,6 +33,7 @@ class RegisterBabySisterIdForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<EmployeeSearchBloc>();
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: 0, horizontal: 16.resizewidth(context)),
@@ -64,6 +69,8 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                     height: 32,
                     alignment: Alignment.center,
                     child: TextField(
+                      onChanged: (value) =>
+                          bloc.add(OnChangedValue(value: value)),
                       maxLines: 1,
                       textAlignVertical: TextAlignVertical.center,
                       textAlign: TextAlign.center,
@@ -86,6 +93,14 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                 ),
                 CustomButton(
                     onPressed: () {
+                      // if (bloc.state is ChangedState) {
+                      //   bloc.add(OnSubmmited(
+                      //       value: (bloc.state as ChangedState).value));
+                      // }
+
+                      // if (bloc.state is SubmittedSuccess) {
+                      //   context.goNamed("register_baby_sister_infor");
+                      // }
                       context.goNamed("register_baby_sister_infor");
                     },
                     title: "Search",

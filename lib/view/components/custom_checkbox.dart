@@ -21,8 +21,8 @@ class CustomCheckBox extends StatelessWidget {
         bloc.pickAvailable(day, !selected);
       },
       child: Container(
-        height: 32.resizeheight(context),
-        width: 32.resizewidth(context),
+        height: 32,
+        width: 32,
         decoration: BoxDecoration(
             color: selected ? CustomColors.blueBorder : Colors.transparent,
             borderRadius: BorderRadius.circular(4),

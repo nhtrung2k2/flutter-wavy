@@ -7,10 +7,10 @@ import '../state/employee_state.dart';
 import 'dart:developer' as devtool;
 
 class EmployeeBloc extends Bloc<EmployeesEvent, EmployeesState> {
-  EmployeeBloc() : super(const EmployeesState()) {
+  EmployeeBloc(this.employeeRepository) : super(const EmployeesState()) {
     on<FetchEmployees>(_fetchEmployees);
   }
-  final employeeRepository = ServiceLocator.locator.get<EmployeesRepository>();
+  final EmployeesRepository employeeRepository;
   Future<void> _fetchEmployees(
     FetchEmployees event,
     Emitter<EmployeesState> emit,

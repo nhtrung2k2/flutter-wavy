@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:wavy/model/Schedule.dart';
+import 'package:wavy/model/schedule.dart';
 
 enum DayOfWeek {
   Monday,
@@ -25,16 +25,17 @@ class SheduleListState extends SheduleState {
   List<Object?> get props => [listSchedule];
 }
 
-class SubmittedSchedule extends SheduleListState {
-  const SubmittedSchedule(super.listSchedule);
+class SubmittedLoading extends SheduleListState {
+  const SubmittedLoading(super.listSchedule);
   @override
   List<Object?> get props => [listSchedule];
 }
 
 class FailSchedule extends SheduleListState {
-  const FailSchedule(super.listSchedule);
+  const FailSchedule(super.listSchedule, this.error);
+  final String error;
   @override
-  List<Object?> get props => [listSchedule];
+  List<Object?> get props => [listSchedule, error];
 }
 
 class SuccessSchedule extends SheduleListState {

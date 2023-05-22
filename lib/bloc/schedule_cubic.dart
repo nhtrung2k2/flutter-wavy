@@ -1,13 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:wavy/service/getit/service_locator.dart';
 
-import '../model/Schedule.dart';
+import '../model/schedule.dart';
+import '../repository/employees_repository.dart';
 import '../state/schedule.dart';
 import 'dart:developer' as devtool;
 
 class ScheduleCubic extends Cubit<SheduleState> {
-  ScheduleCubic()
-      : super(SheduleListState([
+  final EmployeesRepository employeeRepo;
+
+  ScheduleCubic(this.employeeRepo) : super(const SheduleListState([])) {
+    devtool.log("construstor schedule");
+    employeeRepo.getScheduleFromCache().then((listSchedule) {
+      devtool.log("schedule cubic");
+      devtool.log((listSchedule.isEmpty).toString());
+      if (listSchedule.isNotEmpty) {
+        emit(SheduleListState(listSchedule));
+      } else {
+        emit(SheduleListState([
           Schedule(
             day: DayOfWeek.Monday,
             timeStart: '',
@@ -30,13 +41,17 @@ class ScheduleCubic extends Cubit<SheduleState> {
               day: DayOfWeek.Saturday, timeStart: '12:00', timeEnd: '12:00'),
           Schedule(day: DayOfWeek.Sunday, timeStart: '12:00', timeEnd: '12:00')
         ]));
+      }
+    });
+  }
+
   void pickTimeStart(DayOfWeek day, TimeOfDay timeStart) {
     final listupdated = state.listSchedule.map((el) {
       if (el.day == day) {
         final element = el.copyWith(
             timeStart:
                 '${timeStart.hour.toString().padLeft(2, '0')}:${timeStart.minute.toString().padLeft(2, '0')}');
-        devtool.log(element.toString());
+        // devtool.log(element.toString());
         return element;
       } else {
         return el;
@@ -51,7 +66,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
         final elementUpdated = el.copyWith(
             timeEnd:
                 '${timeEnd.hour.toString().padLeft(2, '0')}:${timeEnd.minute.toString().padLeft(2, '0')}');
-        devtool.log(elementUpdated.toString());
+        // devtool.log(elementUpdated.toString());
         return elementUpdated;
       } else {
         return el;
@@ -72,7 +87,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
           elementUpdated = el.copyWith(notHaveAvailable: notHaveAvailable);
         }
 
-        devtool.log(elementUpdated.toString());
+        // devtool.log(elementUpdated.toString());
         return elementUpdated;
       } else {
         return el;
@@ -81,12 +96,19 @@ class ScheduleCubic extends Cubit<SheduleState> {
     emit(PickTimeStartState(listupdated));
   }
 
-  void submitSchedule() {
+  Future<void> submitSchedule() async {
     //submit
-    emit(SubmittedSchedule(state.listSchedule));
+    devtool.log(state.listSchedule.toString());
+    try {
+      emit(SubmittedLoading(state.listSchedule));
+      await employeeRepo.saveScheduleToCache(state.listSchedule);
+      //success
 
-    //success
-    emit(SuccessSchedule(state.listSchedule));
+      emit(SuccessSchedule(state.listSchedule));
+    } catch (e) {
+      devtool.log("fail");
+      emit(FailSchedule(state.listSchedule, e.toString()));
+    }
 
     //error
   }

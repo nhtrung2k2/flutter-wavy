@@ -43,7 +43,8 @@ class RegisterBabySisterInfor extends StatelessWidget {
         name: 'Nguyen Thi Nhan',
         age: '32 years old',
         city: 'Ho Chi Minh',
-        shiftId: 1);
+        shiftId: 1,
+        cancel__contract_date: null);
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 26),
         child: Column(
@@ -127,36 +128,6 @@ class RegisterBabySisterInfor extends StatelessWidget {
                     context.goNamed("register_baby_sister_schedule");
                   },
                 ),
-                //     child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-
-                //     CustomOutLineButton(
-                //       title: "No",
-                //       vertical: 8,
-                //       horizontal: 41,
-                //       textColor: CustomColors.blueBorder,
-                //       backgroundColor: Colors.white,
-                //       borderSideColor: CustomColors.blueBorder,
-                //       borderRadius: 8,
-                //       widthRadius: 1,
-                //       onPressed: () {
-                //
-                //       },
-                //     ),
-                //     CustomElevatedButton(
-                //       title: "Yes",
-                //       vertical: 8,
-                //       horizontal: 32.5,
-                //       textColor: Colors.white,
-                //       backgroundColor: CustomColors.blueBorder,
-                //       borderRadius: 8,
-                //       onPressed: () {
-                //         context.goNamed("register_baby_sister_schedule");
-                //       },
-                //     )
-                //   ],
-                // )
               ],
             )),
             Container(

@@ -2,14 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:wavy/state/email.dart';
 import 'package:wavy/state/password.dart';
 
-enum LoginStatus { pure, valid, invalid }
+import '../utils/form_submission_status.dart';
 
-enum FormSubmissionStatus {
-  initial,
-  formsubmitting,
-  submissionsuccess,
-  submissionfailed
-}
+enum LoginStatus { pure, valid, invalid }
 
 class LoginState extends Equatable {
   final Email email;
@@ -29,7 +24,7 @@ class LoginState extends Equatable {
   factory LoginState.initial() => const LoginState(
       email: Email.pure(),
       password: Password.pure(),
-      language: 'England',
+      language: 'en',
       status: LoginStatus.pure,
       errorMessage: null,
       formStatus: FormSubmissionStatus.initial);

@@ -10,12 +10,12 @@ import 'package:wavy/state/login_state.dart';
 
 import '../state/email.dart';
 import '../state/password.dart';
+import '../utils/form_submission_status.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository _userRepository =
-      ServiceLocator.locator.get<UserRepository>();
+  final UserRepository _userRepository;
   // final AppBloc _appBloc;
-  LoginBloc()
+  LoginBloc(this._userRepository)
       // : _appBloc = appBloc,
       : super(LoginState.initial()) {
     on<LoginEmailChanged>(_onEmailChanged);
@@ -85,6 +85,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(formStatus: FormSubmissionStatus.formsubmitting));
 
       try {
+        devtool.log(event.language);
         await _userRepository.login(
             state.email.value, state.password.value, state.language);
 

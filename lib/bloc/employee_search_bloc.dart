@@ -6,8 +6,8 @@ import '../repository/employees_repository.dart';
 import '../state/employee_search_state.dart';
 
 class EmployeeSearchBloc extends Bloc<SearchEvent, SearchState> {
-  final employeeRepo = ServiceLocator.locator.get<EmployeesRepository>();
-  EmployeeSearchBloc() : super(const InitialState()) {
+  final EmployeesRepository employeeRepo;
+  EmployeeSearchBloc(this.employeeRepo) : super(const InitialState()) {
     on<OnChangedValue>(_onValueChanged);
     on<OnSubmmited>(_onSubmitted);
   }

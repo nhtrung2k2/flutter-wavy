@@ -182,12 +182,18 @@ class __$$_EmployeeCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Employee implements _Employee {
   const _$_Employee(
-      {@JsonKey(name: 'babysistter_id') required this.id,
-      @JsonKey(name: 'name') required this.name,
-      @JsonKey(name: 'age') required this.age,
-      @JsonKey(name: 'city') required this.city,
-      @JsonKey(name: 'shift_id') required this.shiftId,
-      @JsonKey(name: 'cancel_contract_date') this.cancel__contract_date,
+      {@JsonKey(name: 'babysistter_id')
+          required this.id,
+      @JsonKey(name: 'name')
+          required this.name,
+      @JsonKey(name: 'age')
+          required this.age,
+      @JsonKey(name: 'city')
+          required this.city,
+      @JsonKey(name: 'shift_id')
+          required this.shiftId,
+      @JsonKey(name: 'cancel_contract_date')
+          required this.cancel__contract_date,
       this.avatar =
           "https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png"});
 
@@ -268,7 +274,7 @@ abstract class _Employee implements Employee {
       @JsonKey(name: 'shift_id')
           required final int shiftId,
       @JsonKey(name: 'cancel_contract_date')
-          final DateTime? cancel__contract_date,
+          required final DateTime? cancel__contract_date,
       final String avatar}) = _$_Employee;
 
   factory _Employee.fromJson(Map<String, dynamic> json) = _$_Employee.fromJson;

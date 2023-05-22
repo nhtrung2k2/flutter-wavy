@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/service/getit/service_locator.dart';
+import 'package:wavy/view/pages/Input_salary.dart';
 
 import 'package:wavy/view/pages/baby_sister_detail.dart';
 import 'package:wavy/view/pages/home.dart';
@@ -18,7 +21,10 @@ import 'package:wavy/view/pages/settings_page.dart';
 import 'package:wavy/view/pages/splash_page.dart';
 import 'package:wavy/view/pages/BaseScreen.dart';
 
+import 'view/pages/register_basic_setting.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.registerAll();
   runApp(MainApp());
 }
@@ -82,20 +88,61 @@ class MainApp extends StatelessWidget {
                                 child: RegisterBabySisterInforPage()),
                             routes: [
                               GoRoute(
-                                path: 'register_baby_sister_schedule',
-                                name: 'register_baby_sister_schedule',
-                                pageBuilder: (context, state) => MaterialPage(
-                                    child: BlocProvider.value(
-                                  value: ScheduleCubic(),
-                                  child: const RegisterBabySisterSchedulePage(),
-                                )),
-                                // routes: GoRoute(path: 'register_baby_sister_input_salary',
-                                // name:'register_baby_sister_input_salary',
-                                // pageBuilder: (context, state) => MaterialPage(child:
+                                  path: 'register_baby_sister_schedule',
+                                  name: 'register_baby_sister_schedule',
+                                  pageBuilder: (context, state) => MaterialPage(
+                                          child: BlocProvider.value(
+                                        value: ServiceLocator.locator
+                                            .get<ScheduleCubic>(),
+                                        child:
+                                            const RegisterBabySisterSchedulePage(),
+                                      )),
+                                  // routes: GoRoute(path: 'register_baby_sister_input_salary',
+                                  // name:'register_baby_sister_input_salary',
+                                  // pageBuilder: (context, state) => MaterialPage(child:
 
-                                // ),
-                                // )
-                              )
+                                  // ),
+                                  // )
+                                  routes: [
+                                    GoRoute(
+                                        path:
+                                            'register_baby_sister_input_salary',
+                                        name:
+                                            'register_baby_sister_input_salary',
+                                        pageBuilder: (context, state) =>
+                                            MaterialPage(
+                                              child: BlocProvider.value(
+                                                value: ServiceLocator.locator
+                                                    .get<SalaryBloc>(),
+                                                child: const InputSalaryPage(),
+                                              ),
+                                            ),
+                                        routes: [
+                                          GoRoute(
+                                              path:
+                                                  'register_baby_sister_basic_settings',
+                                              name:
+                                                  'register_baby_sister_basic_settings',
+                                              pageBuilder: ((context, state) =>
+                                                  MaterialPage(
+                                                      child: MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider.value(
+                                                          value: ServiceLocator
+                                                              .locator
+                                                              .get<
+                                                                  SalaryBloc>()),
+                                                      BlocProvider.value(
+                                                          value: ServiceLocator
+                                                              .locator
+                                                              .get<
+                                                                  ScheduleCubic>())
+                                                    ],
+                                                    child:
+                                                        const ReigsterBasicSettingPage(),
+                                                  ))))
+                                        ])
+                                  ])
                             ]),
                       ],
                     )

@@ -11,6 +11,8 @@ import '../../bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer' as devtool;
 
+import '../../utils/form_submission_status.dart';
+
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -130,6 +132,7 @@ class LoginForm extends StatelessWidget {
           bloc.add(Validate(
               email: bloc.state.email.value,
               password: bloc.state.password.value));
+
           bloc.add(LoginButtonPressed(
               email: bloc.state.email.value,
               password: bloc.state.password.value,
@@ -176,13 +179,13 @@ class LoginForm extends StatelessWidget {
 String convertFlagToLanguage(flag) {
   switch (flag) {
     case "assets/images/england-flag.png":
-      return "en-US";
+      return "en";
     case "assets/images/japan-flag.png":
-      return "ja-JP";
+      return "ja";
     case "assets/images/vietnam-flag.png":
-      return "vi-VN";
+      return "vi";
     default:
-      return "en-US";
+      return "en";
   }
 }
 

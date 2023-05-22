@@ -14,24 +14,28 @@ int differMinutes(String timeStart, String timeEnd) {
   final minuteEnd = int.parse(parts2[1]);
   final minutesTimeEnd = hourEnd * 60 + minuteEnd;
   if (minutesTimeEnd - minutesTimeStart > 0) {
-    devtool.log(">0");
-    devtool.log(minutesTimeEnd.toString());
-    devtool.log(minutesTimeStart.toString());
+    // devtool.log(">0");
+    // devtool.log(minutesTimeEnd.toString());
+    // devtool.log(minutesTimeStart.toString());
 
     return minutesTimeEnd - minutesTimeStart;
   } else {
     if (hourEnd == 0) {
-      devtool.log("=0");
-      devtool.log(minutesTimeEnd.toString());
-      devtool.log(minutesTimeStart.toString());
+      // devtool.log("=0");
+      // devtool.log(minutesTimeEnd.toString());
+      // devtool.log(minutesTimeStart.toString());
       return 24 * 60 - minutesTimeStart;
     } else {
-      devtool.log("<0");
-      devtool.log(minutesTimeEnd.toString());
-      devtool.log(minutesTimeStart.toString());
+      // devtool.log("<0");
+      // devtool.log(minutesTimeEnd.toString());
+      // devtool.log(minutesTimeStart.toString());
       return minutesTimeEnd - minutesTimeStart;
     }
   }
+}
+
+DayOfWeek convertFromIndex(int index) {
+  return DayOfWeek.values[index];
 }
 
 @immutable
@@ -61,6 +65,19 @@ class Schedule extends Equatable {
       timeStart: timeStart ?? this.timeStart,
       timeEnd: timeEnd ?? this.timeEnd,
     );
+  }
+
+  factory Schedule.fromJson(int index, Map<String, dynamic> json) => Schedule(
+        day: convertFromIndex(index),
+        timeEnd: json['to'],
+        timeStart: json['from'],
+      );
+  Map<String, dynamic> toJson() {
+    return {
+      'from': timeStart,
+      'to': timeEnd,
+      'not_available': notHaveAvailable
+    };
   }
 
   @override

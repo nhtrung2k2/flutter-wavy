@@ -16,20 +16,29 @@ class EmployeesApi {
       : baseUrl = "https://wavy-api.starboardasiavn.com",
         baseAPI = BaseAPI();
   Future<List<Employee>?> fetchEmloyees() async {
-    final url = '$baseUrl/api/home';
     try {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
-
-      final response =
-          await baseAPI.get(url, {'Authorization': 'Bearer $token'});
+      final language = prefs.getString('language');
+      final userId = prefs.getString('userId');
+      devtool.log(userId.toString());
+      final url = '$baseUrl/api/home/$userId';
+      final response = await baseAPI.get(url,
+          {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
+      devtool.log(response.statusCode.toString());
 
       if (response.statusCode == 200) {
-        final data = response.data;
-        final jsonList = json.decode(data);
-        final employees =
-            jsonList.map((json) => Employee.fromJson(json)).toList();
-        return employees;
+        devtool.log("response");
+        devtool.log(response.data);
+        try {
+          devtool.log(response.runtimeType.toString());
+          // final List<Employee> employees =
+          //     jsonList.map((json) => Employee.fromJson(json)).toList();
+
+          // return employees;
+        } catch (e) {
+          devtool.log(e.toString());
+        }
       } else if (response.statusCode == 404) {
         throw Exception("Can't get list employees");
       }
@@ -48,7 +57,7 @@ class EmployeesApi {
           url,
           {'babysistter_id': babySisterId, 'shift_id': null},
           {'Authorization': 'Bearer $token', 'X-Localization': language});
-
+      devtool.log(response.headers.toString());
       if (response.statusCode == 200) {
         final data = response.data;
         final employeeDetail = Employee_Detail.fromJson(data);

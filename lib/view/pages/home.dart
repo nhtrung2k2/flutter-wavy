@@ -38,49 +38,57 @@ class _HomePageState extends State<HomePage> {
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Truong Quan Nhi',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1),
+          shiftId: 1,
+          cancel__contract_date: null),
       const Employee(
           id: '1',
           name: 'Nguyen Thi Nhan',
           age: '32 years old',
           city: 'Ho Chi Minh',
-          shiftId: 1)
+          shiftId: 1,
+          cancel__contract_date: null)
     ];
     return Scaffold(
         appBar: const CustomAppBar(

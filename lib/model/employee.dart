@@ -17,7 +17,7 @@ abstract class Employee with _$Employee {
       @JsonKey(name: 'shift_id')
           required int shiftId,
       @JsonKey(name: 'cancel_contract_date')
-          DateTime? cancel__contract_date,
+          required DateTime? cancel__contract_date,
       @Default("https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar-320x320.png")
           String avatar}) = _Employee;
   factory Employee.fromJson(Map<String, dynamic> json) =>

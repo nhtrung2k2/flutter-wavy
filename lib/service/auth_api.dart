@@ -24,11 +24,13 @@ class AuthApi {
       });
       if (response.statusCode == 200) {
         final data = response.data;
+
         final user = User.fromJson(data['user']);
         final prefs =
             await ServiceLocator.locator.getAsync<SharedPreferences>();
         prefs.setString('token', data['token']);
         prefs.setString('language', language);
+        prefs.setString('userId', user.id);
         return user;
       } else if (response.statusCode == 401) {
         throw Exception(response.statusMessage);

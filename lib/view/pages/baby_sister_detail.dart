@@ -181,7 +181,7 @@ class CardContactDetail extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0), //<-- SEE HERE
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(6),
           child: Column(
             children: [
               const ColumnInfor(),
@@ -234,13 +234,13 @@ class CardContact extends StatelessWidget {
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
-          childAspectRatio: 6.5.resizewidth(context),
+          childAspectRatio: 6.resizewidth(context),
           mainAxisSpacing: 16,
           children: contacts
               .map(
                 (contact) => TextButton.icon(
                   style: ButtonStyle(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.centerLeft,
                       padding: MaterialStateProperty.all<EdgeInsets>(
                           const EdgeInsets.all(0)),
                       backgroundColor:
@@ -251,7 +251,7 @@ class CardContact extends StatelessWidget {
                   label: CustomText(
                       title: contact['title'] as String,
                       fontWeight: FontWeight.normal,
-                      fontSize: 14,
+                      fontSize: 12,
                       lineHeight: 16 / 14,
                       colorText: Colors.black),
                 ),
@@ -276,7 +276,8 @@ class ColumnInfor extends StatelessWidget {
         name: 'Nguyen Thi Nhan',
         age: '32 years old',
         city: 'Ho Chi Minh',
-        shiftId: 1);
+        shiftId: 1,
+        cancel__contract_date: null);
     // final employee = context.select(
     //     (LoginBloc bloc) => (bloc.state as SubmittedSuccess).employeeDetail);
     return Row(

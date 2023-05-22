@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/state/schedule.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
@@ -36,6 +37,7 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<ScheduleCubic>();
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
@@ -45,11 +47,11 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
           SizedBox(
             height: 20.resizeheight(context),
           ),
-          CustomText(
+          const CustomText(
               title: "Please input shift",
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              lineHeight: (18 / 16).resizeheight(context),
+              lineHeight: (18 / 16),
               colorText: CustomColors.blacktext),
           SizedBox(
             height: 16.resizeheight(context),
@@ -84,7 +86,12 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
               GoRouter.of(context).pop();
             },
             onPressedButtonSecond: () {
-              // context.goNamed("register_baby_sister_input_salary");
+              if (bloc.state is! SubmittedLoading) {
+                bloc.submitSchedule().then((value) => {
+                      if (bloc.state is SuccessSchedule)
+                        {context.goNamed("register_baby_sister_input_salary")}
+                    });
+              }
             },
           ),
         ]),
@@ -143,7 +150,7 @@ class TimePickerRow extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         SizedBox(
           height: 18.resizeheight(context),
-          width: 80.resizewidth(context),
+          width: 90.resizewidth(context),
           child: Align(
             alignment: Alignment.centerLeft,
             child: CustomText(
@@ -154,20 +161,17 @@ class TimePickerRow extends StatelessWidget {
                 colorText: CustomColors.blacktext),
           ),
         ),
-        SizedBox(
-          width: 10.resizewidth(context),
-        ),
         Expanded(
           flex: 1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                width: 70.resizewidth(context),
+                width: 60.resizewidth(context),
                 child: CustomOutLineButton(
                     title: row.timeStart,
-                    vertical: 15,
-                    horizontal: 16,
+                    vertical: 0,
+                    horizontal: 0,
                     textColor: Colors.black,
                     backgroundColor: Colors.white,
                     borderSideColor: CustomColors.blueBorder,
@@ -191,11 +195,11 @@ class TimePickerRow extends StatelessWidget {
                       lineHeight: (18 / 14),
                       colorText: CustomColors.blacktext)),
               SizedBox(
-                width: 70.resizewidth(context),
+                width: 60.resizewidth(context),
                 child: CustomOutLineButton(
                     title: row.timeEnd,
-                    vertical: 15,
-                    horizontal: 16,
+                    vertical: 0,
+                    horizontal: 0,
                     textColor: Colors.black,
                     backgroundColor: Colors.white,
                     borderSideColor: CustomColors.blueBorder,
@@ -215,7 +219,7 @@ class TimePickerRow extends StatelessWidget {
           ),
         ),
         SizedBox(
-            width: 80.resizewidth(context),
+            width: 90.resizewidth(context),
             child: Align(
                 alignment: Alignment.center, child: CustomCheckBox(day: day)))
       ]),
