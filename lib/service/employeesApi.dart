@@ -9,6 +9,8 @@ import 'dart:convert';
 
 import 'dart:developer' as devtool;
 
+import '../model/shift_salary_employee.dart';
+
 class EmployeesApi {
   final String baseUrl;
   final BaseAPI baseAPI;
@@ -62,6 +64,26 @@ class EmployeesApi {
         final data = response.data;
         final employeeDetail = Employee_Detail.fromJson(data);
         return employeeDetail;
+      } else if (response.statusCode == 400) {
+        throw Exception("Token could not be parsed from the request.");
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> saveChangeSetting(
+      ShiftSalaryEmployee shiftSalaryEmployee) async {
+    final url = '$baseUrl/api/change_setting';
+    try {
+      final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
+      final token = prefs.getString('token');
+      final language = prefs.getString('language');
+      final response = await baseAPI.post(url, shiftSalaryEmployee.toJson(),
+          {'Authorization': 'Bearer $token', 'X-Localization': language});
+      devtool.log(response.headers.toString());
+      if (response.statusCode == 200) {
+        return;
       } else if (response.statusCode == 400) {
         throw Exception("Token could not be parsed from the request.");
       }

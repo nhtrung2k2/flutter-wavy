@@ -84,8 +84,14 @@ class MainApp extends StatelessWidget {
                         GoRoute(
                             path: 'register_baby_sister_infor',
                             name: "register_baby_sister_infor",
-                            pageBuilder: (context, state) => const MaterialPage(
-                                child: RegisterBabySisterInforPage()),
+                            pageBuilder: (context, state) => MaterialPage(
+                                  key: state.pageKey,
+                                  child: BlocProvider.value(
+                                    value: ServiceLocator.locator
+                                        .get<EmployeeSearchBloc>(),
+                                    child: const RegisterBabySisterInforPage(),
+                                  ),
+                                ),
                             routes: [
                               GoRoute(
                                   path: 'register_baby_sister_schedule',
@@ -111,12 +117,11 @@ class MainApp extends StatelessWidget {
                                             'register_baby_sister_input_salary',
                                         pageBuilder: (context, state) =>
                                             MaterialPage(
-                                              child: BlocProvider.value(
-                                                value: ServiceLocator.locator
-                                                    .get<SalaryBloc>(),
-                                                child: const InputSalaryPage(),
-                                              ),
-                                            ),
+                                                child: BlocProvider.value(
+                                              value: ServiceLocator.locator
+                                                  .get<SalaryBloc>(),
+                                              child: const InputSalaryPage(),
+                                            )),
                                         routes: [
                                           GoRoute(
                                               path:

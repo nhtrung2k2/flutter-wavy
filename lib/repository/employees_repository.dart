@@ -12,6 +12,8 @@ import 'dart:developer' as devtool;
 
 import 'package:wavy/service/iterable.dart';
 
+import '../model/shift_salary_employee.dart';
+
 class EmployeesRepository {
   EmployeesRepository(this._sharedPreferences)
       : _employeeApi = ServiceLocator.locator.get<EmployeesApi>();
@@ -78,5 +80,10 @@ class EmployeesRepository {
   Future<void> saveInputSalaryToCache(InputSalary inputSalary) async {
     final json = jsonEncode(inputSalary.toJson());
     await _sharedPreferences.setString("input_salary", json);
+  }
+
+  Future<void> saveChangeSetting(
+      ShiftSalaryEmployee shiftSalaryEmployee) async {
+    await _employeeApi.saveChangeSetting(shiftSalaryEmployee);
   }
 }

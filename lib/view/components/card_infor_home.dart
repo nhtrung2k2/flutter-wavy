@@ -30,8 +30,8 @@ class CardInforHome extends StatelessWidget {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Image.network(
               avatar,
-              width: 64.resizewidth(context),
-              height: 64.resizeheight(context),
+              width: 64,
+              height: 64,
             ),
             SizedBox(width: 10.resizewidth(context)),
             Column(

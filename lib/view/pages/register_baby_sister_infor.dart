@@ -7,6 +7,7 @@ import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/state/employee_search_state.dart';
+import 'package:wavy/utils/convertBase64Image.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/back_next.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
@@ -36,15 +37,15 @@ class RegisterBabySisterInfor extends StatelessWidget {
   const RegisterBabySisterInfor({super.key});
   @override
   Widget build(BuildContext context) {
-    // final employee = context.select((EmployeeSearchBloc bloc) =>
-    //     (bloc.state as SubmittedSuccess).employeeDetail);
-    const employee = Employee(
-        id: '1',
-        name: 'Nguyen Thi Nhan',
-        age: '32 years old',
-        city: 'Ho Chi Minh',
-        shiftId: 1,
-        cancel__contract_date: null);
+    final employee = context.select((EmployeeSearchBloc bloc) =>
+        (bloc.state as SubmittedSuccess).employeeDetail);
+    // const employee = Employee(
+    //     id: '1',
+    //     name: 'Nguyen Thi Nhan',
+    //     age: '32 years old',
+    //     city: 'Ho Chi Minh',
+    //     shiftId: 1,
+    //     cancel__contract_date: null);
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 26),
         child: Column(
@@ -82,10 +83,10 @@ class RegisterBabySisterInfor extends StatelessWidget {
                 SizedBox(height: 16.resizeheight(context)),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    employee.avatar,
-                    height: 100.resizeheight(context),
-                    width: 100.resizewidth(context),
+                  child: Image.memory(
+                    convertBase64Image(employee.avatar),
+                    height: 100,
+                    width: 100,
                     fit: BoxFit.fill,
                   ),
                 ),

@@ -3,8 +3,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/convertBase64Image.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
@@ -184,7 +186,7 @@ class CardContactDetail extends StatelessWidget {
           padding: const EdgeInsets.all(6),
           child: Column(
             children: [
-              const ColumnInfor(),
+              // const ColumnInfor(),
               SizedBox(
                 height: 12.resizeheight(context),
               ),
@@ -267,27 +269,23 @@ class CardContact extends StatelessWidget {
 }
 
 class ColumnInfor extends StatelessWidget {
-  const ColumnInfor({super.key});
-
+  const ColumnInfor({super.key, required this.employee});
+  final Employee_Detail employee;
   @override
   Widget build(BuildContext context) {
-    const employee = Employee(
-        id: '1',
-        name: 'Nguyen Thi Nhan',
-        age: '32 years old',
-        city: 'Ho Chi Minh',
-        shiftId: 1,
-        cancel__contract_date: null);
-    // final employee = context.select(
-    //     (LoginBloc bloc) => (bloc.state as SubmittedSuccess).employeeDetail);
+    // const employee = Employee(
+    //     id: '1',
+    //     name: 'Nguyen Thi Nhan',
+    //     age: '32 years old',
+    //     city: 'Ho Chi Minh',
+    //     shiftId: 1,
+    //     cancel__contract_date: null);
+
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.network(
-          employee.avatar,
-          height: 64,
-          width: 64,
-        ),
+        Image.memory(convertBase64Image(employee.avatar),
+            height: 64, width: 64, fit: BoxFit.cover),
         SizedBox(
           width: 10.resizewidth(context),
         ),
