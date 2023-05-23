@@ -91,12 +91,32 @@ class CardInforDetail extends StatelessWidget {
                     children: [
                       CustomButtonIconNavigator(
                         onPressed: () {
-                          context.goNamed(
-                            'baby_sister_detail_confirm_schedule',
-                            queryParams: {
-                              'babysisterId': '1'
-                            }
-                          );
+                          if(index==0){
+                            context.goNamed(
+                                'baby_sister_detail_confirm_schedule',
+                                queryParams: {
+                                  'babysisterId': '1',
+                                  'shiftId': '1'
+                                }
+                            );
+                          }
+                          else if(index==1){
+                            context.goNamed(
+                              'baby_sister_payment',
+                              queryParams: {
+                                'shift_id': '1'
+                              }
+                            );
+                          }
+                          else if(index==3){
+                            context.goNamed(
+                                'baby_sister_review',
+                              queryParams: {
+                                'shift_id': '1',
+                                'babysistter_id': '1'
+                              }
+                            );
+                          }
                         },
                         colorText: details[index]['colorText'] as Color,
                         title: details[index]['title'] as String,

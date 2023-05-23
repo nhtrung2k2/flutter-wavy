@@ -1,11 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:wavy/event/confirm_schedule_event.dart';
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
+import 'package:wavy/model/schedule_confirm.dart';
+import 'package:wavy/repository/confirm_the_schedule_repository.dart';
+import 'package:wavy/repository/employees_repository.dart';
+import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/state/confirm_the_schedule_state.dart';
 
 class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheScheduleState> {
-  //Baby Sister Detail Repository
-  //Basic Setting Repository
+
+  final EmployeesRepository _employeesRepository = ServiceLocator.locator.get<EmployeesRepository>();
+  final ConfirmTheScheduleRepository _confirmTheScheduleRepository = ServiceLocator.locator.get<ConfirmTheScheduleRepository>();
 
   ConfirmTheScheduleBloc() : super(ConfirmTheScheduleState.initial()) {
     on<LoadDataConfirmScheduleEvent>(_onLoadData);
@@ -22,15 +29,15 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
     emit(state);
 
     try {
-      //await function to get baby sister data
-      //await function to get schedule data
+      // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
+      // List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       emit(state.copyWith(
         employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1),
         schedule: [false, false, false, false, false, false, false, false, false, false, false, false, false],
         informationStatus: InformationStatus.success,
         monthScheduleStatus: MonthScheduleStatus.success
       ));
-    } catch (_) {
+    } catch (e) {
       emit(state.copyWith(
         informationStatus: InformationStatus.failure,
         monthScheduleStatus: MonthScheduleStatus.failure

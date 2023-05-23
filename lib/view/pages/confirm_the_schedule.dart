@@ -12,10 +12,12 @@ import 'package:wavy/view/components/personal_information/user_info.dart';
 class ConfirmTheSchedule extends StatefulWidget {
 
   final String babysisterId;
+  final int shiftId;
 
   const ConfirmTheSchedule({
     super.key,
-    required this.babysisterId
+    required this.babysisterId,
+    required this.shiftId,
   });
 
   @override
@@ -30,7 +32,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
   void initState() {
     super.initState();
     confirmTheScheduleBloc = context.read<ConfirmTheScheduleBloc>();
-    confirmTheScheduleBloc.add(LoadDataConfirmScheduleEvent(babysisterId: widget.babysisterId));
+    confirmTheScheduleBloc.add(LoadDataConfirmScheduleEvent(babysisterId: widget.babysisterId, shiftId: widget.shiftId));
   }
 
   @override
@@ -204,7 +206,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
               context.goNamed(
                 'baby_sister_cost_list',
                 queryParams: {
-                  'date': DateTime(2023, 10, 04).toIso8601String()
+                  'amountId': '1'
                 }
               );
             },

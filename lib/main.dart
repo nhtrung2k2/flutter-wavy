@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
+import 'package:wavy/bloc/cost_list_bloc.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/salary_bloc.dart';
+import 'package:wavy/bloc/payment_bloc.dart';
+import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/view/pages/Input_salary.dart';
@@ -15,9 +18,11 @@ import 'package:wavy/view/pages/confirm_the_schedule.dart';
 import 'package:wavy/view/pages/cost_list.dart';
 import 'package:wavy/view/pages/home.dart';
 import 'package:wavy/view/pages/login.dart';
+import 'package:wavy/view/pages/payment.dart';
 import 'package:wavy/view/pages/register_baby_sister_id.dart';
 import 'package:wavy/view/pages/register_baby_sister_infor.dart';
 import 'package:wavy/view/pages/register_baby_sister_schedule.dart';
+import 'package:wavy/view/pages/review.dart';
 import 'package:wavy/view/pages/settings_page.dart';
 import 'package:wavy/view/pages/splash_page.dart';
 import 'package:wavy/view/pages/BaseScreen.dart';
@@ -80,6 +85,7 @@ class MainApp extends StatelessWidget {
                                     value: ServiceLocator.locator.get<ConfirmTheScheduleBloc>(),
                                     child: ConfirmTheSchedule(
                                       babysisterId: state.queryParams['babysisterId'] ?? '',
+                                      shiftId: int.parse(state.queryParams['shiftId'] ?? '-1'),
                                     ),
                                   )),
                               routes: [
@@ -87,11 +93,37 @@ class MainApp extends StatelessWidget {
                                     path: 'baby_sister_cost_list',
                                     name: 'baby_sister_cost_list',
                                     pageBuilder: (context, state) => MaterialPage(
-                                        child: CostList(
-                                          date: DateTime.tryParse(state.queryParams['date']!) ?? DateTime.now(),
-                                        )))
+                                        child: BlocProvider.value(
+                                          value: ServiceLocator.locator.get<CostListBloc>(),
+                                          child: CostList(
+                                            amountId: int.parse(state.queryParams['amountId'] ?? ''),
+                                          ),
+                                        ))),
                               ]
-                          )
+                          ),
+                          GoRoute(
+                              path: 'baby_sister_payment',
+                              name: 'baby_sister_payment',
+                              pageBuilder: (context, state) => MaterialPage(
+                                  child: BlocProvider.value(
+                                    value: ServiceLocator.locator.get<PaymentBloc>(),
+                                    child: Payment(
+                                      key: state.pageKey,
+                                      shiftId: int.parse(state.queryParams['shift_id'] ?? ''),
+                                    ),
+                                  ))),
+                          GoRoute(
+                              path: 'baby_sister_review',
+                              name: 'baby_sister_review',
+                              pageBuilder: (context, state) => MaterialPage(
+                                  child: BlocProvider.value(
+                                    value: ServiceLocator.locator.get<ReviewBloc>(),
+                                    child: Review(
+                                      key: state.pageKey,
+                                      shiftId: int.parse(state.queryParams['shift_id'] ?? '0'),
+                                      babysistterId: state.queryParams['babysistter_id'] ?? '',
+                                    ),
+                                  ))),
                         ]
                     ),
                     GoRoute(

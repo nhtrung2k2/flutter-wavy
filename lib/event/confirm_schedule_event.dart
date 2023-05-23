@@ -2,7 +2,8 @@ abstract class ConfirmScheduleEvent {}
 
 class LoadDataConfirmScheduleEvent extends ConfirmScheduleEvent {
   final String babysisterId;
-  LoadDataConfirmScheduleEvent({required this.babysisterId});
+  final int shiftId;
+  LoadDataConfirmScheduleEvent({required this.babysisterId, required this.shiftId});
 }
 
 class NextMonthEvent extends ConfirmScheduleEvent {
