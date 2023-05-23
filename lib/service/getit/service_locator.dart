@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/repository/employees_repository.dart';
@@ -44,5 +45,8 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<SalaryBloc>(
         () => SalaryBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
+    locator.registerSingleton<ConfirmTheScheduleBloc>(ConfirmTheScheduleBloc());
+    locator.registerLazySingletonAsync<SharedPreferences>(
+        () async => await SharedPreferences.getInstance());
   }
 }

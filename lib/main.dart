@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/view/pages/Input_salary.dart';
 
 import 'package:wavy/view/pages/baby_sister_detail.dart';
+import 'package:wavy/view/pages/confirm_the_schedule.dart';
+import 'package:wavy/view/pages/cost_list.dart';
 import 'package:wavy/view/pages/home.dart';
 import 'package:wavy/view/pages/login.dart';
 import 'package:wavy/view/pages/register_baby_sister_id.dart';
@@ -69,7 +72,30 @@ class MainApp extends StatelessWidget {
                         name: 'register_baby_sister_detail',
                         pageBuilder: (context, state) => MaterialPage(
                             key: state.pageKey,
-                            child: const BabySisterDetail())),
+                            child: const BabySisterDetail()),
+                        routes: [
+                          GoRoute(
+                              path: 'baby_sister_detail_confirm_schedule',
+                              name: 'baby_sister_detail_confirm_schedule',
+                              pageBuilder: (context, state) => MaterialPage(
+                                  child: BlocProvider.value(
+                                    value: ServiceLocator.locator.get<ConfirmTheScheduleBloc>(),
+                                    child: ConfirmTheSchedule(
+                                      babysisterId: state.queryParams['babysisterId'] ?? '',
+                                    ),
+                                  )),
+                              routes: [
+                                GoRoute(
+                                    path: 'baby_sister_cost_list',
+                                    name: 'baby_sister_cost_list',
+                                    pageBuilder: (context, state) => MaterialPage(
+                                        child: CostList(
+                                          date: DateTime.tryParse(state.queryParams['date']!) ?? DateTime.now(),
+                                        )))
+                              ]
+                          )
+                        ]
+                    ),
                     GoRoute(
                       path: 'register-babysister-id',
                       name: 'register-babysister-id',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/model/employee_detail.dart';
@@ -89,7 +90,14 @@ class CardInforDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CustomButtonIconNavigator(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.goNamed(
+                            'baby_sister_detail_confirm_schedule',
+                            queryParams: {
+                              'babysisterId': '1'
+                            }
+                          );
+                        },
                         colorText: details[index]['colorText'] as Color,
                         title: details[index]['title'] as String,
                         iconData: details[index]['icon'] as IconData?,
