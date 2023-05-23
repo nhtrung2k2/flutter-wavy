@@ -48,5 +48,6 @@ class ServiceLocator {
     locator.registerSingleton<ConfirmTheScheduleBloc>(ConfirmTheScheduleBloc());
     locator.registerLazySingletonAsync<SharedPreferences>(
         () async => await SharedPreferences.getInstance());
+    locator.registerSingleton<EmployeeSearchBloc>(EmployeeSearchBloc());
   }
 }

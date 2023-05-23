@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
-import 'package:wavy/model/employee.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/view/pages/Input_salary.dart';
 
