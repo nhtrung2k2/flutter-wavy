@@ -55,17 +55,24 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<SalaryBloc>(
         () => SalaryBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
+
     locator.registerSingleton<ScheduleConfirmApi>(ScheduleConfirmApi());
     locator.registerSingleton<ConfirmTheScheduleRepository>(ConfirmTheScheduleRepository());
-    locator.registerSingleton<ConfirmTheScheduleBloc>(ConfirmTheScheduleBloc());
+    locator.registerSingletonWithDependencies<ConfirmTheScheduleBloc>(
+        () => ConfirmTheScheduleBloc(locator.get<EmployeesRepository>()),
+        dependsOn: [EmployeesRepository]);
     locator.registerSingleton<CostListApi>(CostListApi());
     locator.registerSingleton<CostListRepository>(CostListRepository());
     locator.registerSingleton<CostListBloc>(CostListBloc());
     locator.registerSingleton<PaymentApi>(PaymentApi());
     locator.registerSingleton<PaymentRepository>(PaymentRepository());
-    locator.registerSingleton<PaymentBloc>(PaymentBloc());
+    locator.registerSingletonWithDependencies<PaymentBloc>(
+        () => PaymentBloc(locator.get<EmployeesRepository>()),
+        dependsOn: [EmployeesRepository]);
     locator.registerSingleton<ReviewApi>(ReviewApi());
     locator.registerSingleton<ReviewRepository>(ReviewRepository());
-    locator.registerSingleton<ReviewBloc>(ReviewBloc());
+    locator.registerSingletonWithDependencies<ReviewBloc>(
+        () => ReviewBloc(locator.get<EmployeesRepository>()),
+        dependsOn: [EmployeesRepository]);
   }
 }

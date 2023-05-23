@@ -11,10 +11,10 @@ import 'package:wavy/state/confirm_the_schedule_state.dart';
 
 class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheScheduleState> {
 
-  final EmployeesRepository _employeesRepository = ServiceLocator.locator.get<EmployeesRepository>();
+  final EmployeesRepository _employeesRepository;
   final ConfirmTheScheduleRepository _confirmTheScheduleRepository = ServiceLocator.locator.get<ConfirmTheScheduleRepository>();
 
-  ConfirmTheScheduleBloc() : super(ConfirmTheScheduleState.initial()) {
+  ConfirmTheScheduleBloc(this._employeesRepository) : super(ConfirmTheScheduleState.initial()) {
     on<LoadDataConfirmScheduleEvent>(_onLoadData);
     on<NextMonthEvent>(_onNextMonth);
     on<PrevMonthEvent>(_onPrevMonth);
@@ -32,7 +32,7 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1),
+        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
         schedule: [false, false, false, false, false, false, false, false, false, false, false, false, false],
         informationStatus: InformationStatus.success,
         monthScheduleStatus: MonthScheduleStatus.success

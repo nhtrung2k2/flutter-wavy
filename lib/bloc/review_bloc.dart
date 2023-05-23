@@ -10,10 +10,10 @@ import 'package:wavy/state/review_state.dart';
 
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
-  final EmployeesRepository _employeesRepository = ServiceLocator.locator.get<EmployeesRepository>();
+  final EmployeesRepository _employeesRepository;
   final ReviewRepository _reviewRepository = ServiceLocator.locator.get<ReviewRepository>();
 
-  ReviewBloc() : super(ReviewState.initial()) {
+  ReviewBloc(this._employeesRepository) : super(ReviewState.initial()) {
     on<InitDataEvent>(_onInitData);
     on<ChangeOverallRateEvent>(_onChangeRating);
     on<ChangeCleaningRateEvent>(_onChangeRating);
@@ -33,7 +33,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     try {
       // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysistterId);
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1),
+        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
         reviewStateStatus: ReviewStateStatus.inited
       ));
     } catch (e) {

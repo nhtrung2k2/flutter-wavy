@@ -10,10 +10,10 @@ import 'package:wavy/state/payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
 
-  final EmployeesRepository _employeesRepository = ServiceLocator.locator.get<EmployeesRepository>();
+  final EmployeesRepository _employeesRepository;
   final PaymentRepository _paymentRepository = ServiceLocator.locator.get<PaymentRepository>();
 
-  PaymentBloc() : super(PaymentState.initial()) {
+  PaymentBloc(this._employeesRepository) : super(PaymentState.initial()) {
     on<LoadPaymentDataEvent>(_onLoadData);
     on<ChangeMonthEvent>(_onChangeMonth);
     on<IncludeInPaymentEvent>(_onIncludeItemInPayment);
@@ -30,7 +30,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1),
+        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
         payment: Payment.fromJson(paymentDummyJson),
         paymentStateStatus: PaymentStateStatus.success
       ));
@@ -57,7 +57,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       emit(state.copyWith(
-          employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1),
+          employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
           payment: Payment.fromJson(paymentDummyJson),
           paymentStateStatus: PaymentStateStatus.success
       ));

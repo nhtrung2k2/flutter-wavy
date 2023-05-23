@@ -52,6 +52,9 @@ class _ReviewState extends State<Review> {
         if(state.reviewStateStatus == ReviewStateStatus.submitted){
           _showToast('Successfully');
         }
+        else if(state.reviewStateStatus == ReviewStateStatus.cannotSubmit){
+          _showToast('Failed');
+        }
       });
     });
   }
@@ -366,16 +369,18 @@ class _ReviewState extends State<Review> {
 
   _submit(){
 
+    DateTime now = DateTime.now();
+
     DateTime dateStart = DateTime(
-        int.parse(fromYearTextController.text),
-        int.parse(fromMonthTextController.text),
-        int.parse(fromDayTextController.text)
+        int.tryParse(fromYearTextController.text) ?? now.year,
+        int.tryParse(fromMonthTextController.text) ?? now.month,
+        int.tryParse(fromDayTextController.text) ?? now.day
     );
 
     DateTime dateEnd = DateTime(
-        int.parse(toYearTextController.text),
-        int.parse(toMonthTextController.text),
-        int.parse(toDayTextController.text)
+        int.tryParse(toYearTextController.text) ?? now.year,
+        int.tryParse(toMonthTextController.text) ?? now.month,
+        int.tryParse(toDayTextController.text) ?? now.day
     );
 
     reviewBloc.add(SubmitEvent(
