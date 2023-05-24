@@ -15,4 +15,12 @@ class ConfirmTheScheduleRepository {
       throw e.toString();
     }
   }
+
+  Future<String> updateConfirmFlag(int amoundId) async {
+    try {
+      return await _scheduleConfirmApi.updateConfirmFlag(amoundId: amoundId);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

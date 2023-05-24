@@ -1,4 +1,5 @@
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/item.dart';
 import 'package:wavy/model/payment.dart';
 
@@ -8,40 +9,51 @@ enum PaymentStateStatus {
   failure
 }
 
+enum CanPayStatus{
+  beingCalculated,
+  payNow,
+  paid
+}
+
 class PaymentState {
-  final Employee? employee;
+  final Employee_Detail? employee;
   final Payment? payment;
   final int month;
   final int year;
   final PaymentStateStatus paymentStateStatus;
+  final CanPayStatus canPayStatus;
   const PaymentState({
     required this.employee,
     required this.payment,
     required this.month,
     required this.year,
-    required this.paymentStateStatus
+    required this.paymentStateStatus,
+    required this.canPayStatus
   });
   factory PaymentState.initial() => PaymentState(
     employee: null,
     payment: null,
     month: DateTime.now().month,
     year: DateTime.now().year,
-    paymentStateStatus: PaymentStateStatus.loading
+    paymentStateStatus: PaymentStateStatus.loading,
+    canPayStatus: CanPayStatus.beingCalculated
   );
 
   PaymentState copyWith({
-    Employee? employee,
+    Employee_Detail? employee,
     Payment? payment,
     int? month,
     int? year,
-    PaymentStateStatus? paymentStateStatus
+    PaymentStateStatus? paymentStateStatus,
+    CanPayStatus? canPayStatus
   }) {
     return PaymentState(
       employee: employee ?? this.employee,
       payment: payment ?? this.payment,
       month: month ?? this.month,
       year: year ?? this.year,
-      paymentStateStatus: paymentStateStatus ?? this.paymentStateStatus
+      paymentStateStatus: paymentStateStatus ?? this.paymentStateStatus,
+      canPayStatus: canPayStatus ?? this.canPayStatus
     );
   }
 

@@ -16,7 +16,7 @@ class UserInfo extends StatelessWidget{
 
   final List<UserInfoType> infoType;
   final bool horizontalLayoutType;
-  final String? avatarUrl;
+  final String? avatarBase64;
   final String? name;
   final String? id;
   final String? age;
@@ -26,7 +26,7 @@ class UserInfo extends StatelessWidget{
     Key? key,
     required this.infoType,
     this.horizontalLayoutType = true,
-    this.avatarUrl,
+    this.avatarBase64,
     this.name,
     this.id,
     this.age,
@@ -73,7 +73,7 @@ class UserInfo extends StatelessWidget{
         children: [
           Visibility(
             visible: infoType.contains(UserInfoType.avatar),
-            child: CustomAvatar(imageUrl: avatarUrl ?? defaultAvatar)
+            child: CustomAvatar(imageBase64: avatarBase64 ?? defaultAvatar)
           ),
           const SizedBox(width: 10.0,),
           Column(

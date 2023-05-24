@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:wavy/utils/convertBase64Image.dart';
 
 class CustomAvatar extends StatelessWidget{
 
-  final String imageUrl;
+  final String imageBase64;
   final bool isRoundCorner;
   final Size size;
 
   const CustomAvatar({
     Key? key,
-    required this.imageUrl,
+    required this.imageBase64,
     this.isRoundCorner = false,
     this.size = const Size(70, 70)
   }) : super(key: key);
@@ -20,8 +21,8 @@ class CustomAvatar extends StatelessWidget{
       height: size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover
+          image: MemoryImage(convertBase64Image(imageBase64)),
+          fit: BoxFit.contain
         ),
         borderRadius: isRoundCorner ? BorderRadius.circular(16.0) : null
       ),

@@ -14,9 +14,11 @@ import 'package:wavy/view/components/custom_radius_checkbox.dart';
 
 class Payment extends StatefulWidget {
 
+  final String babysisterId;
   final int shiftId;
 
   const Payment({
+    required this.babysisterId,
     required this.shiftId,
     super.key,
   });
@@ -33,7 +35,7 @@ class _PaymentState extends State<Payment> {
   void initState() {
     super.initState();
     paymentBloc = context.read<PaymentBloc>();
-    paymentBloc.add(LoadPaymentDataEvent(shiftId: widget.shiftId));
+    paymentBloc.add(LoadPaymentDataEvent(babysisterId: widget.babysisterId, shiftId: widget.shiftId));
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   costListBloc.stream.listen((state) {
     //
@@ -63,7 +65,7 @@ class _PaymentState extends State<Payment> {
               children: [
                 UserInfo(
                   infoType: const [UserInfoType.avatar, UserInfoType.name, UserInfoType.id],
-                  avatarUrl: paymentState.employee?.avatar ?? '',
+                  avatarBase64: paymentState.employee?.avatar ?? '',
                   name: paymentState.employee?.name ?? '',
                   id: paymentState.employee?.id ?? '',
                 ),
@@ -110,7 +112,7 @@ class _PaymentState extends State<Payment> {
                   ],
                 ),
                 const SizedBox(height: 16.0,),
-                _payButton(0),
+                _payButton(paymentState),
                 const SizedBox(height: 16.0,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +208,7 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Widget _payButton(int paymentStatus){
+  Widget _payButton(PaymentState state){
     return GestureDetector(
       onTap: (){},
       child: Container(
@@ -214,21 +216,34 @@ class _PaymentState extends State<Payment> {
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: CustomColors.bluetext,
+          color: state.canPayStatus == CanPayStatus.paid ? Colors.green : (state.canPayStatus == CanPayStatus.payNow ? CustomColors.bluetext : Colors.grey),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(
-              Icons.check_circle,
-              color: Colors.white,
-              size: 20,
-            ),
-            SizedBox(width: 5.0,),
+          children: [
+            state.canPayStatus == CanPayStatus.paid
+              ? const Padding(
+                padding: EdgeInsets.only(right: 5.0),
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              )
+              : state.canPayStatus == CanPayStatus.beingCalculated
+                  ? const Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  )
+                  : Container(),
             Text(
-              'Paid',
-              style: TextStyle(
+              state.canPayStatus == CanPayStatus.paid ? 'Paid' : (state.canPayStatus == CanPayStatus.payNow ? 'Pay Now' : 'Being calculated'),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontFamily: "Roboto",
@@ -261,6 +276,7 @@ class _PaymentState extends State<Payment> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CustomRadiusCheckbox(
+                    key: Key(DateTime.now().toIso8601String()),
                     value: item.includeInPayment == 1,
                     enable: item.canRemove,
                     onChanged: (value){

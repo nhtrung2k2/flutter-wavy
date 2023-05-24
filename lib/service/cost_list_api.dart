@@ -15,18 +15,15 @@ class CostListApi {
   Future<Cost> fetchCostList({
     required int amountId
   }) async {
-    final url = '$baseUrl/api/cost_list';
+    final url = '$baseUrl/api/cost_list/$amountId';
     try {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
       final language = prefs.getString('language');
 
       final response =
-      await baseAPI.post(
+      await baseAPI.get(
           url,
-          {
-            'amount_id': amountId,
-          },
           {'Authorization': 'Bearer $token', 'X-Localization': language}
       );
 
@@ -46,7 +43,7 @@ class CostListApi {
     required int amountId,
     required Cost cost
   }) async {
-    final url = '$baseUrl/api/update_cost_list';
+    final url = '$baseUrl/api/update_cost';
     try {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');

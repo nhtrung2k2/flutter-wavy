@@ -129,8 +129,8 @@ class __$$_InputSalaryCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_InputSalary implements _InputSalary {
   const _$_InputSalary(
-      {@JsonKey(name: 'hourly_wage') this.hourlyWage = 0,
-      @JsonKey(name: 'monthly_wage') this.monthlyWage = 0,
+      {@JsonKey(name: 'hourly_wage') required this.hourlyWage,
+      @JsonKey(name: 'monthly_wage') required this.monthlyWage,
       @JsonKey(name: 'item') required final List<ItemSalary> itemSalary})
       : _itemSalary = itemSalary;
 

@@ -85,7 +85,7 @@ class _ReviewState extends State<Review> {
                   children: [
                     UserInfo(
                       infoType: const [UserInfoType.avatar, UserInfoType.name, UserInfoType.id],
-                      avatarUrl: reviewState.employee?.avatar ?? '',
+                      avatarBase64: reviewState.employee?.avatar ?? '',
                       name: reviewState.employee?.name ?? '',
                       id: reviewState.employee?.id ?? '',
                     ),

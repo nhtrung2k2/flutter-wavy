@@ -30,66 +30,65 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final employees =
-    //     context.select((EmployeeBloc bloc) => bloc.state.employees);
-    final employees = [
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Truong Quan Nhi',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null),
-      const Employee(
-          id: '1',
-          name: 'Nguyen Thi Nhan',
-          age: '32 years old',
-          city: 'Ho Chi Minh',
-          shiftId: 1,
-          cancel__contract_date: null)
-    ];
+    final employees = context.select((EmployeeBloc bloc) => bloc.state.employees);
+    // final employees = [
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Truong Quan Nhi',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null),
+    //   const Employee(
+    //       id: '1',
+    //       name: 'Nguyen Thi Nhan',
+    //       age: '32 years old',
+    //       city: 'Ho Chi Minh',
+    //       shiftId: 1,
+    //       cancel__contract_date: null)
+    // ];
     return Scaffold(
         appBar: const CustomAppBar(
             textColor: CustomColors.blueDark,
@@ -117,7 +116,13 @@ class _HomePageState extends State<HomePage> {
                       return Column(children: [
                         CardInforHome(
                             onPressed: () {
-                              context.goNamed("register_baby_sister_detail");
+                              context.goNamed(
+                                "register_baby_sister_detail",
+                                queryParams: {
+                                  'babysisterId': employees[index].id,
+                                  'shiftId': '${employees[index].shiftId}'
+                                }
+                              );
                             },
                             avatar: employees[index].avatar,
                             name: employees[index].name,

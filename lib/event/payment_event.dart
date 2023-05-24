@@ -1,8 +1,9 @@
 abstract class PaymentEvent {}
 
 class LoadPaymentDataEvent extends PaymentEvent {
+  final String babysisterId;
   final int shiftId;
-  LoadPaymentDataEvent({required this.shiftId});
+  LoadPaymentDataEvent({required this.babysisterId, required this.shiftId});
 }
 
 class ChangeMonthEvent extends PaymentEvent {

@@ -30,14 +30,11 @@ class EmployeesApi {
       devtool.log(response.statusCode.toString());
 
       if (response.statusCode == 200) {
-        devtool.log("response");
-        devtool.log(response.data);
         try {
-          devtool.log(response.runtimeType.toString());
-          // final List<Employee> employees =
-          //     jsonList.map((json) => Employee.fromJson(json)).toList();
+          List data = response.data;
+          final List<Employee> employees = data.map((json) => Employee.fromJson(json)).toList();
 
-          // return employees;
+          return employees;
         } catch (e) {
           devtool.log(e.toString());
         }

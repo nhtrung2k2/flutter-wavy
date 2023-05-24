@@ -8,8 +8,8 @@ part of 'input_salary.dart';
 
 _$_InputSalary _$$_InputSalaryFromJson(Map<String, dynamic> json) =>
     _$_InputSalary(
-      hourlyWage: json['hourly_wage'] as int? ?? 0,
-      monthlyWage: json['monthly_wage'] as int? ?? 0,
+      hourlyWage: json['hourly_wage'] as int,
+      monthlyWage: json['monthly_wage'] as int,
       itemSalary: (json['item'] as List<dynamic>)
           .map((e) => ItemSalary.fromJson(e as Map<String, dynamic>))
           .toList(),

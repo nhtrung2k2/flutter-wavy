@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:wavy/bloc/cost_list_bloc.dart';
@@ -145,7 +146,7 @@ class _CostListState extends State<CostList> {
                 const SizedBox(height: 8.0,),
                 AddMoreItemsComponents(
                   onAddedNewItem: _addNewItem,
-                  itemList: itemCost.sublist(0, 8),
+                  itemList: itemCost.sublist(4, 8),
                 ),
                 const SizedBox(height: 16.0,),
                 Container(
@@ -228,7 +229,7 @@ class _CostListState extends State<CostList> {
           )
         ],
       ),
-      state.cost?.amount ?? 0,
+      (state.cost?.hourWorking ?? 0) * (state.cost?.hourlyWave ?? 0),
       false);
 
   Widget baseCostItem(Widget content, int price, bool canRemove, {Function? onTap}){
@@ -449,6 +450,7 @@ class _CostListState extends State<CostList> {
 
   _onSubmitSchedule(){
     costListBloc.add(UpdateCostListEvent(amountId: widget.amountId));
+    context.pop();
   }
 
 }

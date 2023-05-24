@@ -7,15 +7,17 @@ class LoadDataConfirmScheduleEvent extends ConfirmScheduleEvent {
 }
 
 class NextMonthEvent extends ConfirmScheduleEvent {
-  NextMonthEvent();
+  final int shiftId;
+  NextMonthEvent({required this.shiftId});
 }
 
 class PrevMonthEvent extends ConfirmScheduleEvent {
-  PrevMonthEvent();
+  final int shiftId;
+  PrevMonthEvent({required this.shiftId});
 }
 
 class CheckItemEvent extends ConfirmScheduleEvent {
-  final int index;
+  final int amountId;
   final bool value;
-  CheckItemEvent({required this.index, required this.value});
+  CheckItemEvent({required this.amountId, required this.value});
 }

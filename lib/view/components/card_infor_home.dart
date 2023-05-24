@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/convertBase64Image.dart';
 import 'package:wavy/utils/resize.dart';
 
 class CardInforHome extends StatelessWidget {
@@ -28,8 +29,8 @@ class CardInforHome extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Image.network(
-              avatar,
+            Image.memory(
+              convertBase64Image(avatar),
               width: 64,
               height: 64,
             ),

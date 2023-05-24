@@ -8,8 +8,8 @@ part 'input_salary.g.dart';
 @freezed
 abstract class InputSalary with _$InputSalary {
   const factory InputSalary(
-          {@JsonKey(name: 'hourly_wage') @Default(0) required int hourlyWage,
-          @JsonKey(name: 'monthly_wage') @Default(0) required int monthlyWage,
+          {@JsonKey(name: 'hourly_wage') required int hourlyWage,
+          @JsonKey(name: 'monthly_wage') required int monthlyWage,
           @JsonKey(name: 'item') required List<ItemSalary> itemSalary}) =
       _InputSalary;
 

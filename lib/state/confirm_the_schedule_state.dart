@@ -1,4 +1,4 @@
-import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/schedule_confirm.dart';
 
 enum InformationStatus {
@@ -15,7 +15,7 @@ enum MonthScheduleStatus{
 }
 
 class ConfirmTheScheduleState {
-  final Employee? employee;
+  final Employee_Detail? employee;
   final int month;
   final int year;
   final List<ScheduleConfirm> scheduleConfirms;
@@ -39,7 +39,7 @@ class ConfirmTheScheduleState {
   );
 
   ConfirmTheScheduleState copyWith({
-    Employee? employee,
+    Employee_Detail? employee,
     int? month,
     int? year,
     List<ScheduleConfirm>? scheduleConfirms,

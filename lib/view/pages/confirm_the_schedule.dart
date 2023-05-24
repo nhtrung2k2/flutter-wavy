@@ -76,7 +76,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
             UserInfoType.name,
             UserInfoType.id
           ],
-          avatarUrl: state.employee?.avatar,
+          avatarBase64: state.employee?.avatar,
           name: state.employee?.name,
           id: state.employee?.id
         )
@@ -91,7 +91,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
         children: [
           IconButton(
             onPressed: (){
-              confirmTheScheduleBloc.add(PrevMonthEvent());
+              confirmTheScheduleBloc.add(PrevMonthEvent(shiftId: widget.shiftId));
             },
             alignment: Alignment.centerLeft,
             icon: const Icon(
@@ -102,7 +102,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
           ),
           Text(
             DateFormat('MMMM yyyy').format(DateTime(state.year, state.month, 1)),
-            style: TextStyle(
+            style: const TextStyle(
               color: CustomColors.bluetext,
               fontSize: 17,
               fontFamily: "Roboto",
@@ -111,7 +111,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
           ),
           IconButton(
             onPressed: (){
-              confirmTheScheduleBloc.add(NextMonthEvent());
+              confirmTheScheduleBloc.add(NextMonthEvent(shiftId: widget.shiftId));
             },
             alignment: Alignment.centerRight,
             icon: const Icon(
@@ -130,7 +130,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
     required String workingTime,
     required int cost,
     required bool isChecked,
-    required int index
+    required int amountId
   }){
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
@@ -183,19 +183,20 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
             ),
           ),
           Text(
-            NumberFormat('###,### VND').format(6500000),
+            NumberFormat('###,### VND').format(cost),
             style: const TextStyle(
               fontFamily: "Roboto",
             ),
           ),
           const SizedBox(width: 10.0,),
           CustomRadiusCheckbox(
+            key: Key(DateTime.now().toIso8601String()),
             value: isChecked,
             width: 20.0,
             height: 20.0,
             iconSize: 15.0,
             onChanged: (value){
-              confirmTheScheduleBloc.add(CheckItemEvent(index: index, value: value));
+              confirmTheScheduleBloc.add(CheckItemEvent(amountId: amountId, value: value));
             },
           )
         ],
@@ -210,20 +211,21 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
         separatorBuilder: (context, int index) => const SizedBox(height: 5.0,),
         itemBuilder: (context, index){
           return GestureDetector(
-            onTap: (){
-              context.goNamed(
+            onTap: () async {
+              await context.pushNamed(
                 'baby_sister_cost_list',
                 queryParams: {
-                  'amountId': '1'
+                  'amountId': '${state.scheduleConfirms[index].amountId}'
                 }
               );
+              confirmTheScheduleBloc.add(LoadDataConfirmScheduleEvent(babysisterId: widget.babysisterId, shiftId: widget.shiftId));
             },
             child: scheduleItem(
                 date: state.scheduleConfirms[index].amountDate,
                 workingTime: state.scheduleConfirms[index].workingTime,
                 cost: state.scheduleConfirms[index].amount,
                 isChecked: state.scheduleConfirms[index].confirmFlag==1,
-                index: index
+                amountId: state.scheduleConfirms[index].amountId
             ),
           );
         }

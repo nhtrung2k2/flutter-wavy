@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/event/payment_event.dart';
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/item.dart';
 import 'package:wavy/model/payment.dart';
 import 'package:wavy/repository/employees_repository.dart';
@@ -29,17 +30,23 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     emit(state);
 
     try {
-      // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
+      Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       Payment paymentData = Payment.fromJson(paymentDummyJson);
+
+      DateTime now = DateTime.now();
+      int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
+      CanPayStatus canPay = paymentData.paymentStatus == 1 ? CanPayStatus.paid : (lastDayOfThisMonth == now.day ? CanPayStatus.payNow : CanPayStatus.beingCalculated);
       List<Item> items = [];
       items.addAll(paymentData.items.map((e) => e.copyWith(
         canRemove: false
       )));
+
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
+        employee: employeeDetail,
         payment: paymentData.copyWith(items: items),
-        paymentStateStatus: PaymentStateStatus.success
+        paymentStateStatus: PaymentStateStatus.success,
+        canPayStatus: canPay
       ));
     } catch (e) {
       emit(state.copyWith(
@@ -61,16 +68,24 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     ));
 
     try {
-      // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
+      Payment paymentData = Payment.fromJson(paymentDummyJson);
+
+      DateTime now = DateTime.now();
+      int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
+      CanPayStatus canPay = paymentData.paymentStatus == 1 ? CanPayStatus.paid : (lastDayOfThisMonth == now.day ? CanPayStatus.payNow : CanPayStatus.beingCalculated);
+      List<Item> items = [];
+      items.addAll(paymentData.items.map((e) => e.copyWith(
+          canRemove: false
+      )));
       emit(state.copyWith(
-          employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
-          payment: Payment.fromJson(paymentDummyJson),
-          paymentStateStatus: PaymentStateStatus.success
+        payment: paymentData.copyWith(items: items),
+        paymentStateStatus: PaymentStateStatus.success,
+        canPayStatus: canPay
       ));
     } catch (e) {
       emit(state.copyWith(
-          paymentStateStatus: PaymentStateStatus.failure
+        paymentStateStatus: PaymentStateStatus.failure
       ));
     }
 

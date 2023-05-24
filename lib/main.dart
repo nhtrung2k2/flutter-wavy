@@ -75,7 +75,10 @@ class MainApp extends StatelessWidget {
                         name: 'register_baby_sister_detail',
                         pageBuilder: (context, state) => MaterialPage(
                             key: state.pageKey,
-                            child: const BabySisterDetail()),
+                            child: BabySisterDetail(
+                              babysisterId: state.queryParams['babysisterId'] ?? '',
+                              shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                            )),
                         routes: [
                           GoRoute(
                               path: 'baby_sister_detail_confirm_schedule',
@@ -96,7 +99,7 @@ class MainApp extends StatelessWidget {
                                         child: BlocProvider.value(
                                           value: ServiceLocator.locator.get<CostListBloc>(),
                                           child: CostList(
-                                            amountId: int.parse(state.queryParams['amountId'] ?? ''),
+                                            amountId: int.parse(state.queryParams['amountId'] ?? '0'),
                                           ),
                                         ))),
                               ]
@@ -109,7 +112,8 @@ class MainApp extends StatelessWidget {
                                     value: ServiceLocator.locator.get<PaymentBloc>(),
                                     child: Payment(
                                       key: state.pageKey,
-                                      shiftId: int.parse(state.queryParams['shift_id'] ?? ''),
+                                      shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                      babysisterId: state.queryParams['babysisterId'] ?? '',
                                     ),
                                   ))),
                           GoRoute(

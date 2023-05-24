@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:wavy/event/confirm_schedule_event.dart';
-import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/schedule_confirm.dart';
 import 'package:wavy/repository/confirm_the_schedule_repository.dart';
@@ -29,11 +28,11 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
     emit(state);
 
     try {
-      // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
-      // List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
+      Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
+      List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
-        scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
+        employee: employeeDetail,
+        scheduleConfirms: scheduleConfirms,
         informationStatus: InformationStatus.success,
         monthScheduleStatus: MonthScheduleStatus.success
       ));
@@ -54,9 +53,9 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
     emit(state.nextMonth());
 
     try {
-      //await function to get schedule data
+      List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
       emit(state.copyWith(
-          scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
+          scheduleConfirms: scheduleConfirms,
           monthScheduleStatus: MonthScheduleStatus.success
       ));
     } catch (_) {
@@ -75,9 +74,9 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
     emit(state.prevMonth());
 
     try {
-      //await function to get schedule data
+      List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
       emit(state.copyWith(
-          scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
+          scheduleConfirms: scheduleConfirms,
           monthScheduleStatus: MonthScheduleStatus.success
       ));
     } catch (_) {
@@ -93,15 +92,17 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       Emitter<ConfirmTheScheduleState> emit,
       ) async {
 
+    String message = await _confirmTheScheduleRepository.updateConfirmFlag(event.amountId);
+
     List<ScheduleConfirm> confirms = [];
-    for(int i = 0; i < state.scheduleConfirms.length; i++){
-      if(i == event.index){
-        confirms.add(state.scheduleConfirms[i].copyWith(
+    for(ScheduleConfirm s in state.scheduleConfirms){
+      if(s.amountId == event.amountId){
+        confirms.add(s.copyWith(
           confirmFlag: event.value ? 1 : 0
         ));
       }
       else{
-        confirms.add(state.scheduleConfirms[i]);
+        confirms.add(s);
       }
     }
 
@@ -112,32 +113,3 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
   }
 
 }
-
-const confirmScheduleDummyData = {
-  "schedule_list": [
-    {
-      "amount_id": 1,
-      "amount_date": "Wed, 04/10/2023",
-      "working_time": "10:00 ～ 18:00",
-      "amount": 600000,
-      "confirm_flag": 1,
-      "payment_status" : 0
-    },
-    {
-      "amount_id": 2,
-      "amount_date": "Wed, 04/10/2023",
-      "working_time": "10:00 ～ 18:00",
-      "amount": 600000,
-      "confirm_flag": 1,
-      "payment_status" : 0
-    },
-    {
-      "amount_id": 3,
-      "amount_date": "Wed, 04/10/2023",
-      "working_time": "10:00 ～ 18:00",
-      "amount": 600000,
-      "confirm_flag": 0,
-      "payment_status" : 0
-    }
-  ]
-};

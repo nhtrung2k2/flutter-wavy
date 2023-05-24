@@ -15,23 +15,42 @@ import 'package:wavy/view/components/custom_text.dart';
 import '../../model/employee.dart';
 
 class BabySisterDetail extends StatelessWidget {
-  const BabySisterDetail({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  const BabySisterDetail({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(
+    return Scaffold(
+      appBar: const CustomAppBar(
           nameTitle: "BabySister Detail",
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: BabySisterDetailForm(),
+      body: BabySisterDetailForm(
+        babysisterId: babysisterId,
+        shiftId: shiftId,
+      ),
     );
   }
 }
 
 class BabySisterDetailForm extends StatelessWidget {
-  const BabySisterDetailForm({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  const BabySisterDetailForm({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +64,10 @@ class BabySisterDetailForm extends StatelessWidget {
           ),
           Expanded(
             flex: 4,
-            child: CardInforDetail(),
+            child: CardInforDetail(
+              babysisterId: babysisterId,
+              shiftId: shiftId,
+            ),
           ),
         ],
       ),
@@ -54,7 +76,15 @@ class BabySisterDetailForm extends StatelessWidget {
 }
 
 class CardInforDetail extends StatelessWidget {
-  CardInforDetail({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  CardInforDetail({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
   final details = [
     {"icon": null, "title": "Confirm the schedule", "colorText": Colors.black},
     {"icon": null, "title": "Payments", "colorText": Colors.black},
@@ -95,8 +125,8 @@ class CardInforDetail extends StatelessWidget {
                             context.goNamed(
                                 'baby_sister_detail_confirm_schedule',
                                 queryParams: {
-                                  'babysisterId': '1',
-                                  'shiftId': '1'
+                                  'babysisterId': babysisterId,
+                                  'shiftId': '$shiftId'
                                 }
                             );
                           }
@@ -104,7 +134,8 @@ class CardInforDetail extends StatelessWidget {
                             context.goNamed(
                               'baby_sister_payment',
                               queryParams: {
-                                'shift_id': '1'
+                                'babysisterId': babysisterId,
+                                'shiftId': '$shiftId'
                               }
                             );
                           }
