@@ -10,11 +10,13 @@ class AddMoreItemsComponents extends StatefulWidget{
   final bool isFilledColor;
   final Function(int, int, int) onAddedNewItem;
   final List itemList;
+  final bool enable;
 
   const AddMoreItemsComponents({
     this.isFilledColor = false,
     required this.onAddedNewItem,
     required this.itemList,
+    this.enable = true,
     Key? key
   }) : super(key: key);
 
@@ -155,15 +157,17 @@ class _AddMoreItemsComponentsState extends State<AddMoreItemsComponents> {
                 title: '+ Add more item',
                 vertical: 0,
                 horizontal: 0,
-                textColor: widget.isFilledColor ? Colors.white : CustomColors.bluetext,
+                textColor: widget.enable ? (widget.isFilledColor ? Colors.white : CustomColors.bluetext) : CustomColors.blueLight,
                 backgroundColor: widget.isFilledColor ? CustomColors.bluetext : Colors.transparent,
-                borderSideColor:  widget.isFilledColor ? Colors.transparent : CustomColors.blueBorder,
+                borderSideColor:  widget.enable ? (widget.isFilledColor ? Colors.transparent : CustomColors.blueBorder) : CustomColors.blueLight,
                 borderRadius: 10.0,
                 widthRadius: 1,
                 onPressed: (){
-                  setState((){
-                    _isAdding = true;
-                  });
+                  if(widget.enable){
+                    setState((){
+                      _isAdding = true;
+                    });
+                  }
                 }
             ),
           ),

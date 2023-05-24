@@ -167,13 +167,14 @@ class _PaymentState extends State<Payment> {
                 Column(
                   children: (paymentState.payment?.items ?? []).map((item) => Padding(
                     padding: EdgeInsets.only(bottom: paymentState.payment!.items.last == item ? 0.0 : 16.0),
-                    child: _item(item, (paymentState.payment?.items ?? []).indexOf(item)),
+                    child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
                   )).toList(),
                 ),
                 const SizedBox(
                   height: 16.0,
                 ),
                 AddMoreItemsComponents(
+                  enable: paymentState.canPayStatus == CanPayStatus.payNow,
                   onAddedNewItem: _addNewItem,
                   itemList: itemCost.sublist(8),
                 )
@@ -255,7 +256,7 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Widget _item(Item item, int index){
+  Widget _item(Item item, int index, bool canCheck){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -278,7 +279,7 @@ class _PaymentState extends State<Payment> {
                   CustomRadiusCheckbox(
                     key: Key(DateTime.now().toIso8601String()),
                     value: item.includeInPayment == 1,
-                    enable: item.canRemove,
+                    enable: canCheck,
                     onChanged: (value){
                       paymentBloc.add(IncludeInPaymentEvent(index: index, value: value));
                     },

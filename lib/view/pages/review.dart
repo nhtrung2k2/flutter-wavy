@@ -83,7 +83,9 @@ class _ReviewState extends State<Review> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserInfo(
+                    reviewState.reviewStateStatus == ReviewStateStatus.initing
+                    ? const Center(child: CircularProgressIndicator(),)
+                    : UserInfo(
                       infoType: const [UserInfoType.avatar, UserInfoType.name, UserInfoType.id],
                       avatarBase64: reviewState.employee?.avatar ?? '',
                       name: reviewState.employee?.name ?? '',

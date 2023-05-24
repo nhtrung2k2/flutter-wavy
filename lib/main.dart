@@ -124,8 +124,8 @@ class MainApp extends StatelessWidget {
                                     value: ServiceLocator.locator.get<ReviewBloc>(),
                                     child: Review(
                                       key: state.pageKey,
-                                      shiftId: int.parse(state.queryParams['shift_id'] ?? '0'),
-                                      babysistterId: state.queryParams['babysistter_id'] ?? '',
+                                      shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                      babysistterId: state.queryParams['babysisterId'] ?? '',
                                     ),
                                   ))),
                         ]

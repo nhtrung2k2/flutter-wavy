@@ -143,8 +143,8 @@ class CardInforDetail extends StatelessWidget {
                             context.goNamed(
                                 'baby_sister_review',
                               queryParams: {
-                                'shift_id': '1',
-                                'babysistter_id': '1'
+                                'babysisterId': babysisterId,
+                                'shiftId': '$shiftId'
                               }
                             );
                           }

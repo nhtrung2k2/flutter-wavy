@@ -1,4 +1,4 @@
-import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/review.dart';
 
 enum ReviewStateStatus {
@@ -11,7 +11,7 @@ enum ReviewStateStatus {
 }
 
 class ReviewState {
-  final Employee? employee;
+  final Employee_Detail? employee;
   final Review review;
   final ReviewStateStatus reviewStateStatus;
   const ReviewState({
@@ -26,7 +26,7 @@ class ReviewState {
   );
 
   ReviewState copyWith({
-    Employee? employee,
+    Employee_Detail? employee,
     Review? review,
     ReviewStateStatus? reviewStateStatus
   }) {

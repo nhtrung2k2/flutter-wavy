@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/event/review_event.dart';
-import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/review.dart';
 import 'package:wavy/repository/employees_repository.dart';
 import 'package:wavy/repository/review_repository.dart';
@@ -31,9 +31,9 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     emit(state);
 
     try {
-      // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysistterId);
+      Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysistterId);
       emit(state.copyWith(
-        employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
+        employee: employeeDetail,
         reviewStateStatus: ReviewStateStatus.inited
       ));
     } catch (e) {
