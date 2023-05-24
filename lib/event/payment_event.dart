@@ -15,3 +15,15 @@ class IncludeInPaymentEvent extends PaymentEvent {
   final bool value;
   IncludeInPaymentEvent({required this.index, required this.value});
 }
+
+class AddItemEvent extends PaymentEvent {
+  final int itemId;
+  final int price;
+  final int optionId;
+  AddItemEvent({required this.itemId, required this.price, required this.optionId});
+}
+
+class RemoveItemEvent extends PaymentEvent {
+  final int index;
+  RemoveItemEvent({required this.index});
+}

@@ -21,7 +21,7 @@ ScheduleConfirm _$ScheduleConfirmFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ScheduleConfirm {
   @JsonKey(name: 'amount_id')
-  String get amountId => throw _privateConstructorUsedError;
+  int get amountId => throw _privateConstructorUsedError;
   @JsonKey(name: 'amount_date')
   String get amountDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'working_time')
@@ -46,7 +46,7 @@ abstract class $ScheduleConfirmCopyWith<$Res> {
       _$ScheduleConfirmCopyWithImpl<$Res, ScheduleConfirm>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'amount_id') String amountId,
+      {@JsonKey(name: 'amount_id') int amountId,
       @JsonKey(name: 'amount_date') String amountDate,
       @JsonKey(name: 'working_time') String workingTime,
       @JsonKey(name: 'amount') int amount,
@@ -78,7 +78,7 @@ class _$ScheduleConfirmCopyWithImpl<$Res, $Val extends ScheduleConfirm>
       amountId: null == amountId
           ? _value.amountId
           : amountId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       amountDate: null == amountDate
           ? _value.amountDate
           : amountDate // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$$_ScheduleConfirmCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'amount_id') String amountId,
+      {@JsonKey(name: 'amount_id') int amountId,
       @JsonKey(name: 'amount_date') String amountDate,
       @JsonKey(name: 'working_time') String workingTime,
       @JsonKey(name: 'amount') int amount,
@@ -142,7 +142,7 @@ class __$$_ScheduleConfirmCopyWithImpl<$Res>
       amountId: null == amountId
           ? _value.amountId
           : amountId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       amountDate: null == amountDate
           ? _value.amountDate
           : amountDate // ignore: cast_nullable_to_non_nullable
@@ -183,7 +183,7 @@ class _$_ScheduleConfirm implements _ScheduleConfirm {
 
   @override
   @JsonKey(name: 'amount_id')
-  final String amountId;
+  final int amountId;
   @override
   @JsonKey(name: 'amount_date')
   final String amountDate;
@@ -244,7 +244,7 @@ class _$_ScheduleConfirm implements _ScheduleConfirm {
 
 abstract class _ScheduleConfirm implements ScheduleConfirm {
   const factory _ScheduleConfirm(
-          {@JsonKey(name: 'amount_id') required final String amountId,
+          {@JsonKey(name: 'amount_id') required final int amountId,
           @JsonKey(name: 'amount_date') required final String amountDate,
           @JsonKey(name: 'working_time') required final String workingTime,
           @JsonKey(name: 'amount') required final int amount,
@@ -257,7 +257,7 @@ abstract class _ScheduleConfirm implements ScheduleConfirm {
 
   @override
   @JsonKey(name: 'amount_id')
-  String get amountId;
+  int get amountId;
   @override
   @JsonKey(name: 'amount_date')
   String get amountDate;

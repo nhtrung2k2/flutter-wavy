@@ -33,7 +33,7 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       // List<ScheduleConfirm> scheduleConfirms = await _confirmTheScheduleRepository.fetchScheduleConfirm(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
       emit(state.copyWith(
         employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
-        schedule: [false, false, false, false, false, false, false, false, false, false, false, false, false],
+        scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
         informationStatus: InformationStatus.success,
         monthScheduleStatus: MonthScheduleStatus.success
       ));
@@ -51,13 +51,12 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       Emitter<ConfirmTheScheduleState> emit,
       ) async {
 
-
     emit(state.nextMonth());
 
     try {
       //await function to get schedule data
       emit(state.copyWith(
-          schedule: [false, false, false, false, false, false, false, false, false, false, false, false, false],
+          scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
           monthScheduleStatus: MonthScheduleStatus.success
       ));
     } catch (_) {
@@ -73,13 +72,12 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       Emitter<ConfirmTheScheduleState> emit,
       ) async {
 
-
     emit(state.prevMonth());
 
     try {
       //await function to get schedule data
       emit(state.copyWith(
-          schedule: [false, false, false, false, false, false, false, false, false, false, false, false, false],
+          scheduleConfirms: (confirmScheduleDummyData['schedule_list'] as List).map((e) => ScheduleConfirm.fromJson(e)).toList(),
           monthScheduleStatus: MonthScheduleStatus.success
       ));
     } catch (_) {
@@ -95,8 +93,51 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
       Emitter<ConfirmTheScheduleState> emit,
       ) async {
 
-    emit(state.checkItem(event.index, event.value));
+    List<ScheduleConfirm> confirms = [];
+    for(int i = 0; i < state.scheduleConfirms.length; i++){
+      if(i == event.index){
+        confirms.add(state.scheduleConfirms[i].copyWith(
+          confirmFlag: event.value ? 1 : 0
+        ));
+      }
+      else{
+        confirms.add(state.scheduleConfirms[i]);
+      }
+    }
+
+    emit(state.copyWith(
+      scheduleConfirms: confirms
+    ));
 
   }
 
 }
+
+const confirmScheduleDummyData = {
+  "schedule_list": [
+    {
+      "amount_id": 1,
+      "amount_date": "Wed, 04/10/2023",
+      "working_time": "10:00 ～ 18:00",
+      "amount": 600000,
+      "confirm_flag": 1,
+      "payment_status" : 0
+    },
+    {
+      "amount_id": 2,
+      "amount_date": "Wed, 04/10/2023",
+      "working_time": "10:00 ～ 18:00",
+      "amount": 600000,
+      "confirm_flag": 1,
+      "payment_status" : 0
+    },
+    {
+      "amount_id": 3,
+      "amount_date": "Wed, 04/10/2023",
+      "working_time": "10:00 ～ 18:00",
+      "amount": 600000,
+      "confirm_flag": 0,
+      "payment_status" : 0
+    }
+  ]
+};

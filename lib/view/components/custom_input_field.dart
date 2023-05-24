@@ -9,7 +9,7 @@ enum InputType{
   dropdown
 }
 
-class CustomInputField extends StatelessWidget{
+class CustomInputField extends StatefulWidget{
 
   final InputType inputType;
   final TextEditingController? controller;
@@ -18,7 +18,10 @@ class CustomInputField extends StatelessWidget{
   final String? verticalLabel;
   final bool isRequiredField;
   final int maxLines;
-  final Function(String)? onChanged;
+  final Function(dynamic)? onChanged;
+  final List<InputDropdownItem>? dropdownItemList;
+  final bool isNoDecoration;
+  final Widget? child;
 
   const CustomInputField({
     this.controller,
@@ -29,8 +32,19 @@ class CustomInputField extends StatelessWidget{
     this.maxLines = 1,
     this.isRequiredField = false,
     this.onChanged,
+    this.dropdownItemList,
+    this.isNoDecoration = false,
+    this.child,
     Key? key
   }) : super(key: key);
+
+  @override
+  State<CustomInputField> createState() => _CustomInputFieldState();
+}
+
+class _CustomInputFieldState extends State<CustomInputField> {
+
+  InputDropdownItem? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +58,12 @@ class CustomInputField extends StatelessWidget{
     );
 
     List<TextInputFormatter> inputFormatter = [];
-    if(inputType==InputType.number){
+    if(widget.inputType==InputType.number){
       inputFormatter = [
         FilteringTextInputFormatter.digitsOnly,
       ];
     }
-    else if(inputType==InputType.currency){
+    else if(widget.inputType==InputType.currency){
       inputFormatter = [
         FilteringTextInputFormatter.digitsOnly,
         _ThousandsSeparatorInputFormatter(),
@@ -61,14 +75,14 @@ class CustomInputField extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Visibility(
-          visible: verticalLabel!=null,
+          visible: widget.verticalLabel!=null,
           child: Column(
             children: [
               RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: verticalLabel ?? '',
+                      text: widget.verticalLabel ?? '',
                       style: const TextStyle(
                           color: CustomColors.gray,
                           fontSize: 14,
@@ -92,18 +106,20 @@ class CustomInputField extends StatelessWidget{
             ],
           ),
         ),
-        TextFormField(
-          controller: controller,
-          textAlign: textAlign ?? (inputType == InputType.currency ? TextAlign.end : TextAlign.start),
+        widget.inputType == InputType.dropdown
+        ? _showPopupMenu(widget.dropdownItemList ?? [])
+        : TextFormField(
+          controller: widget.controller,
+          textAlign: widget.textAlign ?? (widget.inputType == InputType.currency ? TextAlign.end : TextAlign.start),
           inputFormatters: inputFormatter,
-          maxLines: maxLines,
+          maxLines: widget.maxLines,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 14,
             fontFamily: "Roboto",
           ),
           decoration: InputDecoration(
-            suffix: inputType==InputType.currency
+            suffix: widget.inputType==InputType.currency
               ? const Text(
                 'VND',
                 style: TextStyle(
@@ -111,7 +127,7 @@ class CustomInputField extends StatelessWidget{
                 ),
               )
               : null,
-            hintText: hintText,
+            hintText: widget.hintText,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
             enabledBorder: textFieldBorder,
@@ -119,10 +135,56 @@ class CustomInputField extends StatelessWidget{
             border: textFieldBorder
           ),
           onChanged: (value){
-            if(onChanged!=null) onChanged!(value);
+            if(widget.onChanged!=null) widget.onChanged!(value);
           },
         ),
       ],
+    );
+  }
+
+  _showPopupMenu(List<InputDropdownItem> list){
+    return PopupMenuButton<InputDropdownItem>(
+      onSelected: (item){
+        setState((){
+          _selectedItem = item;
+        });
+        if(widget.onChanged!=null) widget.onChanged!(item);
+      },
+      itemBuilder: (BuildContext context) => list.map((item) => PopupMenuItem<InputDropdownItem>(
+        value: item,
+        child: Text(item.content),
+      )).toList(),
+      child: widget.child ?? Container(
+        height: 35.0,
+        padding: const EdgeInsets.only(left: 10.0, right: 4.0),
+        decoration: widget.isNoDecoration
+          ? null
+          : BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: CustomColors.blueBorder,
+              width: 1.0
+            )
+          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                _selectedItem?.content ?? '',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontFamily: "Roboto",
+                ),
+              )
+            ),
+            Visibility(
+              visible: !widget.isNoDecoration,
+              child: const Icon(Icons.keyboard_arrow_down)
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -168,4 +230,13 @@ class _ThousandsSeparatorInputFormatter extends TextInputFormatter {
 
     return newValue;
   }
+}
+
+class InputDropdownItem {
+  dynamic id;
+  dynamic content;
+  InputDropdownItem({
+    required this.id,
+    required this.content
+  });
 }

@@ -7,6 +7,7 @@ import 'package:wavy/event/confirm_schedule_event.dart';
 import 'package:wavy/state/confirm_the_schedule_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
+import 'package:wavy/view/components/custom_radius_checkbox.dart';
 import 'package:wavy/view/components/personal_information/user_info.dart';
 
 class ConfirmTheSchedule extends StatefulWidget {
@@ -51,13 +52,17 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
           const SizedBox(height: 16.0,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _babysisterInformationSection(confirmTheScheduleState)
+            child: confirmTheScheduleState.inforStatus==InformationStatus.loading
+              ? const Center(child: CircularProgressIndicator(),)
+              : _babysisterInformationSection(confirmTheScheduleState)
           ),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: _monthYearSelector(confirmTheScheduleState),
           ),
-          _listSchedule(confirmTheScheduleState)
+          confirmTheScheduleState.monthScheduleStatus==MonthScheduleStatus.loading
+            ? const Center(child: CircularProgressIndicator(),)
+            : _listSchedule(confirmTheScheduleState)
         ],
       ),
     );
@@ -121,9 +126,8 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
   }
 
   Widget scheduleItem({
-    required DateTime date,
-    required String startTime,
-    required String endTime,
+    required String date,
+    required String workingTime,
     required int cost,
     required bool isChecked,
     required int index
@@ -149,7 +153,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat('EE dd/MM/yyyy').format(date),
+                  date,
                   style: const TextStyle(
                       color: CustomColors.grayLight,
                       fontSize: 13,
@@ -157,7 +161,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
                   ),
                 ),
                 Text(
-                  '$startTime ~ $endTime',
+                  workingTime,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -166,9 +170,9 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
+                  child: const Text(
                     'View cost',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: CustomColors.bluetext,
                       decoration: TextDecoration.underline,
                       fontFamily: "Roboto",
@@ -180,15 +184,19 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
           ),
           Text(
             NumberFormat('###,### VND').format(6500000),
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: "Roboto",
             ),
           ),
-          Checkbox(
+          const SizedBox(width: 10.0,),
+          CustomRadiusCheckbox(
             value: isChecked,
+            width: 20.0,
+            height: 20.0,
+            iconSize: 15.0,
             onChanged: (value){
-              confirmTheScheduleBloc.add(CheckItemEvent(index: index, value: value ?? false));
-            }
+              confirmTheScheduleBloc.add(CheckItemEvent(index: index, value: value));
+            },
           )
         ],
       ),
@@ -198,7 +206,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
   Widget _listSchedule(ConfirmTheScheduleState state){
     return Expanded(
       child: ListView.separated(
-        itemCount: state.schedule.length,
+        itemCount: state.scheduleConfirms.length,
         separatorBuilder: (context, int index) => const SizedBox(height: 5.0,),
         itemBuilder: (context, index){
           return GestureDetector(
@@ -211,11 +219,10 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
               );
             },
             child: scheduleItem(
-                date: DateTime(2023, 10, 04),
-                startTime: '09:00',
-                endTime: '12:00',
-                cost: 6500000,
-                isChecked: state.schedule[index],
+                date: state.scheduleConfirms[index].amountDate,
+                workingTime: state.scheduleConfirms[index].workingTime,
+                cost: state.scheduleConfirms[index].amount,
+                isChecked: state.scheduleConfirms[index].confirmFlag==1,
                 index: index
             ),
           );

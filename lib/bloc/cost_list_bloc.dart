@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wavy/event/cost_list_event.dart';
 import 'package:wavy/model/cost.dart';
+import 'package:wavy/model/item.dart';
 import 'package:wavy/repository/cost_list_repository.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/state/cost_list_state.dart';
@@ -20,6 +21,8 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     on<UploadImagesEvent>(_onUploadImages);
     on<RemoveImageEvent>(_onRemoveImage);
     on<UpdateCostListEvent>(_onUpdateCostList);
+    on<AddItemEvent>(_onAddNewItem);
+    on<RemoveItemEvent>(_onRemoveItem);
   }
 
   Future<void> _onFetchingData(
@@ -114,14 +117,14 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     ));
 
     try {
-      
-      List<dynamic> images = [];
+      List<String> images = [];
+
       for(var image in state.getImages()){
         if(image.runtimeType == XFile){
           images.add('data:image/png;base64,${base64Encode(await (image as XFile).readAsBytes())}');
         }
         else{
-          images.add(image);
+          images.add('$image');
         }
       }
 
@@ -141,6 +144,40 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
           costListStatus: CostListStatus.failedUpdated
       ));
     }
+
+  }
+
+  Future<void> _onAddNewItem(
+      AddItemEvent event,
+      Emitter<CostListState> emit,
+      ) async {
+
+    List<Item> items = [];
+    items.addAll(state.cost?.items ?? []);
+    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: event.price, option: event.optionId));
+    
+    emit(state.copyWith(
+      cost: state.cost!.copyWith(
+        items: items
+      )
+    ));
+
+  }
+
+  Future<void> _onRemoveItem(
+      RemoveItemEvent event,
+      Emitter<CostListState> emit,
+      ) async {
+
+    List<Item> items = [];
+    items.addAll(state.cost?.items ?? []);
+    items.removeAt(event.index);
+
+    emit(state.copyWith(
+        cost: state.cost!.copyWith(
+            items: items
+        )
+    ));
 
   }
 

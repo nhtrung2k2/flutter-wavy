@@ -26,8 +26,11 @@ mixin _$Item {
   String get itemName => throw _privateConstructorUsedError;
   @JsonKey(name: 'item_amount')
   int get itemAmount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'option')
+  int get option => throw _privateConstructorUsedError;
   @JsonKey(name: 'include_in_payment', nullable: true)
   int? get includeInPayment => throw _privateConstructorUsedError;
+  bool get canRemove => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,8 +49,11 @@ abstract class $ItemCopyWith<$Res> {
           String itemName,
       @JsonKey(name: 'item_amount')
           int itemAmount,
+      @JsonKey(name: 'option')
+          int option,
       @JsonKey(name: 'include_in_payment', nullable: true)
-          int? includeInPayment});
+          int? includeInPayment,
+      bool canRemove});
 }
 
 /// @nodoc
@@ -66,7 +72,9 @@ class _$ItemCopyWithImpl<$Res, $Val extends Item>
     Object? itemId = null,
     Object? itemName = null,
     Object? itemAmount = null,
+    Object? option = null,
     Object? includeInPayment = freezed,
+    Object? canRemove = null,
   }) {
     return _then(_value.copyWith(
       itemId: null == itemId
@@ -81,10 +89,18 @@ class _$ItemCopyWithImpl<$Res, $Val extends Item>
           ? _value.itemAmount
           : itemAmount // ignore: cast_nullable_to_non_nullable
               as int,
+      option: null == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int,
       includeInPayment: freezed == includeInPayment
           ? _value.includeInPayment
           : includeInPayment // ignore: cast_nullable_to_non_nullable
               as int?,
+      canRemove: null == canRemove
+          ? _value.canRemove
+          : canRemove // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -102,8 +118,11 @@ abstract class _$$_ItemCopyWith<$Res> implements $ItemCopyWith<$Res> {
           String itemName,
       @JsonKey(name: 'item_amount')
           int itemAmount,
+      @JsonKey(name: 'option')
+          int option,
       @JsonKey(name: 'include_in_payment', nullable: true)
-          int? includeInPayment});
+          int? includeInPayment,
+      bool canRemove});
 }
 
 /// @nodoc
@@ -118,7 +137,9 @@ class __$$_ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res, _$_Item>
     Object? itemId = null,
     Object? itemName = null,
     Object? itemAmount = null,
+    Object? option = null,
     Object? includeInPayment = freezed,
+    Object? canRemove = null,
   }) {
     return _then(_$_Item(
       itemId: null == itemId
@@ -133,10 +154,18 @@ class __$$_ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res, _$_Item>
           ? _value.itemAmount
           : itemAmount // ignore: cast_nullable_to_non_nullable
               as int,
+      option: null == option
+          ? _value.option
+          : option // ignore: cast_nullable_to_non_nullable
+              as int,
       includeInPayment: freezed == includeInPayment
           ? _value.includeInPayment
           : includeInPayment // ignore: cast_nullable_to_non_nullable
               as int?,
+      canRemove: null == canRemove
+          ? _value.canRemove
+          : canRemove // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -148,11 +177,14 @@ class _$_Item implements _Item {
       {@JsonKey(name: 'item_id')
           required this.itemId,
       @JsonKey(name: 'item_name')
-          required this.itemName,
+          this.itemName = '',
       @JsonKey(name: 'item_amount')
           required this.itemAmount,
+      @JsonKey(name: 'option')
+          this.option = 1,
       @JsonKey(name: 'include_in_payment', nullable: true)
-          this.includeInPayment});
+          this.includeInPayment,
+      this.canRemove = true});
 
   factory _$_Item.fromJson(Map<String, dynamic> json) => _$$_ItemFromJson(json);
 
@@ -166,12 +198,18 @@ class _$_Item implements _Item {
   @JsonKey(name: 'item_amount')
   final int itemAmount;
   @override
+  @JsonKey(name: 'option')
+  final int option;
+  @override
   @JsonKey(name: 'include_in_payment', nullable: true)
   final int? includeInPayment;
+  @override
+  @JsonKey()
+  final bool canRemove;
 
   @override
   String toString() {
-    return 'Item(itemId: $itemId, itemName: $itemName, itemAmount: $itemAmount, includeInPayment: $includeInPayment)';
+    return 'Item(itemId: $itemId, itemName: $itemName, itemAmount: $itemAmount, option: $option, includeInPayment: $includeInPayment, canRemove: $canRemove)';
   }
 
   @override
@@ -184,14 +222,17 @@ class _$_Item implements _Item {
                 other.itemName == itemName) &&
             (identical(other.itemAmount, itemAmount) ||
                 other.itemAmount == itemAmount) &&
+            (identical(other.option, option) || other.option == option) &&
             (identical(other.includeInPayment, includeInPayment) ||
-                other.includeInPayment == includeInPayment));
+                other.includeInPayment == includeInPayment) &&
+            (identical(other.canRemove, canRemove) ||
+                other.canRemove == canRemove));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, itemId, itemName, itemAmount, includeInPayment);
+  int get hashCode => Object.hash(runtimeType, itemId, itemName, itemAmount,
+      option, includeInPayment, canRemove);
 
   @JsonKey(ignore: true)
   @override
@@ -212,11 +253,14 @@ abstract class _Item implements Item {
       {@JsonKey(name: 'item_id')
           required final int itemId,
       @JsonKey(name: 'item_name')
-          required final String itemName,
+          final String itemName,
       @JsonKey(name: 'item_amount')
           required final int itemAmount,
+      @JsonKey(name: 'option')
+          final int option,
       @JsonKey(name: 'include_in_payment', nullable: true)
-          final int? includeInPayment}) = _$_Item;
+          final int? includeInPayment,
+      final bool canRemove}) = _$_Item;
 
   factory _Item.fromJson(Map<String, dynamic> json) = _$_Item.fromJson;
 
@@ -230,8 +274,13 @@ abstract class _Item implements Item {
   @JsonKey(name: 'item_amount')
   int get itemAmount;
   @override
+  @JsonKey(name: 'option')
+  int get option;
+  @override
   @JsonKey(name: 'include_in_payment', nullable: true)
   int? get includeInPayment;
+  @override
+  bool get canRemove;
   @override
   @JsonKey(ignore: true)
   _$$_ItemCopyWith<_$_Item> get copyWith => throw _privateConstructorUsedError;

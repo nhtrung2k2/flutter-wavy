@@ -17,6 +17,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<LoadPaymentDataEvent>(_onLoadData);
     on<ChangeMonthEvent>(_onChangeMonth);
     on<IncludeInPaymentEvent>(_onIncludeItemInPayment);
+    on<AddItemEvent>(_onAddNewItem);
+    on<RemoveItemEvent>(_onRemoveItem);
   }
 
   Future<void> _onLoadData(
@@ -29,9 +31,14 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     try {
       // Employee_Detail employee_detail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
       // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
+      Payment paymentData = Payment.fromJson(paymentDummyJson);
+      List<Item> items = [];
+      items.addAll(paymentData.items.map((e) => e.copyWith(
+        canRemove: false
+      )));
       emit(state.copyWith(
         employee: Employee(id: '1', name: 'Test Babysister', age: '30', city: 'Ho Chi Minh', shiftId: 1, cancel__contract_date: DateTime(2025, 01, 01)),
-        payment: Payment.fromJson(paymentDummyJson),
+        payment: paymentData.copyWith(items: items),
         paymentStateStatus: PaymentStateStatus.success
       ));
     } catch (e) {
@@ -91,6 +98,40 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       payment: state.payment?.copyWith(
         items: items
       )
+    ));
+
+  }
+
+  Future<void> _onAddNewItem(
+      AddItemEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
+    List<Item> items = [];
+    items.addAll(state.payment?.items ?? []);
+    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: event.price, option: event.optionId));
+
+    emit(state.copyWith(
+        payment: state.payment!.copyWith(
+            items: items
+        )
+    ));
+
+  }
+
+  Future<void> _onRemoveItem(
+      RemoveItemEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
+    List<Item> items = [];
+    items.addAll(state.payment?.items ?? []);
+    items.removeAt(event.index);
+
+    emit(state.copyWith(
+        payment: state.payment!.copyWith(
+            items: items
+        )
     ));
 
   }

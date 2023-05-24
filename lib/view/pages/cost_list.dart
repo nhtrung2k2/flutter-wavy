@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:wavy/bloc/cost_list_bloc.dart';
 import 'package:wavy/event/cost_list_event.dart';
+import 'package:wavy/model/item.dart';
 import 'package:wavy/state/cost_list_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/view/components/add_more_items_components/add_more_items_component.dart';
@@ -39,7 +40,7 @@ class _CostListState extends State<CostList> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       costListBloc.stream.listen((state) {
         if(state.costListStatus == CostListStatus.failedUploadImageMore3){
-          _showPopup();
+          _showPopup(context);
         }
         else if(state.costListStatus == CostListStatus.updated){
           _showToast('Success');
@@ -51,7 +52,7 @@ class _CostListState extends State<CostList> {
     });
   }
 
-  _showPopup(){
+  _showPopup(context){
     CustomDialog().show(
       context,
       title: 'Upload image failed',
@@ -126,19 +127,26 @@ class _CostListState extends State<CostList> {
                 workingTimeCost(costListState),
                 const SizedBox(height: 16.0,),
                 Column(
-                  children: costListState.cost?.items.map((item) => Column(
-                    children: [
-                      singleCostItem(
-                          item.itemName,
-                          item.itemAmount,
-                          canRemove: true
-                      ),
-                      const SizedBox(height: 16.0,),
-                    ],
-                  )).toList() ?? [],
+                  children: List.generate(
+                      (costListState.cost?.items ?? []).length,
+                      (index) => Column(
+                        children: [
+                          singleCostItem(
+                            (costListState.cost?.items ?? [])[index].itemName,
+                            (costListState.cost?.items ?? [])[index].itemAmount,
+                            index: index,
+                            canRemove: true,
+                          ),
+                          const SizedBox(height: 16.0,),
+                        ],
+                      )
+                  )
                 ),
                 const SizedBox(height: 8.0,),
-                const AddMoreItemsComponents(),
+                AddMoreItemsComponents(
+                  onAddedNewItem: _addNewItem,
+                  itemList: itemCost.sublist(0, 8),
+                ),
                 const SizedBox(height: 16.0,),
                 Container(
                   width: double.infinity,
@@ -181,7 +189,7 @@ class _CostListState extends State<CostList> {
     );
   }
 
-  Widget singleCostItem(String content, int price, {bool canRemove = false}) => baseCostItem(
+  Widget singleCostItem(String content, int price, {bool canRemove = false, int index = -1}) => baseCostItem(
       Text(
         content,
         style: const TextStyle(
@@ -190,7 +198,12 @@ class _CostListState extends State<CostList> {
           fontFamily: "Roboto",
         ),
       ),
-      price, canRemove);
+      price,
+      canRemove,
+      onTap: (){
+        if(canRemove) costListBloc.add(RemoveItemEvent(index: index));
+      }
+  );
 
   Widget workingTimeCost(CostListState state) => baseCostItem(
       Column(
@@ -218,7 +231,7 @@ class _CostListState extends State<CostList> {
       state.cost?.amount ?? 0,
       false);
 
-  Widget baseCostItem(Widget content, int price, bool canRemove){
+  Widget baseCostItem(Widget content, int price, bool canRemove, {Function? onTap}){
     return Row(
       children: [
         Expanded(child: content),
@@ -237,21 +250,30 @@ class _CostListState extends State<CostList> {
           width: 22,
           child: Visibility(
             visible: canRemove,
-            child: Container(
-              decoration: BoxDecoration(
-                color: CustomColors.redText,
-                borderRadius: BorderRadius.circular(3.0)
-              ),
-              child: const Icon(
-                Icons.horizontal_rule,
-                color: Colors.white,
-                size: 18,
+            child: GestureDetector(
+              onTap: (){
+                if(onTap!=null) onTap();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: CustomColors.redText,
+                  borderRadius: BorderRadius.circular(3.0)
+                ),
+                child: const Icon(
+                  Icons.horizontal_rule,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
             )
           ),
         )
       ],
     );
+  }
+
+  _addNewItem(int itemId, int price, int optionId){
+    costListBloc.add(AddItemEvent(itemId: itemId, price: price, optionId: optionId));
   }
 
   Widget _uploadImage(CostListState state){

@@ -1,4 +1,5 @@
 import 'package:wavy/model/employee.dart';
+import 'package:wavy/model/schedule_confirm.dart';
 
 enum InformationStatus {
   loading,
@@ -17,14 +18,14 @@ class ConfirmTheScheduleState {
   final Employee? employee;
   final int month;
   final int year;
-  final List<bool> schedule;
+  final List<ScheduleConfirm> scheduleConfirms;
   final InformationStatus inforStatus;
   final MonthScheduleStatus monthScheduleStatus;
   const ConfirmTheScheduleState({
     required this.employee,
     required this.month,
     required this.year,
-    required this.schedule,
+    required this.scheduleConfirms,
     required this.inforStatus,
     required this.monthScheduleStatus
   });
@@ -32,7 +33,7 @@ class ConfirmTheScheduleState {
     employee: null,
     month: DateTime.now().month,
     year: DateTime.now().year,
-    schedule: [],
+    scheduleConfirms: [],
     inforStatus: InformationStatus.loading,
     monthScheduleStatus: MonthScheduleStatus.loading
   );
@@ -41,7 +42,7 @@ class ConfirmTheScheduleState {
     Employee? employee,
     int? month,
     int? year,
-    List<bool>? schedule,
+    List<ScheduleConfirm>? scheduleConfirms,
     InformationStatus? informationStatus,
     MonthScheduleStatus? monthScheduleStatus
   }) {
@@ -49,7 +50,7 @@ class ConfirmTheScheduleState {
       employee: employee ?? this.employee,
       month: month ?? this.month,
       year: year ?? this.year,
-      schedule: schedule ?? this.schedule,
+      scheduleConfirms: scheduleConfirms ?? this.scheduleConfirms,
       inforStatus: informationStatus ?? inforStatus,
       monthScheduleStatus: monthScheduleStatus ?? this.monthScheduleStatus
     );
@@ -63,25 +64,13 @@ class ConfirmTheScheduleState {
     return _monthChange(-1);
   }
 
-  checkItem(int index, bool value){
-    schedule[index] = value;
-    return ConfirmTheScheduleState(
-        employee: employee,
-        month: month,
-        year: year,
-        schedule: schedule,
-        inforStatus: inforStatus,
-        monthScheduleStatus: MonthScheduleStatus.success
-    );
-  }
-
   _monthChange(int del){
     var m = month + del;
     return ConfirmTheScheduleState(
         employee: employee,
         month: m == 0 ? 12 : (m == 13 ? 1 : m),
         year: m == 0 ? year - 1 : (m == 13 ? year + 1: year),
-        schedule: schedule,
+        scheduleConfirms: scheduleConfirms,
         inforStatus: inforStatus,
         monthScheduleStatus: MonthScheduleStatus.loading
     );

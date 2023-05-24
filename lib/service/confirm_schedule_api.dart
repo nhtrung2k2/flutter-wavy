@@ -32,7 +32,7 @@ class ScheduleConfirmApi {
       );
 
       if (response.statusCode == 200) {
-        final data = response.data;
+        final data = response.data['schedule_list'];
         final confirmScheudles = data.map((json) => ScheduleConfirm.fromJson(json)).toList();
         return confirmScheudles;
       } else {

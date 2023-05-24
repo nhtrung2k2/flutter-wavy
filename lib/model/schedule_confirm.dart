@@ -8,7 +8,7 @@ part 'schedule_confirm.g.dart';
 abstract class ScheduleConfirm with _$ScheduleConfirm {
   const factory ScheduleConfirm({
       @JsonKey(name: 'amount_id')
-      required String amountId,
+      required int amountId,
       @JsonKey(name: 'amount_date')
       required String amountDate,
       @JsonKey(name: 'working_time')

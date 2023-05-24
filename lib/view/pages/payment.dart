@@ -171,7 +171,10 @@ class _PaymentState extends State<Payment> {
                 const SizedBox(
                   height: 16.0,
                 ),
-                const AddMoreItemsComponents()
+                AddMoreItemsComponents(
+                  onAddedNewItem: _addNewItem,
+                  itemList: itemCost.sublist(8),
+                )
               ],
             ),
           ),
@@ -259,6 +262,7 @@ class _PaymentState extends State<Payment> {
                 children: [
                   CustomRadiusCheckbox(
                     value: item.includeInPayment == 1,
+                    enable: item.canRemove,
                     onChanged: (value){
                       paymentBloc.add(IncludeInPaymentEvent(index: index, value: value));
                     },
@@ -286,8 +290,36 @@ class _PaymentState extends State<Payment> {
             fontFamily: "Roboto",
           ),
         ),
+        const SizedBox(width: 10.0,),
+        SizedBox(
+          height: 22,
+          width: 22,
+          child: Visibility(
+              visible: item.canRemove,
+              child: GestureDetector(
+                onTap: (){
+                  paymentBloc.add(RemoveItemEvent(index: index));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: CustomColors.redText,
+                      borderRadius: BorderRadius.circular(3.0)
+                  ),
+                  child: const Icon(
+                    Icons.horizontal_rule,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              )
+          ),
+        )
       ],
     );
+  }
+
+  _addNewItem(int itemId, int price, int optionId){
+    paymentBloc.add(AddItemEvent(itemId: itemId, price: price, optionId: optionId));
   }
 
 }

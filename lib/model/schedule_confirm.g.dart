@@ -8,7 +8,7 @@ part of 'schedule_confirm.dart';
 
 _$_ScheduleConfirm _$$_ScheduleConfirmFromJson(Map<String, dynamic> json) =>
     _$_ScheduleConfirm(
-      amountId: json['amount_id'] as String,
+      amountId: json['amount_id'] as int,
       amountDate: json['amount_date'] as String,
       workingTime: json['working_time'] as String,
       amount: json['amount'] as int,
