@@ -27,7 +27,9 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     Emitter<PaymentState> emit,
   ) async {
 
-    emit(state);
+    emit(state.copyWith(
+      paymentStateStatus: PaymentStateStatus.loading
+    ));
 
     try {
       Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId);

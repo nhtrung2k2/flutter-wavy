@@ -25,7 +25,10 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
     Emitter<ConfirmTheScheduleState> emit,
   ) async {
 
-    emit(state);
+    emit(state.copyWith(
+      informationStatus: InformationStatus.loading,
+      monthScheduleStatus: MonthScheduleStatus.loading
+    ));
 
     try {
       Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId);

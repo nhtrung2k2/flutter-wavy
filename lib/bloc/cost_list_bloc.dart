@@ -30,7 +30,9 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     Emitter<CostListState> emit,
   ) async {
 
-    emit(state);
+    emit(state.copyWith(
+      costListStatus: CostListStatus.loading
+    ));
 
     try {
 
