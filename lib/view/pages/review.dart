@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/event/review_event.dart';
@@ -51,9 +52,23 @@ class _ReviewState extends State<Review> {
       reviewBloc.stream.listen((state) {
         if(state.reviewStateStatus == ReviewStateStatus.submitted){
           _showToast('Successfully');
+          if(mounted) context.pop();
         }
         else if(state.reviewStateStatus == ReviewStateStatus.cannotSubmit){
           _showToast('Failed');
+        }
+
+        if(state.validateStatus == ReviewValidateStatus.emptyName){
+          _showToast('Empty Name');
+        }
+        else if(state.validateStatus == ReviewValidateStatus.startDateFormat){
+          _showToast('Invalid Start Date');
+        }
+        else if(state.validateStatus == ReviewValidateStatus.endDateFormat){
+          _showToast('Invalid End Date');
+        }
+        else if(state.validateStatus == ReviewValidateStatus.emptyOverallComment){
+          _showToast('Empty Overall Comment');
         }
       });
     });
@@ -371,25 +386,14 @@ class _ReviewState extends State<Review> {
 
   _submit(){
 
-    DateTime now = DateTime.now();
-
-    DateTime dateStart = DateTime(
-        int.tryParse(fromYearTextController.text) ?? now.year,
-        int.tryParse(fromMonthTextController.text) ?? now.month,
-        int.tryParse(fromDayTextController.text) ?? now.day
-    );
-
-    DateTime dateEnd = DateTime(
-        int.tryParse(toYearTextController.text) ?? now.year,
-        int.tryParse(toMonthTextController.text) ?? now.month,
-        int.tryParse(toDayTextController.text) ?? now.day
-    );
+    String dateStart = '${fromYearTextController.text}-${fromMonthTextController.text}-${fromDayTextController.text}';
+    String dateEnd = '${toYearTextController.text}-${toMonthTextController.text}-${toDayTextController.text}';
 
     reviewBloc.add(SubmitEvent(
       babysistterId: widget.babysistterId,
       name: nameTextController.text,
-      dateStart: DateFormat('yyyy-MM-dd').format(dateStart),
-      dateEnd: DateFormat('yyyy-MM-dd').format(dateEnd),
+      dateStart: dateStart,
+      dateEnd: dateEnd,
       overallComment: overallEvaluationTextController.text,
       babysisttingComment: petcareTextController.text,
       cleanningComment: cleaningTextController.text,

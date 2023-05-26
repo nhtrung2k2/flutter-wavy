@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:wavy/event/review_event.dart';
 import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/review.dart';
@@ -28,7 +29,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     Emitter<ReviewState> emit,
   ) async {
 
-    emit(state);
+    emit(state.copyWith(
+      review: const Review(),
+      reviewStateStatus: ReviewStateStatus.initing,
+      validateStatus: ReviewValidateStatus.empty
+    ));
 
     try {
       Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysistterId);
@@ -87,13 +92,32 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
   }
 
+  ReviewValidateStatus validate(Review review){
+    if(review.name==null || review.name!.isEmpty) return ReviewValidateStatus.emptyName;
+    try{
+      DateFormat('yyyy-MM-dd').parseStrict(review.dateStart ?? '');
+    }
+    catch(e){
+      return ReviewValidateStatus.startDateFormat;
+    }
+    try{
+      DateFormat('yyyy-MM-dd').parseStrict(review.dateEnd ?? '');
+    }
+    catch(e){
+      return ReviewValidateStatus.endDateFormat;
+    }
+    if(review.overallComment.isEmpty) return ReviewValidateStatus.emptyOverallComment;
+    return ReviewValidateStatus.done;
+  }
+
   Future<void> _onSubmit(
       SubmitEvent event,
       Emitter<ReviewState> emit,
       ) async {
 
     emit(state.copyWith(
-        reviewStateStatus: ReviewStateStatus.submitting
+        reviewStateStatus: ReviewStateStatus.submitting,
+        validateStatus: ReviewValidateStatus.empty
     ));
 
     Review review = state.review.copyWith(
@@ -109,21 +133,32 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       communicationComment: event.communicationComment
     );
 
-    try {
-      Response response = await _reviewRepository.createReview(review, event.babysistterId);
-      if(response.statusCode==200){
-        emit(state.copyWith(
-            reviewStateStatus: ReviewStateStatus.submitted
-        ));
-      }
-      else{
+    ReviewValidateStatus validateStatus = validate(review);
+    if(validateStatus==ReviewValidateStatus.done){
+      try {
+        Response response = await _reviewRepository.createReview(review.copyWith(
+            dateStart: DateFormat('yyyy-MM-dd').format(DateFormat('yyyy-MM-dd').parse(review.dateStart!)),
+            dateEnd: DateFormat('yyyy-MM-dd').format(DateFormat('yyyy-MM-dd').parse(review.dateEnd!)),
+        ), event.babysistterId);
+        if(response.statusCode==200){
+          emit(state.copyWith(
+              reviewStateStatus: ReviewStateStatus.submitted
+          ));
+        }
+        else{
+          emit(state.copyWith(
+              reviewStateStatus: ReviewStateStatus.cannotSubmit
+          ));
+        }
+      } catch (e) {
         emit(state.copyWith(
             reviewStateStatus: ReviewStateStatus.cannotSubmit
         ));
       }
-    } catch (e) {
+    }
+    else{
       emit(state.copyWith(
-          reviewStateStatus: ReviewStateStatus.cannotSubmit
+          validateStatus: validateStatus
       ));
     }
 
