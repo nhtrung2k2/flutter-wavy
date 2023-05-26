@@ -26,6 +26,8 @@ class ConfirmTheScheduleBloc extends Bloc<ConfirmScheduleEvent, ConfirmTheSchedu
   ) async {
 
     emit(state.copyWith(
+      year: DateTime.now().year,
+      month: DateTime.now().month,
       informationStatus: InformationStatus.loading,
       monthScheduleStatus: MonthScheduleStatus.loading
     ));
