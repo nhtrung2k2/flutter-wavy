@@ -407,8 +407,12 @@ class _CostListState extends State<CostList> {
           ),
           CupertinoActionSheetAction(
             child: const Text('Camera'),
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
+              XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+              List<XFile> listImages = [];
+              if(image!=null) listImages.add(image);
+              costListBloc.add(UploadImagesEvent(files: listImages));
             },
           )
         ],
