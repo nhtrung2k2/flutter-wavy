@@ -20,11 +20,13 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Payment {
+  @JsonKey(name: 'payment_id')
+  int get paymentId => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_month')
   String get paymentMonth => throw _privateConstructorUsedError;
   @JsonKey(name: 'labour_cost')
   int get labourCost => throw _privateConstructorUsedError;
-  @JsonKey(name: 'hour_woking')
+  @JsonKey(name: 'hour_working')
   int get hourWorking => throw _privateConstructorUsedError;
   @JsonKey(name: 'hourly_wage')
   int get hourlyWage => throw _privateConstructorUsedError;
@@ -46,9 +48,10 @@ abstract class $PaymentCopyWith<$Res> {
       _$PaymentCopyWithImpl<$Res, Payment>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'payment_month') String paymentMonth,
+      {@JsonKey(name: 'payment_id') int paymentId,
+      @JsonKey(name: 'payment_month') String paymentMonth,
       @JsonKey(name: 'labour_cost') int labourCost,
-      @JsonKey(name: 'hour_woking') int hourWorking,
+      @JsonKey(name: 'hour_working') int hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWage,
       @JsonKey(name: 'payment_amount') int paymentAmount,
       @JsonKey(name: 'payment_status') int paymentStatus,
@@ -68,6 +71,7 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? paymentId = null,
     Object? paymentMonth = null,
     Object? labourCost = null,
     Object? hourWorking = null,
@@ -77,6 +81,10 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
     Object? items = null,
   }) {
     return _then(_value.copyWith(
+      paymentId: null == paymentId
+          ? _value.paymentId
+          : paymentId // ignore: cast_nullable_to_non_nullable
+              as int,
       paymentMonth: null == paymentMonth
           ? _value.paymentMonth
           : paymentMonth // ignore: cast_nullable_to_non_nullable
@@ -117,9 +125,10 @@ abstract class _$$_PaymentCopyWith<$Res> implements $PaymentCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'payment_month') String paymentMonth,
+      {@JsonKey(name: 'payment_id') int paymentId,
+      @JsonKey(name: 'payment_month') String paymentMonth,
       @JsonKey(name: 'labour_cost') int labourCost,
-      @JsonKey(name: 'hour_woking') int hourWorking,
+      @JsonKey(name: 'hour_working') int hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWage,
       @JsonKey(name: 'payment_amount') int paymentAmount,
       @JsonKey(name: 'payment_status') int paymentStatus,
@@ -136,6 +145,7 @@ class __$$_PaymentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? paymentId = null,
     Object? paymentMonth = null,
     Object? labourCost = null,
     Object? hourWorking = null,
@@ -145,6 +155,10 @@ class __$$_PaymentCopyWithImpl<$Res>
     Object? items = null,
   }) {
     return _then(_$_Payment(
+      paymentId: null == paymentId
+          ? _value.paymentId
+          : paymentId // ignore: cast_nullable_to_non_nullable
+              as int,
       paymentMonth: null == paymentMonth
           ? _value.paymentMonth
           : paymentMonth // ignore: cast_nullable_to_non_nullable
@@ -181,9 +195,10 @@ class __$$_PaymentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Payment implements _Payment {
   const _$_Payment(
-      {@JsonKey(name: 'payment_month') required this.paymentMonth,
+      {@JsonKey(name: 'payment_id') required this.paymentId,
+      @JsonKey(name: 'payment_month') required this.paymentMonth,
       @JsonKey(name: 'labour_cost') required this.labourCost,
-      @JsonKey(name: 'hour_woking') required this.hourWorking,
+      @JsonKey(name: 'hour_working') required this.hourWorking,
       @JsonKey(name: 'hourly_wage') required this.hourlyWage,
       @JsonKey(name: 'payment_amount') required this.paymentAmount,
       @JsonKey(name: 'payment_status') required this.paymentStatus,
@@ -194,13 +209,16 @@ class _$_Payment implements _Payment {
       _$$_PaymentFromJson(json);
 
   @override
+  @JsonKey(name: 'payment_id')
+  final int paymentId;
+  @override
   @JsonKey(name: 'payment_month')
   final String paymentMonth;
   @override
   @JsonKey(name: 'labour_cost')
   final int labourCost;
   @override
-  @JsonKey(name: 'hour_woking')
+  @JsonKey(name: 'hour_working')
   final int hourWorking;
   @override
   @JsonKey(name: 'hourly_wage')
@@ -222,7 +240,7 @@ class _$_Payment implements _Payment {
 
   @override
   String toString() {
-    return 'Payment(paymentMonth: $paymentMonth, labourCost: $labourCost, hourWorking: $hourWorking, hourlyWage: $hourlyWage, paymentAmount: $paymentAmount, paymentStatus: $paymentStatus, items: $items)';
+    return 'Payment(paymentId: $paymentId, paymentMonth: $paymentMonth, labourCost: $labourCost, hourWorking: $hourWorking, hourlyWage: $hourlyWage, paymentAmount: $paymentAmount, paymentStatus: $paymentStatus, items: $items)';
   }
 
   @override
@@ -230,6 +248,8 @@ class _$_Payment implements _Payment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Payment &&
+            (identical(other.paymentId, paymentId) ||
+                other.paymentId == paymentId) &&
             (identical(other.paymentMonth, paymentMonth) ||
                 other.paymentMonth == paymentMonth) &&
             (identical(other.labourCost, labourCost) ||
@@ -249,6 +269,7 @@ class _$_Payment implements _Payment {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      paymentId,
       paymentMonth,
       labourCost,
       hourWorking,
@@ -273,9 +294,10 @@ class _$_Payment implements _Payment {
 
 abstract class _Payment implements Payment {
   const factory _Payment(
-      {@JsonKey(name: 'payment_month') required final String paymentMonth,
+      {@JsonKey(name: 'payment_id') required final int paymentId,
+      @JsonKey(name: 'payment_month') required final String paymentMonth,
       @JsonKey(name: 'labour_cost') required final int labourCost,
-      @JsonKey(name: 'hour_woking') required final int hourWorking,
+      @JsonKey(name: 'hour_working') required final int hourWorking,
       @JsonKey(name: 'hourly_wage') required final int hourlyWage,
       @JsonKey(name: 'payment_amount') required final int paymentAmount,
       @JsonKey(name: 'payment_status') required final int paymentStatus,
@@ -284,13 +306,16 @@ abstract class _Payment implements Payment {
   factory _Payment.fromJson(Map<String, dynamic> json) = _$_Payment.fromJson;
 
   @override
+  @JsonKey(name: 'payment_id')
+  int get paymentId;
+  @override
   @JsonKey(name: 'payment_month')
   String get paymentMonth;
   @override
   @JsonKey(name: 'labour_cost')
   int get labourCost;
   @override
-  @JsonKey(name: 'hour_woking')
+  @JsonKey(name: 'hour_working')
   int get hourWorking;
   @override
   @JsonKey(name: 'hourly_wage')

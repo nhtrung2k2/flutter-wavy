@@ -6,7 +6,11 @@ import 'package:wavy/model/payment.dart';
 enum PaymentStateStatus {
   loading,
   success,
-  failure
+  failure,
+  emptyPayment,
+  paying,
+  paid,
+  payFailed
 }
 
 enum CanPayStatus{

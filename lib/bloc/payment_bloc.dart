@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:wavy/event/payment_event.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/employee_detail.dart';
@@ -20,6 +21,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<IncludeInPaymentEvent>(_onIncludeItemInPayment);
     on<AddItemEvent>(_onAddNewItem);
     on<RemoveItemEvent>(_onRemoveItem);
+    on<PayEvent>(_onPay);
   }
 
   Future<void> _onLoadData(
@@ -28,13 +30,16 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   ) async {
 
     emit(state.copyWith(
+      month: DateTime.now().month,
+      year: DateTime.now().year,
       paymentStateStatus: PaymentStateStatus.loading
     ));
 
     try {
       Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId);
-      // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
-      Payment paymentData = Payment.fromJson(paymentDummyJson);
+      emit(state.copyWith(employee: employeeDetail));
+
+      Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
 
       DateTime now = DateTime.now();
       int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
@@ -45,15 +50,21 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       )));
 
       emit(state.copyWith(
-        employee: employeeDetail,
         payment: paymentData.copyWith(items: items),
         paymentStateStatus: PaymentStateStatus.success,
         canPayStatus: canPay
       ));
     } catch (e) {
-      emit(state.copyWith(
-        paymentStateStatus: PaymentStateStatus.failure
-      ));
+      if(e.toString().contains('EMPTY_PAYMENT')){
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.emptyPayment
+        ));
+      }
+      else{
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.failure
+        ));
+      }
     }
 
   }
@@ -70,8 +81,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     ));
 
     try {
-      // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
-      Payment paymentData = Payment.fromJson(paymentDummyJson);
+      Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
 
       DateTime now = DateTime.now();
       int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
@@ -86,9 +96,16 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         canPayStatus: canPay
       ));
     } catch (e) {
-      emit(state.copyWith(
-        paymentStateStatus: PaymentStateStatus.failure
-      ));
+      if(e.toString().contains('EMPTY_PAYMENT')){
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.emptyPayment
+        ));
+      }
+      else{
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.failure
+        ));
+      }
     }
 
   }
@@ -153,27 +170,21 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
 
   }
 
-}
+  Future<void> _onPay(
+      PayEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
 
-const paymentDummyJson = {
-  "payment_month": "2023-05",
-  "labour_cost": 8000000,
-  "hour_woking": 8,
-  "hourly_wage": 50000,
-  "payment_amount": 600000,
-  "payment_status" : 0,
-  "items": [
-    {
-      "item_id": 8,
-      "item_name": "Tet bonus",
-      "item_amount": 500000,
-      "include_in_payment" : 0
-    },
-    {
-      "item_id": 9,
-      "item_name": "Contract-end bonus",
-      "item_amount": 500000,
-      "include_in_payment" : 1
-    },
-  ]
-};
+    emit(state.copyWith(paymentStateStatus: PaymentStateStatus.paying));
+
+    try {
+      await _paymentRepository.updateItemPayment(state.payment!);
+
+      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.paid));
+    } catch (e) {
+      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.payFailed));
+    }
+
+  }
+
+}

@@ -8,11 +8,13 @@ part 'payment.g.dart';
 @freezed
 abstract class Payment with _$Payment {
   const factory Payment({
+      @JsonKey(name: 'payment_id')
+      required int paymentId,
       @JsonKey(name: 'payment_month')
       required String paymentMonth,
       @JsonKey(name: 'labour_cost')
       required int labourCost,
-      @JsonKey(name: 'hour_woking')
+      @JsonKey(name: 'hour_working')
       required int hourWorking,
       @JsonKey(name: 'hourly_wage')
       required int hourlyWage,

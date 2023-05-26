@@ -7,9 +7,10 @@ part of 'payment.dart';
 // **************************************************************************
 
 _$_Payment _$$_PaymentFromJson(Map<String, dynamic> json) => _$_Payment(
+      paymentId: json['payment_id'] as int,
       paymentMonth: json['payment_month'] as String,
       labourCost: json['labour_cost'] as int,
-      hourWorking: json['hour_woking'] as int,
+      hourWorking: json['hour_working'] as int,
       hourlyWage: json['hourly_wage'] as int,
       paymentAmount: json['payment_amount'] as int,
       paymentStatus: json['payment_status'] as int,
@@ -20,9 +21,10 @@ _$_Payment _$$_PaymentFromJson(Map<String, dynamic> json) => _$_Payment(
 
 Map<String, dynamic> _$$_PaymentToJson(_$_Payment instance) =>
     <String, dynamic>{
+      'payment_id': instance.paymentId,
       'payment_month': instance.paymentMonth,
       'labour_cost': instance.labourCost,
-      'hour_woking': instance.hourWorking,
+      'hour_working': instance.hourWorking,
       'hourly_wage': instance.hourlyWage,
       'payment_amount': instance.paymentAmount,
       'payment_status': instance.paymentStatus,

@@ -8,7 +8,8 @@ class LoadPaymentDataEvent extends PaymentEvent {
 
 class ChangeMonthEvent extends PaymentEvent {
   final DateTime dateTime;
-  ChangeMonthEvent({required this.dateTime});
+  final int shiftId;
+  ChangeMonthEvent({required this.shiftId, required this.dateTime});
 }
 
 class IncludeInPaymentEvent extends PaymentEvent {
@@ -27,4 +28,8 @@ class AddItemEvent extends PaymentEvent {
 class RemoveItemEvent extends PaymentEvent {
   final int index;
   RemoveItemEvent({required this.index});
+}
+
+class PayEvent extends PaymentEvent {
+  PayEvent();
 }

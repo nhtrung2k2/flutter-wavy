@@ -114,55 +114,58 @@ class _PaymentState extends State<Payment> {
                 const SizedBox(height: 16.0,),
                 _payButton(paymentState),
                 const SizedBox(height: 16.0,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Labour cost',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontFamily: "Roboto",
-                            ),
+                Visibility(
+                  visible: paymentState.paymentStateStatus != PaymentStateStatus.emptyPayment,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 32.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Labour cost',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: "Roboto",
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0,),
+                                Text(
+                                  'Hourly wage: ${paymentState.payment?.hourlyWage ?? 0}',
+                                  style: const TextStyle(
+                                    color: CustomColors.gray,
+                                    fontSize: 14,
+                                    fontFamily: "Roboto",
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0,),
+                                Text(
+                                  '20 days - ${paymentState.payment?.hourWorking ?? 0} hours',
+                                  style: const TextStyle(
+                                    color: CustomColors.gray,
+                                    fontSize: 14,
+                                    fontFamily: "Roboto",
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                        Text(
+                          NumberFormat('###,###').format(paymentState.payment?.labourCost ?? 0),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: "Roboto",
                           ),
-                          const SizedBox(height: 8.0,),
-                          Text(
-                            'Hourly wage: ${paymentState.payment?.hourlyWage ?? 0}',
-                            style: const TextStyle(
-                              color: CustomColors.gray,
-                              fontSize: 14,
-                              fontFamily: "Roboto",
-                            ),
-                          ),
-                          const SizedBox(height: 8.0,),
-                          Text(
-                            '20 days - ${paymentState.payment?.hourWorking ?? 0} hours',
-                            style: const TextStyle(
-                              color: CustomColors.gray,
-                              fontSize: 14,
-                              fontFamily: "Roboto",
-                            ),
-                          ),
-                        ],
-                      )
+                        ),
+                      ],
                     ),
-                    Text(
-                      NumberFormat('###,###').format(paymentState.payment?.labourCost ?? 0),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontFamily: "Roboto",
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 32.0,
+                  )
                 ),
                 Column(
                   children: (paymentState.payment?.items ?? []).map((item) => Padding(
@@ -201,7 +204,10 @@ class _PaymentState extends State<Payment> {
             initialDateTime: DateTime.now(),
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (DateTime newDate) {
-              paymentBloc.add(ChangeMonthEvent(dateTime: newDate));
+              paymentBloc.add(ChangeMonthEvent(
+                shiftId: widget.shiftId,
+                dateTime: newDate
+              ));
             },
           ),
         ),
@@ -211,7 +217,11 @@ class _PaymentState extends State<Payment> {
 
   Widget _payButton(PaymentState state){
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        if(state.canPayStatus == CanPayStatus.payNow){
+          paymentBloc.add(PayEvent());
+        }
+      },
       child: Container(
         height: 35,
         width: double.infinity,

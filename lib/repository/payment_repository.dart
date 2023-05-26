@@ -15,4 +15,13 @@ class PaymentRepository {
       throw e.toString();
     }
   }
+
+  Future<void> updateItemPayment(Payment payment) async {
+    try {
+      await _paymentApi.updateItemPayment(payment: payment);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
 }
