@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
 import 'package:wavy/bloc/cost_list_bloc.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
+import 'package:wavy/bloc/employee_change_setting.dart';
+import 'package:wavy/bloc/employee_detail.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/payment_bloc.dart';
 import 'package:wavy/bloc/review_bloc.dart';
@@ -17,20 +19,22 @@ import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/confirm_schedule_api.dart';
 import 'package:wavy/service/cost_list_api.dart';
 import 'package:wavy/service/employeesApi.dart';
-import 'package:wavy/service/payment_api.dart';
-import 'package:wavy/service/review_api.dart';
+import 'package:wavy/service/user_api.dart';
 
 import '../../bloc/employee_search_bloc.dart';
 import '../../bloc/salary_bloc.dart';
 import '../../bloc/schedule_cubic.dart';
+import '../../bloc/user_infor_setting.dart';
 
 class ServiceLocator {
   static final locator = GetIt.instance;
   static void registerAll() {
     locator.registerSingletonAsync<SharedPreferences>(
         () async => await SharedPreferences.getInstance());
+
     locator.registerSingleton<Dio>(Dio());
     locator.registerSingleton<AuthApi>(AuthApi());
+    locator.registerSingleton<UserApi>(UserApi());
     locator.registerSingletonWithDependencies<UserRepository>(
         () => UserRepository(),
         dependsOn: [SharedPreferences]);
@@ -41,7 +45,9 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<EmployeesRepository>(
         () => EmployeesRepository(locator.get<SharedPreferences>()),
         dependsOn: [SharedPreferences]);
-
+    locator.registerSingletonWithDependencies<EmployeeDetailBloc>(
+        () => EmployeeDetailBloc(locator.get<EmployeesRepository>()),
+        dependsOn: [EmployeesRepository]);
     locator.registerSingletonWithDependencies<EmployeeBloc>(
         () => EmployeeBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
@@ -55,24 +61,8 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<SalaryBloc>(
         () => SalaryBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
-
-    locator.registerSingleton<ScheduleConfirmApi>(ScheduleConfirmApi());
-    locator.registerSingleton<ConfirmTheScheduleRepository>(ConfirmTheScheduleRepository());
-    locator.registerSingletonWithDependencies<ConfirmTheScheduleBloc>(
-        () => ConfirmTheScheduleBloc(locator.get<EmployeesRepository>()),
-        dependsOn: [EmployeesRepository]);
-    locator.registerSingleton<CostListApi>(CostListApi());
-    locator.registerSingleton<CostListRepository>(CostListRepository());
-    locator.registerSingleton<CostListBloc>(CostListBloc());
-    locator.registerSingleton<PaymentApi>(PaymentApi());
-    locator.registerSingleton<PaymentRepository>(PaymentRepository());
-    locator.registerSingletonWithDependencies<PaymentBloc>(
-        () => PaymentBloc(locator.get<EmployeesRepository>()),
-        dependsOn: [EmployeesRepository]);
-    locator.registerSingleton<ReviewApi>(ReviewApi());
-    locator.registerSingleton<ReviewRepository>(ReviewRepository());
-    locator.registerSingletonWithDependencies<ReviewBloc>(
-        () => ReviewBloc(locator.get<EmployeesRepository>()),
+    locator.registerSingletonWithDependencies<EmployeeChangeSettingBloc>(
+        () => EmployeeChangeSettingBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
   }
 }

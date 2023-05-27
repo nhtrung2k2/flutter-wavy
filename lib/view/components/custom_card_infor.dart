@@ -7,10 +7,14 @@ import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/view/pages/baby_sister_detail.dart';
 
 import '../../state/employee_search_state.dart';
+import 'custom_column_infor.dart';
 
 class CustomCardInfor extends StatelessWidget {
-  const CustomCardInfor({super.key});
-
+  const CustomCardInfor(
+      {super.key, required this.name, required this.avatar, required this.id});
+  final String name;
+  final String avatar;
+  final String id;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -19,23 +23,12 @@ class CustomCardInfor extends StatelessWidget {
         borderRadius: BorderRadius.circular(16), //<-- SEE HERE
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            BlocProvider.value(
-              value: ServiceLocator.locator.get<EmployeeSearchBloc>(),
-              child: Builder(builder: (context) {
-                return ColumnInfor(
-                  employee: context
-                      .select((EmployeeSearchBloc bloc) =>
-                          (bloc.state as SubmittedSuccess))
-                      .employeeDetail,
-                );
-              }),
-            )
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.all(16),
+          child: ColumnInfor(
+            name: name,
+            avatar: avatar,
+            id: id,
+          )),
     );
   }
 }

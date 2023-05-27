@@ -11,6 +11,7 @@ import '../../bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer' as devtool;
 
+import '../../service/getit/service_locator.dart';
 import '../../utils/form_submission_status.dart';
 
 class LoginPage extends StatelessWidget {
@@ -23,12 +24,12 @@ class LoginPage extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Error"),
-            content: Text(
+            title: const Text("Error"),
+            content: const Text(
                 "The email or password you entered is incorrect. Please try again."),
             actions: [
               TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   context.pop();
                 },
@@ -73,12 +74,6 @@ typedef StringValidator = String? Function();
 
 class LoginForm extends StatelessWidget {
   LoginForm({super.key});
-
-  List<String> languageimages = const [
-    "assets/images/england-flag.png",
-    "assets/images/japan-flag.png",
-    "assets/images/vietnam-flag.png"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -147,32 +142,56 @@ class LoginForm extends StatelessWidget {
         content: "Create new account",
         onPressed: () {},
       ),
-      SizedBox(
-        height: 60,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: languageimages.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return IconButton(
-                      iconSize: 50,
-                      onPressed: () {
-                        bloc.add(LanguageChanged(
-                            language:
-                                convertFlagToLanguage(languageimages[index])));
-                      },
-                      icon: Image.asset(
-                        languageimages[index],
-                      ));
-                }),
-          ],
-        ),
+      Flags(
+        height: 20,
+        width: 30,
       )
     ]));
+  }
+}
+
+class Flags extends StatelessWidget {
+  Flags({super.key, required this.height, required this.width});
+  final double height;
+  final double width;
+  final List<String> languageimages = const [
+    "assets/images/england-flag.png",
+    "assets/images/japan-flag.png",
+    "assets/images/vietnam-flag.png"
+  ];
+  final LoginBloc bloc = ServiceLocator.locator.get<LoginBloc>();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: languageimages.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                return IconButton(
+                    iconSize: 30,
+                    onPressed: () {
+                      bloc.add(LanguageChanged(
+                          language:
+                              convertFlagToLanguage(languageimages[index])));
+                    },
+                    icon: Image.asset(
+                      fit: BoxFit.cover,
+                      height: height,
+                      width: width,
+                      languageimages[index],
+                    ));
+              }),
+        ],
+      ),
+    );
   }
 }
 

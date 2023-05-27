@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/service/getit/service_locator.dart';
@@ -28,6 +30,7 @@ class AuthApi {
         final user = User.fromJson(data['user']);
         final prefs =
             await ServiceLocator.locator.getAsync<SharedPreferences>();
+
         prefs.setString('token', data['token']);
         prefs.setString('language', language);
         prefs.setString('userId', user.id);
@@ -36,8 +39,18 @@ class AuthApi {
         throw Exception(response.statusMessage);
       }
     } catch (e) {
-      devtool.log(e.toString());
+      // devtool.log(e.toString());
       throw e.toString();
     }
+  }
+
+  Future<String?> getUserId() async {
+    final sharedPreferences = ServiceLocator.locator.get<SharedPreferences>();
+    final jsonString = sharedPreferences.getString("userId");
+    if (jsonString != null) {
+      final String userId = jsonDecode(jsonString);
+      return userId;
+    }
+    return null;
   }
 }

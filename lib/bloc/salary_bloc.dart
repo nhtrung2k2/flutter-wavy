@@ -10,7 +10,7 @@ import 'dart:developer' as devtool;
 class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   final EmployeesRepository _employeesRepository;
   SalaryBloc(this._employeesRepository) : super(SalaryInputState.initial()) {
-    // on<InitialFetch>(_fetchInputSalary);
+    on<InitialFetch>(_fetchInputSalary);
     on<OnChangedWage>(_onChangeWage);
     on<AddItem>(_addItem);
     on<OnChangedOption>(_onChangedOption);
@@ -26,6 +26,10 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   //     emit(state.copywith(inputSalary: inputSalary));
   //   }
   // }
+  Future<void> _fetchInputSalary(
+      InitialFetch event, Emitter<SalaryInputState> emit) async {
+    emit(state.copywith(inputSalary: event.inputSalary));
+  }
 
   Future<void> _onChangeValueItem(
     OnChangedValueItem event,
@@ -90,7 +94,7 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   ) async {
     try {
       emit(state.copywith(formStatus: FormSubmissionStatus.formsubmitting));
-      await _employeesRepository.saveInputSalaryToCache(state.inputSalary);
+      // await _employeesRepository.saveInputSalaryToCache(state.inputSalary);
       // devtool.log(state.toString());
       // devtool.log(state.inputSalary.toString());
       // devtool.log(state.inputSalary.itemSalary.toString());

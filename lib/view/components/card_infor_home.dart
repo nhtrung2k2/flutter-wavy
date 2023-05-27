@@ -33,6 +33,7 @@ class CardInforHome extends StatelessWidget {
               convertBase64Image(avatar),
               width: 64,
               height: 64,
+              fit: BoxFit.cover,
             ),
             SizedBox(width: 10.resizewidth(context)),
             Column(
@@ -61,7 +62,7 @@ class CardInforHome extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
-                    "$city city",
+                    city,
                     style: const TextStyle(
                         color: CustomColors.blackLight,
                         fontSize: 14,

@@ -3,27 +3,24 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_detail.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/model/employee_detail.dart';
+import 'package:wavy/state/employee_detail_state.dart';
 import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/convertBase64Image.dart';
 import 'package:wavy/utils/resize.dart';
+import 'package:wavy/utils/routesName.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
 import '../../model/employee.dart';
+import '../components/custom_column_infor.dart';
 
 class BabySisterDetail extends StatelessWidget {
-
-  final String babysisterId;
-  final int shiftId;
-
-  const BabySisterDetail({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  const BabySisterDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +30,13 @@ class BabySisterDetail extends StatelessWidget {
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: BabySisterDetailForm(
-        babysisterId: babysisterId,
-        shiftId: shiftId,
-      ),
+      body: BabySisterDetailForm(),
     );
   }
 }
 
 class BabySisterDetailForm extends StatelessWidget {
-
-  final String babysisterId;
-  final int shiftId;
-
-  const BabySisterDetailForm({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  const BabySisterDetailForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +50,7 @@ class BabySisterDetailForm extends StatelessWidget {
           ),
           Expanded(
             flex: 4,
-            child: CardInforDetail(
-              babysisterId: babysisterId,
-              shiftId: shiftId,
-            ),
+            child: CardInforDetail(),
           ),
         ],
       ),
@@ -76,24 +59,22 @@ class BabySisterDetailForm extends StatelessWidget {
 }
 
 class CardInforDetail extends StatelessWidget {
-
-  final String babysisterId;
-  final int shiftId;
-
-  CardInforDetail({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  CardInforDetail({super.key});
   final details = [
     {"icon": null, "title": "Confirm the schedule", "colorText": Colors.black},
     {"icon": null, "title": "Payments", "colorText": Colors.black},
-    {"icon": null, "title": "Basic settings", "colorText": Colors.black},
+    {
+      "icon": null,
+      "title": "Basic settings",
+      "colorText": Colors.black,
+      'route': RoutesName.basicSettingRoute.name
+    },
     {"icon": Icons.star, "title": "Review", "colorText": Colors.black},
     {
       "icon": null,
       "title": "Cancel the contracts",
-      "colorText": CustomColors.redText
+      "colorText": CustomColors.redText,
+      'route': RoutesName.cancelTheContractRoute.name
     }
   ];
   @override
@@ -103,11 +84,13 @@ class CardInforDetail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CustomText(
-              title: "Details",
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              lineHeight: 16 / 14,
-              colorText: CustomColors.bluetext),
+            title: "Details",
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            lineHeight: 16 / 14,
+            colorText: CustomColors.bluetext,
+            textAlign: TextAlign.start,
+          ),
           SizedBox(
             height: 4.resizeheight(context),
           ),
@@ -121,32 +104,8 @@ class CardInforDetail extends StatelessWidget {
                     children: [
                       CustomButtonIconNavigator(
                         onPressed: () {
-                          if(index==0){
-                            context.goNamed(
-                                'baby_sister_detail_confirm_schedule',
-                                queryParams: {
-                                  'babysisterId': babysisterId,
-                                  'shiftId': '$shiftId'
-                                }
-                            );
-                          }
-                          else if(index==1){
-                            context.goNamed(
-                              'baby_sister_payment',
-                              queryParams: {
-                                'babysisterId': babysisterId,
-                                'shiftId': '$shiftId'
-                              }
-                            );
-                          }
-                          else if(index==3){
-                            context.goNamed(
-                                'baby_sister_review',
-                              queryParams: {
-                                'babysisterId': babysisterId,
-                                'shiftId': '$shiftId'
-                              }
-                            );
+                          if (details[index]['route'] != null) {
+                            context.goNamed(details[index]['route'] as String);
                           }
                         },
                         colorText: details[index]['colorText'] as Color,
@@ -160,7 +119,11 @@ class CardInforDetail extends StatelessWidget {
                   );
                 } else {
                   return CustomButtonIconNavigator(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (details[index]['route'] != null) {
+                        context.goNamed(details[index]['route'] as String);
+                      }
+                    },
                     colorText: details[index]['colorText'] as Color,
                     title: details[index]['title'] as String,
                     iconData: details[index]['icon'] as IconData?,
@@ -200,7 +163,7 @@ class CustomButtonIconNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 1.5),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 1.5),
       child: SizedBox(
         height: 25,
         child: IconButton(
@@ -209,17 +172,27 @@ class CustomButtonIconNavigator extends StatelessWidget {
               onPressed();
             },
             icon: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                icon,
                 Expanded(
-                  child: CustomText(
-                      title: title,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14,
-                      lineHeight: 16 / 14,
-                      colorText: colorText),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      icon,
+                      Expanded(
+                        child: CustomText(
+                          title: title,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14,
+                          lineHeight: 16 / 14,
+                          colorText: colorText,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const Icon(Icons.navigate_next,
                     color: CustomColors.blueNextIcon, size: 21.5)
@@ -235,6 +208,9 @@ class CardContactDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final employee = (context.watch<EmployeeDetailBloc>().state
+            as SubmittedEmployeeDetailSuccessState)
+        .employeeDetail;
     return SizedBox(
       child: Card(
         elevation: 4,
@@ -245,7 +221,11 @@ class CardContactDetail extends StatelessWidget {
           padding: const EdgeInsets.all(6),
           child: Column(
             children: [
-              // const ColumnInfor(),
+              ColumnInfor(
+                name: employee.name,
+                avatar: employee.avatar,
+                id: employee.id,
+              ),
               SizedBox(
                 height: 12.resizeheight(context),
               ),
@@ -284,11 +264,13 @@ class CardContact extends StatelessWidget {
           height: 18.resizeheight(context),
         ),
         const CustomText(
-            title: "Contacts",
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            lineHeight: 16 / 14,
-            colorText: CustomColors.bluetext),
+          title: "Contacts",
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          lineHeight: 16 / 14,
+          colorText: CustomColors.bluetext,
+          textAlign: TextAlign.start,
+        ),
         SizedBox(
           height: 20.resizeheight(context),
         ),
@@ -310,11 +292,13 @@ class CardContact extends StatelessWidget {
                   icon: Icon(contact['icon'] as IconData,
                       color: CustomColors.bluetext, size: 25),
                   label: CustomText(
-                      title: contact['title'] as String,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 12,
-                      lineHeight: 16 / 14,
-                      colorText: Colors.black),
+                    title: contact['title'] as String,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                    lineHeight: 16 / 14,
+                    colorText: Colors.black,
+                    textAlign: TextAlign.start,
+                  ),
                 ),
               )
               .toList(),
@@ -327,43 +311,41 @@ class CardContact extends StatelessWidget {
   }
 }
 
-class ColumnInfor extends StatelessWidget {
-  const ColumnInfor({super.key, required this.employee});
-  final Employee_Detail employee;
-  @override
-  Widget build(BuildContext context) {
-    // const employee = Employee(
-    //     id: '1',
-    //     name: 'Nguyen Thi Nhan',
-    //     age: '32 years old',
-    //     city: 'Ho Chi Minh',
-    //     shiftId: 1,
-    //     cancel__contract_date: null);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.memory(convertBase64Image(employee.avatar),
-            height: 64, width: 64, fit: BoxFit.cover),
-        SizedBox(
-          width: 10.resizewidth(context),
-        ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          CustomText(
-              title: employee.name,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              lineHeight: (16 / 14),
-              colorText: CustomColors.blueTextDark),
-          const SizedBox(height: 4),
-          CustomText(
-              title: "ID: ${employee.id}",
-              fontWeight: FontWeight.normal,
-              fontSize: 14,
-              lineHeight: (16 / 14),
-              colorText: CustomColors.gray)
-        ])
-      ],
-    );
-  }
-}
+// class ColumnInfor extends StatelessWidget {
+//   const ColumnInfor({super.key, required this.employee});
+//   final Employee_Detail employee;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         Image.memory(convertBase64Image(employee.avatar),
+//             height: 64, width: 64, fit: BoxFit.cover),
+//         SizedBox(
+//           width: 10.resizewidth(context),
+//         ),
+//         Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               CustomText(
+//                 title: employee.name,
+//                 fontWeight: FontWeight.bold,
+//                 fontSize: 14,
+//                 lineHeight: (16 / 14),
+//                 colorText: CustomColors.blueTextDark,
+//                 textAlign: TextAlign.start,
+//               ),
+//               const SizedBox(height: 4),
+//               CustomText(
+//                 title: "ID: ${employee.id}",
+//                 fontWeight: FontWeight.normal,
+//                 fontSize: 14,
+//                 lineHeight: (16 / 14),
+//                 colorText: CustomColors.gray,
+//                 textAlign: TextAlign.start,
+//               )
+//             ])
+//       ],
+//     );
+//   }
+// }

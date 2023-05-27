@@ -8,17 +8,18 @@ class CustomText extends StatelessWidget {
     required this.fontSize,
     required this.lineHeight,
     required this.colorText,
+    required this.textAlign,
   });
   final String title;
   final FontWeight fontWeight;
   final double fontSize;
   final double lineHeight;
   final Color colorText;
-
+  final TextAlign textAlign;
   @override
   Widget build(BuildContext context) {
     return Text(title,
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
         overflow: TextOverflow.visible,
         maxLines: 2,
         style: TextStyle(

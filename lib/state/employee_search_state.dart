@@ -33,7 +33,7 @@ class SubmittedSuccess extends SearchState {
   const SubmittedSuccess({required this.employeeDetail});
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [employeeDetail];
 }
 
 class SubmittedError extends SearchState {

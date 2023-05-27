@@ -1,10 +1,14 @@
+import 'package:wavy/model/input_salary.dart';
 import 'package:wavy/model/item_salary.dart';
 
 abstract class SalaryEvent {}
 
 enum Wage { hourlyWage, monthlyWage }
 
-class InitialFetch extends SalaryEvent {}
+class InitialFetch extends SalaryEvent {
+  final InputSalary inputSalary;
+  InitialFetch({required this.inputSalary});
+}
 
 class OnChangedWage extends SalaryEvent {
   final int value;

@@ -3,8 +3,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/employee_change_setting.dart';
+import 'package:wavy/bloc/employee_search_bloc.dart';
 import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
+import 'package:wavy/event/change_setting_event.dart';
 
 import 'package:wavy/model/schedule.dart';
 import 'package:wavy/utils/convert_id_to_name.dart';
@@ -14,10 +17,13 @@ import 'package:wavy/view/components/custom_row_divide.dart';
 import 'package:wavy/view/pages/Input_salary.dart';
 
 import '../../model/input_salary.dart';
+import '../../state/employee_change_setting.dart';
+import '../../state/employee_search_state.dart';
 import '../../utils/colors/custom_colors.dart';
 import '../components/begin_to_match_new_babysiter.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_text.dart';
+import 'dart:developer' as devtool;
 
 class ReigsterBasicSettingPage extends StatelessWidget {
   const ReigsterBasicSettingPage({super.key});
@@ -51,11 +57,13 @@ class RegisterBasicSetting extends StatelessWidget {
                 height: 20.resizeheight(context),
               ),
               const CustomText(
-                  title: "Registering with following informations",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  lineHeight: (18 / 16),
-                  colorText: CustomColors.blacktext),
+                title: "Registering with following informations",
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                lineHeight: (18 / 16),
+                colorText: CustomColors.blacktext,
+                textAlign: TextAlign.start,
+              ),
               const RegisterBasicSettingForm(),
             ])));
   }
@@ -66,41 +74,60 @@ class RegisterBasicSettingForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 16.resizeheight(context),
-        ),
-        const ShiftTime(),
-        const Salary(),
-        SizedBox(
-          height: 16.resizeheight(context),
-        ),
-        const CustomText(
+    final employeeChangeSettingBloc = context.read<EmployeeChangeSettingBloc>();
+    final searchBloc = context.read<EmployeeSearchBloc>();
+    final inputSalaryBloc = context.read<SalaryBloc>();
+    final scheduleBloc = context.read<ScheduleCubic>();
+    return BlocListener<EmployeeChangeSettingBloc, ChangeSettingState>(
+      listener: (context, state) {
+        devtool.log(state.toString());
+        if (state is SubmittedSuccessChangeSetting) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+      },
+      child: Column(
+        children: [
+          SizedBox(
+            height: 16.resizeheight(context),
+          ),
+          const ShiftTime(),
+          const Salary(),
+          SizedBox(
+            height: 16.resizeheight(context),
+          ),
+          const CustomText(
             title: '* You can change the details in "Basic setting"',
             fontWeight: FontWeight.normal,
             fontSize: 14,
             lineHeight: 18 / 16,
-            colorText: CustomColors.blacktext),
-        SizedBox(
-          height: 42.resizeheight(context),
-        ),
-        BackNext(
-          horizontalPadding: 10.resizewidth(context),
-          firstButton: "Back",
-          secondButton: "Next",
-          verticalfirstButton: 16,
-          horizontalfirstButton: 38.5,
-          verticalsecondButton: 16,
-          horizontalsecondButton: 38.5,
-          onPressedButtonFirst: () {
-            GoRouter.of(context).pop();
-          },
-          onPressedButtonSecond: () {
-            context.goNamed("register_baby_sister_input_salary");
-          },
-        ),
-      ],
+            colorText: CustomColors.blacktext,
+            textAlign: TextAlign.start,
+          ),
+          SizedBox(
+            height: 42.resizeheight(context),
+          ),
+          BackNext(
+            horizontalPadding: 10.resizewidth(context),
+            firstButton: "Back",
+            secondButton: "Next",
+            verticalfirstButton: 16,
+            horizontalfirstButton: 38.5,
+            verticalsecondButton: 16,
+            horizontalsecondButton: 38.5,
+            onPressedButtonFirst: () {
+              GoRouter.of(context).pop();
+            },
+            onPressedButtonSecond: () {
+              employeeChangeSettingBloc.add(OnSubmmitedChangeSettingEvent(
+                  shiftId: null,
+                  babysistterId:
+                      (searchBloc.state as SubmittedSuccess).employeeDetail.id,
+                  inputShifts: (scheduleBloc.state.listSchedule),
+                  inputSalary: (inputSalaryBloc.state.inputSalary)));
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -116,34 +143,41 @@ class ShiftTime extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const CustomText(
-            title: "Shift time",
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            lineHeight: 32 / 20,
-            colorText: CustomColors.blueBorder),
+          title: "Shift time",
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          lineHeight: 32 / 20,
+          colorText: CustomColors.blueBorder,
+          textAlign: TextAlign.start,
+        ),
         const SizedBox(
           height: 16,
         ),
         ...listSchedule.map((schedule) => CustomRowDevide(
             firstChild: CustomText(
-                title: schedule.day.name,
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-                lineHeight: 18 / 16,
-                colorText: CustomColors.blacktext),
+              title: schedule.day.name,
+              fontWeight: FontWeight.normal,
+              fontSize: 16,
+              lineHeight: 18 / 16,
+              colorText: CustomColors.blacktext,
+              textAlign: TextAlign.start,
+            ),
             secondChild: schedule.notHaveAvailable
                 ? const CustomText(
                     title: "Not Available",
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     lineHeight: 18 / 16,
-                    colorText: CustomColors.blacktext)
+                    colorText: CustomColors.blacktext,
+                    textAlign: TextAlign.end,
+                  )
                 : CustomText(
                     title: '${schedule.timeStart} ~ ${schedule.timeEnd}',
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     lineHeight: 18 / 16,
-                    colorText: CustomColors.blacktext)))
+                    colorText: CustomColors.blacktext,
+                    textAlign: TextAlign.end)))
       ],
     );
   }
@@ -160,52 +194,61 @@ class Salary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const CustomText(
-            title: "Salary",
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            lineHeight: 32 / 20,
-            colorText: CustomColors.blueBorder),
+          title: "Salary",
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          lineHeight: 32 / 20,
+          colorText: CustomColors.blueBorder,
+          textAlign: TextAlign.start,
+        ),
         const SizedBox(
           height: 16,
         ),
         CustomRowDevide(
-            firstChild: CustomText(
-                title: inputSalary.hourlyWage != 0
-                    ? "Hourly Wage"
-                    : "Monthly Wage",
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-                lineHeight: 18 / 16,
-                colorText: CustomColors.blacktext),
-            secondChild: CustomText(
-                title:
-                    '${inputSalary.hourlyWage != 0 ? inputSalary.hourlyWage : inputSalary.monthlyWage} VND',
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                lineHeight: 18 / 16,
-                colorText: CustomColors.blacktext)),
+          firstChild: CustomText(
+            title: inputSalary.hourlyWage != 0 ? "Hourly Wage" : "Monthly Wage",
+            fontWeight: FontWeight.normal,
+            fontSize: 16,
+            lineHeight: 18 / 16,
+            colorText: CustomColors.blacktext,
+            textAlign: TextAlign.start,
+          ),
+          secondChild: CustomText(
+              title:
+                  '${inputSalary.hourlyWage != 0 ? inputSalary.hourlyWage : inputSalary.monthlyWage} VND',
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              lineHeight: 18 / 16,
+              colorText: CustomColors.blacktext,
+              textAlign: TextAlign.start),
+        ),
         ...inputSalary.itemSalary.map((item) => CustomRowDevide(
             firstChild:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               CustomText(
-                  title: convertIdToName(item.id),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                  lineHeight: 18 / 16,
-                  colorText: CustomColors.blacktext),
+                title: convertIdToName(item.id),
+                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                lineHeight: 18 / 16,
+                colorText: CustomColors.blacktext,
+                textAlign: TextAlign.start,
+              ),
               CustomText(
-                  title: convertIdOptiontoOption(item.option),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                  lineHeight: 1,
-                  colorText: CustomColors.grayText)
+                title: convertIdOptiontoOption(item.option),
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                lineHeight: 1,
+                colorText: CustomColors.grayText,
+                textAlign: TextAlign.start,
+              )
             ]),
             secondChild: CustomText(
                 title: '${item.price} VND',
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 lineHeight: 18 / 16,
-                colorText: CustomColors.blacktext)))
+                colorText: CustomColors.blacktext,
+                textAlign: TextAlign.end)))
       ],
     );
   }

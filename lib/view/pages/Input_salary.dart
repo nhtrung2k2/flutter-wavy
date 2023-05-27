@@ -60,13 +60,18 @@ class InputSalaryView extends StatelessWidget {
                 height: 32.resizeheight(context),
               ),
               const CustomText(
-                  title: "Please input salary",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  lineHeight: (18 / 16),
-                  colorText: CustomColors.blacktext),
+                title: "Please input salary",
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                lineHeight: (18 / 16),
+                colorText: CustomColors.blacktext,
+                textAlign: TextAlign.start,
+              ),
               SizedBox(height: 16.resizeheight(context)),
               const InputSalaryForm(),
+              SizedBox(
+                height: 139.resizeheight(context),
+              ),
               BackNext(
                 horizontalPadding: 10.resizewidth(context),
                 firstButton: "Back",
@@ -137,9 +142,6 @@ class InputSalaryForm extends StatelessWidget {
                 ItemSalary(id: 4, price: 0, option: 2),
               ]);
             }),
-        SizedBox(
-          height: 139.resizeheight(context),
-        )
       ],
     );
   }
@@ -163,11 +165,13 @@ class ItemSalaryRow extends StatelessWidget {
                   120.resizewidth(context), // Set your desired minimum width
             ),
             child: CustomText(
-                title: title ?? convertIdToName(item!.id),
-                fontWeight: FontWeight.normal,
-                fontSize: 14,
-                lineHeight: 18 / 14,
-                colorText: CustomColors.blacktext),
+              title: title ?? convertIdToName(item!.id),
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+              lineHeight: 18 / 14,
+              colorText: CustomColors.blacktext,
+              textAlign: TextAlign.start,
+            ),
           ),
         ),
         Expanded(

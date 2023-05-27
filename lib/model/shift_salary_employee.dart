@@ -12,6 +12,7 @@ abstract class ShiftSalaryEmployee with _$ShiftSalaryEmployee {
   const factory ShiftSalaryEmployee({
     @JsonKey(name: 'user_id') required String userId,
     @JsonKey(name: 'babysistter_id') required String babysistterId,
+    @JsonKey(name: 'shift_id') required int? shiftId,
     @JsonKey(name: 'input_shift') required List<InputShift> inputShift,
     @JsonKey(name: 'input_salary') required InputSalary inputSalary,
   }) = _ShiftSalaryEmployee;

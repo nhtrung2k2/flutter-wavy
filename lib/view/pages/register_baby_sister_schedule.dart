@@ -48,11 +48,13 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
             height: 20.resizeheight(context),
           ),
           const CustomText(
-              title: "Please input shift",
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              lineHeight: (18 / 16),
-              colorText: CustomColors.blacktext),
+            title: "Please input shift",
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            lineHeight: (18 / 16),
+            colorText: CustomColors.blacktext,
+            textAlign: TextAlign.start,
+          ),
           SizedBox(
             height: 16.resizeheight(context),
           ),
@@ -60,11 +62,13 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: Column(children: [
               CustomText(
-                  title: "Not available",
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                  lineHeight: (18 / 14).resizeheight(context),
-                  colorText: CustomColors.blacktext),
+                title: "Not available",
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                lineHeight: (18 / 14).resizeheight(context),
+                colorText: CustomColors.blacktext,
+                textAlign: TextAlign.center,
+              ),
               SizedBox(
                 height: 10.resizeheight(context),
               ),
@@ -154,11 +158,13 @@ class TimePickerRow extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: CustomText(
-                title: day.name,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                lineHeight: (18 / 14).resizeheight(context),
-                colorText: CustomColors.blacktext),
+              title: day.name,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              lineHeight: (18 / 14).resizeheight(context),
+              colorText: CustomColors.blacktext,
+              textAlign: TextAlign.start,
+            ),
           ),
         ),
         Expanded(
@@ -189,11 +195,13 @@ class TimePickerRow extends StatelessWidget {
               const Padding(
                   padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                   child: CustomText(
-                      title: "~",
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14,
-                      lineHeight: (18 / 14),
-                      colorText: CustomColors.blacktext)),
+                    title: "~",
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    lineHeight: (18 / 14),
+                    colorText: CustomColors.blacktext,
+                    textAlign: TextAlign.center,
+                  )),
               SizedBox(
                 width: 60.resizewidth(context),
                 child: CustomOutLineButton(

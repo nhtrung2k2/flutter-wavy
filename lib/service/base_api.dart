@@ -17,7 +17,7 @@ class BaseAPI {
       if (headers != null) {
         dio.options.headers.addAll(headers);
       }
-      devtool.log(dio.options.headers.toString());
+
       return await dio.get(url);
     } catch (e) {
       throw Exception('Failed to make GET request: ${e.toString()}');
@@ -31,7 +31,7 @@ class BaseAPI {
       if (headers != null) {
         dio.options.headers.addAll(headers);
       }
-      devtool.log(dio.options.headers.toString());
+      // devtool.log(dio.options.headers.toString());
       return await dio.post(url, data: data);
     } catch (e) {
       throw Exception('Failed to make POST request: ${e.toString()}');

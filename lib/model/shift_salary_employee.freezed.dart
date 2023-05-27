@@ -24,6 +24,8 @@ mixin _$ShiftSalaryEmployee {
   String get userId => throw _privateConstructorUsedError;
   @JsonKey(name: 'babysistter_id')
   String get babysistterId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'shift_id')
+  int? get shiftId => throw _privateConstructorUsedError;
   @JsonKey(name: 'input_shift')
   List<InputShift> get inputShift => throw _privateConstructorUsedError;
   @JsonKey(name: 'input_salary')
@@ -44,6 +46,7 @@ abstract class $ShiftSalaryEmployeeCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'user_id') String userId,
       @JsonKey(name: 'babysistter_id') String babysistterId,
+      @JsonKey(name: 'shift_id') int? shiftId,
       @JsonKey(name: 'input_shift') List<InputShift> inputShift,
       @JsonKey(name: 'input_salary') InputSalary inputSalary});
 
@@ -65,6 +68,7 @@ class _$ShiftSalaryEmployeeCopyWithImpl<$Res, $Val extends ShiftSalaryEmployee>
   $Res call({
     Object? userId = null,
     Object? babysistterId = null,
+    Object? shiftId = freezed,
     Object? inputShift = null,
     Object? inputSalary = null,
   }) {
@@ -77,6 +81,10 @@ class _$ShiftSalaryEmployeeCopyWithImpl<$Res, $Val extends ShiftSalaryEmployee>
           ? _value.babysistterId
           : babysistterId // ignore: cast_nullable_to_non_nullable
               as String,
+      shiftId: freezed == shiftId
+          ? _value.shiftId
+          : shiftId // ignore: cast_nullable_to_non_nullable
+              as int?,
       inputShift: null == inputShift
           ? _value.inputShift
           : inputShift // ignore: cast_nullable_to_non_nullable
@@ -108,6 +116,7 @@ abstract class _$$_ShiftSalaryEmployeeCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'user_id') String userId,
       @JsonKey(name: 'babysistter_id') String babysistterId,
+      @JsonKey(name: 'shift_id') int? shiftId,
       @JsonKey(name: 'input_shift') List<InputShift> inputShift,
       @JsonKey(name: 'input_salary') InputSalary inputSalary});
 
@@ -128,6 +137,7 @@ class __$$_ShiftSalaryEmployeeCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? babysistterId = null,
+    Object? shiftId = freezed,
     Object? inputShift = null,
     Object? inputSalary = null,
   }) {
@@ -140,6 +150,10 @@ class __$$_ShiftSalaryEmployeeCopyWithImpl<$Res>
           ? _value.babysistterId
           : babysistterId // ignore: cast_nullable_to_non_nullable
               as String,
+      shiftId: freezed == shiftId
+          ? _value.shiftId
+          : shiftId // ignore: cast_nullable_to_non_nullable
+              as int?,
       inputShift: null == inputShift
           ? _value._inputShift
           : inputShift // ignore: cast_nullable_to_non_nullable
@@ -158,6 +172,7 @@ class _$_ShiftSalaryEmployee implements _ShiftSalaryEmployee {
   const _$_ShiftSalaryEmployee(
       {@JsonKey(name: 'user_id') required this.userId,
       @JsonKey(name: 'babysistter_id') required this.babysistterId,
+      @JsonKey(name: 'shift_id') required this.shiftId,
       @JsonKey(name: 'input_shift') required final List<InputShift> inputShift,
       @JsonKey(name: 'input_salary') required this.inputSalary})
       : _inputShift = inputShift;
@@ -171,6 +186,9 @@ class _$_ShiftSalaryEmployee implements _ShiftSalaryEmployee {
   @override
   @JsonKey(name: 'babysistter_id')
   final String babysistterId;
+  @override
+  @JsonKey(name: 'shift_id')
+  final int? shiftId;
   final List<InputShift> _inputShift;
   @override
   @JsonKey(name: 'input_shift')
@@ -186,7 +204,7 @@ class _$_ShiftSalaryEmployee implements _ShiftSalaryEmployee {
 
   @override
   String toString() {
-    return 'ShiftSalaryEmployee(userId: $userId, babysistterId: $babysistterId, inputShift: $inputShift, inputSalary: $inputSalary)';
+    return 'ShiftSalaryEmployee(userId: $userId, babysistterId: $babysistterId, shiftId: $shiftId, inputShift: $inputShift, inputSalary: $inputSalary)';
   }
 
   @override
@@ -197,6 +215,7 @@ class _$_ShiftSalaryEmployee implements _ShiftSalaryEmployee {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.babysistterId, babysistterId) ||
                 other.babysistterId == babysistterId) &&
+            (identical(other.shiftId, shiftId) || other.shiftId == shiftId) &&
             const DeepCollectionEquality()
                 .equals(other._inputShift, _inputShift) &&
             (identical(other.inputSalary, inputSalary) ||
@@ -205,7 +224,7 @@ class _$_ShiftSalaryEmployee implements _ShiftSalaryEmployee {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, babysistterId,
+  int get hashCode => Object.hash(runtimeType, userId, babysistterId, shiftId,
       const DeepCollectionEquality().hash(_inputShift), inputSalary);
 
   @JsonKey(ignore: true)
@@ -229,6 +248,8 @@ abstract class _ShiftSalaryEmployee implements ShiftSalaryEmployee {
           required final String userId,
       @JsonKey(name: 'babysistter_id')
           required final String babysistterId,
+      @JsonKey(name: 'shift_id')
+          required final int? shiftId,
       @JsonKey(name: 'input_shift')
           required final List<InputShift> inputShift,
       @JsonKey(name: 'input_salary')
@@ -243,6 +264,9 @@ abstract class _ShiftSalaryEmployee implements ShiftSalaryEmployee {
   @override
   @JsonKey(name: 'babysistter_id')
   String get babysistterId;
+  @override
+  @JsonKey(name: 'shift_id')
+  int? get shiftId;
   @override
   @JsonKey(name: 'input_shift')
   List<InputShift> get inputShift;

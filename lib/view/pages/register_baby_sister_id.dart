@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/employee_search_bloc.dart';
@@ -119,7 +118,9 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                       lineHeight: 16 / 14,
-                      colorText: CustomColors.redText)
+                      colorText: CustomColors.redText,
+                      textAlign: TextAlign.center,
+                    )
                   : Container()
             ]),
       ),

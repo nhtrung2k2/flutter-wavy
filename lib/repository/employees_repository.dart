@@ -6,6 +6,7 @@ import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/employee_detail.dart';
 import 'package:wavy/model/input_salary.dart';
 import 'package:wavy/model/schedule.dart';
+import 'package:wavy/repository/user_repository.dart';
 import 'package:wavy/service/employeesApi.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'dart:developer' as devtool;
@@ -20,6 +21,7 @@ class EmployeesRepository {
 
   final EmployeesApi _employeeApi;
   final SharedPreferences _sharedPreferences;
+
   Future<List<Employee>> fetchEmployees() async {
     try {
       final employees = await _employeeApi.fetchEmloyees();
@@ -32,11 +34,12 @@ class EmployeesRepository {
     }
   }
 
-  Future<Employee_Detail> fetchEmployDetail(String babySisterId) async {
+  Future<Employee_Detail> fetchEmployDetail(
+      String babySisterId, int? shiftId) async {
     try {
       final employeeDetail =
-          await _employeeApi.fetchEmployeDetail(babySisterId);
-      devtool.log(employeeDetail.toString());
+          await _employeeApi.fetchEmployeDetail(babySisterId, shiftId);
+      // devtool.log(employeeDetail.toString());
       if (employeeDetail == null) {
         throw Exception("Can't not find this employee");
       }
@@ -84,6 +87,20 @@ class EmployeesRepository {
 
   Future<void> saveChangeSetting(
       ShiftSalaryEmployee shiftSalaryEmployee) async {
-    await _employeeApi.saveChangeSetting(shiftSalaryEmployee);
+    try {
+      await _employeeApi.saveChangeSetting(shiftSalaryEmployee);
+    } catch (e) {
+      throw (e.toString());
+    }
+  }
+
+  Future<ShiftSalaryEmployee> getChangeSetting(int shiftId) async {
+    try {
+      ShiftSalaryEmployee shiftSalaryEmployee =
+          await _employeeApi.getChangeSetting(shiftId);
+      return shiftSalaryEmployee;
+    } catch (e) {
+      throw (e.toString());
+    }
   }
 }

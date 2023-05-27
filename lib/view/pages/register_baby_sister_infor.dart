@@ -46,95 +46,88 @@ class RegisterBabySisterInfor extends StatelessWidget {
     //     city: 'Ho Chi Minh',
     //     shiftId: 1,
     //     cancel__contract_date: null);
-    return Padding(
+    return Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 26),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              constraints: BoxConstraints(maxHeight: 126.resizeheight(context)),
-            ),
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Begin to match new babysister",
-                  style: TextStyle(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                "Begin to match new babysister",
+                style: TextStyle(
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  height: (19 / 16),
+                  color: CustomColors.bluetext,
+                ),
+              ),
+              SizedBox(height: 48.resizeheight(context)),
+              const Text(
+                "BabySistter",
+                style: TextStyle(
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    height: (19 / 16),
-                    color: CustomColors.bluetext,
-                  ),
+                    fontSize: 14,
+                    height: (16 / 14),
+                    color: CustomColors.gray),
+              ),
+              SizedBox(height: 16.resizeheight(context)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.memory(
+                  convertBase64Image(employee.avatar),
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.fill,
                 ),
-                SizedBox(height: 48.resizeheight(context)),
-                const Text(
-                  "BabySistter",
+              ),
+              SizedBox(height: 10.resizeheight(context)),
+              CustomText(
+                title: employee.name,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                lineHeight: (16 / 14),
+                colorText: CustomColors.blueTextDark,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 4.resizeheight(context)),
+              CustomText(
+                  title: "ID: ${employee.id}",
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                  lineHeight: (16 / 14),
+                  colorText: CustomColors.gray,
+                  textAlign: TextAlign.center),
+              SizedBox(height: 48.resizeheight(context)),
+              const Text("Are you sure the babysister above is correct?",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                       height: (16 / 14),
-                      color: CustomColors.gray),
-                ),
-                SizedBox(height: 16.resizeheight(context)),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.memory(
-                    convertBase64Image(employee.avatar),
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                SizedBox(height: 10.resizeheight(context)),
-                CustomText(
-                    title: employee.name,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    lineHeight: (16 / 14),
-                    colorText: CustomColors.blueTextDark),
-                SizedBox(height: 4.resizeheight(context)),
-                CustomText(
-                    title: "ID: ${employee.id}",
-                    fontWeight: FontWeight.normal,
-                    fontSize: 14,
-                    lineHeight: (16 / 14),
-                    colorText: CustomColors.gray),
-                SizedBox(height: 48.resizeheight(context)),
-                const Text("Are you sure the babysister above is correct?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: "Roboto",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        height: (16 / 14),
-                        color: CustomColors.blacktext)),
-                SizedBox(height: 26.resizeheight(context)),
-                BackNext(
-                  horizontalPadding: 10.resizewidth(context),
-                  firstButton: "No",
-                  secondButton: "Yes",
-                  verticalfirstButton: 16,
-                  horizontalfirstButton: 41,
-                  verticalsecondButton: 16,
-                  horizontalsecondButton: 38.5,
-                  onPressedButtonFirst: () {
-                    GoRouter.of(context).pop();
-                  },
-                  onPressedButtonSecond: () {
-                    context.goNamed("register_baby_sister_schedule");
-                  },
-                ),
-              ],
-            )),
-            Container(
-              constraints: BoxConstraints(maxHeight: 122.resizeheight(context)),
-            )
-          ],
+                      color: CustomColors.blacktext)),
+              SizedBox(height: 26.resizeheight(context)),
+              BackNext(
+                horizontalPadding: 10.resizewidth(context),
+                firstButton: "No",
+                secondButton: "Yes",
+                verticalfirstButton: 16,
+                horizontalfirstButton: 41,
+                verticalsecondButton: 16,
+                horizontalsecondButton: 38.5,
+                onPressedButtonFirst: () {
+                  GoRouter.of(context).pop();
+                },
+                onPressedButtonSecond: () {
+                  context.goNamed("register_baby_sister_schedule");
+                },
+              ),
+            ],
+          ),
         ));
   }
 }

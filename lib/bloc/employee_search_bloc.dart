@@ -19,7 +19,7 @@ class EmployeeSearchBloc extends Bloc<SearchEvent, SearchState> {
       OnSubmmited event, Emitter<SearchState> emit) async {
     emit(const ChangedLoading(isLoading: true));
     try {
-      final employee = await employeeRepo.fetchEmployDetail(event.value);
+      final employee = await employeeRepo.fetchEmployDetail(event.value, null);
       emit(const ChangedLoading(isLoading: false));
       emit(SubmittedSuccess(employeeDetail: employee));
     } catch (e) {

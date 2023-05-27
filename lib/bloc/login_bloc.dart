@@ -86,11 +86,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       try {
         devtool.log(event.language);
-        await _userRepository.login(
+        User? user = await _userRepository.login(
             state.email.value, state.password.value, state.language);
-
-        emit(
-            state.copyWith(formStatus: FormSubmissionStatus.submissionsuccess));
+        if (user == null) {
+          throw Exception("Some thing went wrong with user infor");
+        }
+        emit(state.copyWith(
+            user: user, formStatus: FormSubmissionStatus.submissionsuccess));
       } catch (_) {
         emit(state.copyWith(formStatus: FormSubmissionStatus.submissionfailed));
       }
