@@ -21,10 +21,13 @@ import 'package:wavy/service/cost_list_api.dart';
 import 'package:wavy/service/employeesApi.dart';
 import 'package:wavy/service/user_api.dart';
 
+import '../../bloc/app_bloc.dart';
 import '../../bloc/employee_search_bloc.dart';
+import '../../bloc/logout_bloc.dart';
 import '../../bloc/salary_bloc.dart';
 import '../../bloc/schedule_cubic.dart';
 import '../../bloc/user_infor_setting.dart';
+import '../../main.dart';
 
 class ServiceLocator {
   static final locator = GetIt.instance;
@@ -64,5 +67,11 @@ class ServiceLocator {
     locator.registerSingletonWithDependencies<EmployeeChangeSettingBloc>(
         () => EmployeeChangeSettingBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
+    locator.registerSingletonWithDependencies<LogoutBloc>(
+        () => LogoutBloc(locator.get<UserRepository>()),
+        dependsOn: [UserRepository]);
+    locator.registerSingletonWithDependencies<AppBloc>(
+        () => AppBloc(locator.get<LogoutBloc>(), locator.get<LoginBloc>()),
+        dependsOn: [LoginBloc, LogoutBloc]);
   }
 }

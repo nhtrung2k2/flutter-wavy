@@ -79,13 +79,16 @@ class EmployeesApi {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
       final language = prefs.getString('language');
-      devtool.log(shiftSalaryEmployee.toJson().toString());
+
       final response = await baseAPI.post(url, shiftSalaryEmployee.toJson(),
           {'Authorization': 'Bearer $token', 'X-Localization': language});
       // devtool.log(response.headers.toString());
       if (response.statusCode == 200) {
-        // devtool.log("api success");
+        devtool.log("api success");
         return;
+      } else if (response.statusCode == 422) {
+        // devtool.log("api 400");
+        throw Exception("The babysitter was registered contract.");
       } else if (response.statusCode == 400) {
         // devtool.log("api 400");
         throw Exception("Token could not be parsed from the request.");

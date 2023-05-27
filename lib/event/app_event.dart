@@ -12,8 +12,6 @@ class AppStarted extends AppEvent {
   const AppStarted();
 }
 
-class AppUserChanged extends AppEvent {
-  const AppUserChanged(this.user);
-
-  final User user;
+class AppLogined extends AppEvent {
+  const AppLogined();
 }

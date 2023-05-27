@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/employee_change_setting.dart';
@@ -24,6 +23,7 @@ import '../components/begin_to_match_new_babysiter.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_text.dart';
 import 'dart:developer' as devtool;
+import '../pages/login.dart';
 
 class ReigsterBasicSettingPage extends StatelessWidget {
   const ReigsterBasicSettingPage({super.key});
@@ -83,6 +83,14 @@ class RegisterBasicSettingForm extends StatelessWidget {
         devtool.log(state.toString());
         if (state is SubmittedSuccessChangeSetting) {
           Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+        if (state is SubmittedErrorChangeSetting) {
+          showErrorDialog(
+              context, "Error", "The babysitter was registered contract.", "OK",
+              () {
+            context.pop();
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          });
         }
       },
       child: Column(

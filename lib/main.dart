@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wavy/bloc/app_bloc.dart';
 import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
 import 'package:wavy/bloc/cost_list_bloc.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
@@ -32,14 +35,32 @@ import 'package:wavy/view/pages/splash_page.dart';
 import 'package:wavy/view/pages/BaseScreen.dart';
 
 import 'bloc/employee_change_setting.dart';
+import 'bloc/logout_bloc.dart';
+import 'state/app_state.dart';
 import 'utils/routesName.dart';
 import 'view/pages/basic_setting.dart';
 import 'view/pages/register_basic_setting.dart';
+import 'dart:developer' as devtool;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.registerAll();
+
   runApp(MainApp());
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: ServiceLocator.locator.get<AppBloc>(),
+      child: Builder(builder: (context) {
+        return MainApp();
+      }),
+    );
+  }
 }
 
 final GlobalKey<NavigatorState> _rootNavitator = GlobalKey(debugLabel: 'root');
@@ -47,9 +68,11 @@ final GlobalKey<NavigatorState> _shellNavigator =
     GlobalKey(debugLabel: "shell");
 
 class MainApp extends StatelessWidget {
-  MainApp({super.key});
+  late final GoRouter _router;
 
-  final _router = GoRouter(
+  MainApp({super.key}) {
+    _router = GoRouter(
+      navigatorKey: _rootNavitator,
       routes: [
         GoRoute(
             name: RoutesName.splashRoute.name,
@@ -57,13 +80,17 @@ class MainApp extends StatelessWidget {
             pageBuilder: (context, state) =>
                 MaterialPage(key: state.pageKey, child: const SplashPage())),
         GoRoute(
-            name: RoutesName.loginRoute.name,
-            path: RoutesName.loginRoute.path,
-            pageBuilder: (context, state) => MaterialPage(
-                key: state.pageKey,
-                child: BlocProvider.value(
-                    value: ServiceLocator.locator.get<LoginBloc>(),
-                    child: const LoginPage()))),
+          name: RoutesName.loginRoute.name,
+          path: RoutesName.loginRoute.path,
+          pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: MultiBlocProvider(providers: [
+                BlocProvider.value(
+                  value: ServiceLocator.locator.get<LoginBloc>(),
+                )
+              ], child: const LoginPage())),
+          redirect: getRouteName,
+        ),
         ShellRoute(
             navigatorKey: _shellNavigator,
             builder: (context, state, child) => BaseScreen(child: child),
@@ -131,7 +158,8 @@ class MainApp extends StatelessWidget {
                             path: RoutesName.cancelTheContractRoute.path,
                             name: RoutesName.cancelTheContractRoute.name,
                             pageBuilder: (context, state) => MaterialPage(
-                                key: state.pageKey, child: BasicSettingPage()),
+                                key: state.pageKey,
+                                child: const BasicSettingPage()),
                           )
                         ]),
                     GoRoute(
@@ -234,14 +262,14 @@ class MainApp extends StatelessWidget {
                     )
                   ]),
               GoRoute(
-                path: RoutesName.settingsRoute.path,
-                name: RoutesName.settingsRoute.name,
-                pageBuilder: (context, state) => NoTransitionPage(
-                    child: BlocProvider.value(
-                  value: ServiceLocator.locator.get<LoginBloc>(),
-                  child: const SettingsPage(),
-                )),
-              )
+                  path: RoutesName.settingsRoute.path,
+                  name: RoutesName.settingsRoute.name,
+                  pageBuilder: (context, state) => NoTransitionPage(
+                          child: BlocProvider.value(
+                        value: ServiceLocator.locator.get<LoginBloc>(),
+                        child: const SettingsPage(),
+                      )),
+                  redirect: getRouteName)
             ])
       ],
       errorPageBuilder: (context, state) => MaterialPage(
@@ -249,13 +277,48 @@ class MainApp extends StatelessWidget {
           child: Scaffold(
             body: Center(child: Text(state.error.toString())),
           )),
-      redirect: (context, state) {});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerDelegate: _router.routerDelegate,
-      routeInformationParser: _router.routeInformationParser,
-      routeInformationProvider: _router.routeInformationProvider,
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+        value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
+            ServiceLocator.locator.get<LoginBloc>()),
+        child: BlocListener<AppBloc, AppState>(
+          listenWhen: (previous, current) => previous != current,
+          listener: (context, state) {
+            devtool.log("redirect");
+            devtool.log(state.status.name);
+            if (state.status == AuthenticationStatus.authenticated ||
+                state.status == AuthenticationStatus.unauthenticated) {
+              _router.refresh();
+            }
+          },
+          child: MaterialApp.router(
+            routerConfig: _router,
+          ),
+        ));
+  }
+}
+
+String? getRouteName(BuildContext context, state) {
+  final appBlocState = ServiceLocator.locator.get<AppBloc>().state;
+  devtool.log("getRouteName");
+  devtool.log(appBlocState.status.name);
+  final isInitial = appBlocState.status == AuthenticationStatus.unknow;
+
+  final isLoggedIn = appBlocState.status == AuthenticationStatus.authenticated;
+  final isLoggingIn = state.location == RoutesName.loginRoute.path;
+  devtool.log("go_router");
+  devtool.log(isLoggedIn.toString());
+  if (!isInitial && !isLoggedIn && !isLoggingIn) {
+    return RoutesName.loginRoute.path;
+  }
+
+  if (!isInitial && isLoggedIn && isLoggingIn) {
+    return RoutesName.homeRoute.path;
+  }
+
+  return null;
 }

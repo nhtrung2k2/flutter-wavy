@@ -31,4 +31,8 @@ class UserRepository {
   Future<User?> getUserInforSetting() async {
     return await _userApi.getUserInforSetting();
   }
+
+  Future<void> logout() async {
+    await _authApi.logout();
+  }
 }

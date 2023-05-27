@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
-import 'package:wavy/model/employee.dart';
-import 'package:wavy/state/employee_search_state.dart';
+
 import 'package:wavy/state/schedule.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
@@ -14,7 +13,6 @@ import 'package:wavy/view/components/custom_text.dart';
 import '../../utils/colors/custom_colors.dart';
 import '../components/back_next.dart';
 import '../components/begin_to_match_new_babysiter.dart';
-import 'dart:developer' as devtool;
 
 class RegisterBabySisterSchedulePage extends StatelessWidget {
   const RegisterBabySisterSchedulePage({super.key});

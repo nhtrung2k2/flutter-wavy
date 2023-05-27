@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_detail.dart';
-import 'package:wavy/bloc/login_bloc.dart';
+
 import 'package:wavy/event/employee_detail_event.dart';
-import 'package:wavy/event/employees_event.dart';
+
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/state/employee_detail_state.dart';
-import 'package:wavy/state/employee_state.dart';
+
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/card_infor_home.dart';

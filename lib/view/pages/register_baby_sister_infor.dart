@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:wavy/bloc/employee_bloc.dart';
+
 import 'package:wavy/bloc/employee_search_bloc.dart';
-import 'package:wavy/model/employee.dart';
+
 import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/convertBase64Image.dart';
 import 'package:wavy/utils/resize.dart';
@@ -14,8 +13,6 @@ import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
 import '../../utils/colors/custom_colors.dart';
-import '../components/custom_elevated_button.dart';
-import '../components/custom_ouline_button.dart';
 
 class RegisterBabySisterInforPage extends StatelessWidget {
   const RegisterBabySisterInforPage({super.key});

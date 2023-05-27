@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/event/salary_event.dart';
@@ -115,9 +116,11 @@ class InputSalaryForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const ItemSalaryRow(
-          title: "Wage",
-          item: null,
+        const Padding(
+          padding: EdgeInsets.only(left: 8, right: 8),
+          child: ItemSalaryRowNonSlidable(
+            title: "Wage",
+          ),
         ),
         SizedBox(
           height: 16.resizeheight(context),
@@ -125,7 +128,7 @@ class InputSalaryForm extends StatelessWidget {
         ...listItem
             .map((item) => Container(
                 margin: EdgeInsets.only(bottom: 16.resizeheight(context)),
-                child: ItemSalaryRow(title: null, item: item)))
+                child: ItemSalaryRowSlidable(item: item)))
             .toList(),
         CustomElevatedButton(
             title: '+ Add more item',
@@ -147,10 +150,109 @@ class InputSalaryForm extends StatelessWidget {
   }
 }
 
-class ItemSalaryRow extends StatelessWidget {
-  const ItemSalaryRow({super.key, required this.item, required this.title});
-  final ItemSalary? item;
-  final String? title;
+class ItemSalaryRowSlidable extends StatelessWidget {
+  const ItemSalaryRowSlidable({
+    super.key,
+    required this.item,
+  });
+
+  final ItemSalary item;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<SalaryBloc>();
+    return Slidable(
+        endActionPane: ActionPane(motion: const StretchMotion(), children: [
+          SlidableAction(
+              label: 'Delete',
+              icon: Icons.cancel,
+              onPressed: (context) {
+                bloc.add(OnDeleteItem(item.id));
+              })
+        ]),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          color: Colors.white70,
+          elevation: 16,
+          shadowColor: CustomColors.grayShadow,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 8, 5, 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minWidth: 120.resizewidth(
+                          context), // Set your desired minimum width
+                    ),
+                    child: CustomText(
+                      title: convertIdToName(item.id),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14,
+                      lineHeight: 18 / 14,
+                      colorText: CustomColors.blacktext,
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomInputUnit(
+                          borderColor: CustomColors.blueBorder,
+                          onChanged: (value) {
+                            if (value != null) {
+                              final money = int.tryParse(value);
+                              if (money != null) {
+                                bloc.add(OnChangedValueItem(money, item.id));
+                              }
+                            }
+                          },
+                          textAlign: TextAlign.end,
+                          unit: 'VND',
+                          inititialValue: item.price.toString()),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 32,
+                        child: CustomOutLineButtonPopUp(
+                            vertical: 2,
+                            horizontal: 6,
+                            textColor: CustomColors.blacktext,
+                            backgroundColor: Colors.white,
+                            borderSideColor: CustomColors.blueBorder,
+                            borderRadius: 8,
+                            widthRadius: 1,
+                            onChanged: (value) {
+                              if (value != null) {
+                                bloc.add(OnChangedOption(
+                                    option: convertOption(value), id: item.id));
+                              }
+                            },
+                            selectedValue: "Once per day",
+                            options: const ['Once per month', 'Once per day']),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}
+
+class ItemSalaryRowNonSlidable extends StatelessWidget {
+  const ItemSalaryRowNonSlidable({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SalaryBloc>();
@@ -165,7 +267,7 @@ class ItemSalaryRow extends StatelessWidget {
                   120.resizewidth(context), // Set your desired minimum width
             ),
             child: CustomText(
-              title: title ?? convertIdToName(item!.id),
+              title: title,
               fontWeight: FontWeight.normal,
               fontSize: 14,
               lineHeight: 18 / 14,
@@ -184,25 +286,19 @@ class ItemSalaryRow extends StatelessWidget {
                     if (value != null) {
                       final money = int.tryParse(value);
                       if (money != null) {
-                        if (title == "Wage") {
-                          bloc.add(OnChangedWage(
-                              money,
-                              bloc.state.inputSalary.hourlyWage != 0
-                                  ? Wage.hourlyWage
-                                  : Wage.monthlyWage));
-                        } else {
-                          bloc.add(OnChangedValueItem(money, item!.id));
-                        }
+                        bloc.add(OnChangedWage(
+                            money,
+                            bloc.state.inputSalary.hourlyWage != 0
+                                ? Wage.hourlyWage
+                                : Wage.monthlyWage));
                       }
                     }
                   },
                   textAlign: TextAlign.end,
                   unit: 'VND',
-                  inititialValue: title == "Wage"
-                      ? bloc.state.inputSalary.hourlyWage != 0
-                          ? bloc.state.inputSalary.hourlyWage.toString()
-                          : bloc.state.inputSalary.monthlyWage.toString()
-                      : item!.price.toString()),
+                  inititialValue: bloc.state.inputSalary.hourlyWage != 0
+                      ? bloc.state.inputSalary.hourlyWage.toString()
+                      : bloc.state.inputSalary.monthlyWage.toString()),
               const SizedBox(height: 8),
               SizedBox(
                 height: 32,
@@ -216,16 +312,11 @@ class ItemSalaryRow extends StatelessWidget {
                     widthRadius: 1,
                     onChanged: (value) {
                       if (value != null) {
-                        if (title == "Wage") {
-                          bloc.add(OnChangedWage(
-                              bloc.state.inputSalary.hourlyWage != 0
-                                  ? bloc.state.inputSalary.hourlyWage
-                                  : bloc.state.inputSalary.monthlyWage,
-                              convertOptionSalary(value)));
-                        } else {
-                          bloc.add(OnChangedOption(
-                              option: convertOption(value), id: item!.id));
-                        }
+                        bloc.add(OnChangedWage(
+                            bloc.state.inputSalary.hourlyWage != 0
+                                ? bloc.state.inputSalary.hourlyWage
+                                : bloc.state.inputSalary.monthlyWage,
+                            convertOptionSalary(value)));
                       }
                     },
                     selectedValue: "Once per day",

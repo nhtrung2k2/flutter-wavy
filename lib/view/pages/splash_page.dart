@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  Timer? _timer;
   @override
   void initState() {
     super.initState();
@@ -19,9 +22,15 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _navigatetologin() async {
-    await Future.delayed(const Duration(milliseconds: 3000), () {
+    _timer = await Future.delayed(const Duration(milliseconds: 3000), () {
       GoRouter.of(context).goNamed('loginPage');
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

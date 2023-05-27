@@ -14,32 +14,30 @@ import 'dart:developer' as devtool;
 import '../../service/getit/service_locator.dart';
 import '../../utils/form_submission_status.dart';
 
+void showErrorDialog(BuildContext context, final String title,
+    final String message, final String textButton, void Function() onPressed) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: onPressed,
+            child: Text(textButton),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    void _showErrorDialog() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: const Text(
-                "The email or password you entered is incorrect. Please try again."),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  context.pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -56,7 +54,13 @@ class LoginPage extends StatelessWidget {
                 } else if (state.formStatus ==
                     FormSubmissionStatus.submissionfailed) {
                   LoadingOverlay.hide();
-                  _showErrorDialog();
+                  showErrorDialog(
+                      context,
+                      "Error",
+                      "The email or password you entered is incorrect. Please try again.",
+                      "OK", () {
+                    context.pop();
+                  });
                   context.read<LoginBloc>().add(LoginRestart());
                 } else if (state.formStatus ==
                     FormSubmissionStatus.formsubmitting) {

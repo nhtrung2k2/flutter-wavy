@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/service/getit/service_locator.dart';
@@ -9,10 +8,12 @@ import 'package:wavy/view/components/custom_row_divide.dart';
 import 'package:wavy/view/components/custom_text.dart';
 import 'package:wavy/view/pages/baby_sister_detail.dart';
 
+import '../../bloc/logout_bloc.dart';
+import '../../event/logout_event.dart';
 import '../../utils/colors/custom_colors.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_card_infor.dart';
-import '../components/custom_column_infor.dart';
+
 import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -65,11 +66,18 @@ class SettingForm extends StatelessWidget {
                         width: 30,
                         height: 20,
                       ))),
-              CustomeButtonIconNavigatorDivide(
-                title: "Logout",
-                colorText: Colors.black,
-                iconData: null,
-                onPressed: () {},
+              BlocProvider(
+                create: (context) => ServiceLocator.locator.get<LogoutBloc>(),
+                child: Builder(builder: (context) {
+                  return CustomeButtonIconNavigatorDivide(
+                    title: "Logout",
+                    colorText: Colors.black,
+                    iconData: null,
+                    onPressed: () {
+                      context.read<LogoutBloc>().add(LogoutPressed());
+                    },
+                  );
+                }),
               ),
               CustomButtonIconNavigator(
                   onPressed: () {},

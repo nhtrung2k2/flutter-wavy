@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:wavy/bloc/employee_detail.dart';
-import 'package:wavy/bloc/login_bloc.dart';
-import 'package:wavy/model/employee_detail.dart';
+
 import 'package:wavy/state/employee_detail_state.dart';
-import 'package:wavy/state/employee_search_state.dart';
+
 import 'package:wavy/utils/colors/custom_colors.dart';
-import 'package:wavy/utils/convertBase64Image.dart';
+
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/utils/routesName.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
-import '../../model/employee.dart';
 import '../components/custom_column_infor.dart';
 
 class BabySisterDetail extends StatelessWidget {
@@ -24,8 +21,8 @@ class BabySisterDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
+    return const Scaffold(
+      appBar: CustomAppBar(
           nameTitle: "BabySister Detail",
           haveBackButton: true,
           textColor: CustomColors.blueDark,

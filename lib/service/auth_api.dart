@@ -53,4 +53,25 @@ class AuthApi {
     }
     return null;
   }
+
+  Future<void> logout() async {
+    final logoutUrl = '$baseUrl/api/logout';
+    try {
+      final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
+      final token = prefs.getString("token");
+      final language = prefs.getString("language");
+      final response = await baseApi.post(logoutUrl, null,
+          {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
+      if (response.statusCode == 200) {
+        prefs.setString("token", "");
+        prefs.setString("language", "");
+        prefs.setString('userId', "");
+      } else if (response.statusCode == 400) {
+        throw Exception(response.statusMessage);
+      }
+    } catch (e) {
+      // devtool.log(e.toString());
+      throw e.toString();
+    }
+  }
 }

@@ -9,19 +9,17 @@ enum AuthenticationStatus { unknow, authenticated, unauthenticated }
 class AppState extends Equatable {
   final AuthenticationStatus status;
 
-  final User? user;
-  const AppState({required this.status, required this.user});
+  const AppState({required this.status});
   factory AppState.unknow() =>
-      const AppState(status: AuthenticationStatus.unknow, user: null);
-  factory AppState.authenticated(User user) =>
-      AppState(status: AuthenticationStatus.authenticated, user: user);
+      const AppState(status: AuthenticationStatus.unknow);
+  factory AppState.authenticated() =>
+      const AppState(status: AuthenticationStatus.authenticated);
   factory AppState.unauthenticated() =>
-      const AppState(status: AuthenticationStatus.unauthenticated, user: null);
+      const AppState(status: AuthenticationStatus.unauthenticated);
   @override
-  List<Object?> get props => [user, status];
-  AppState copyWith({AuthenticationStatus? status, User? user}) {
+  List<Object?> get props => [status];
+  AppState copyWith({AuthenticationStatus? status}) {
     return AppState(
-      user: user ?? this.user,
       status: status ?? this.status,
     );
   }

@@ -16,6 +16,11 @@ class OnChangedWage extends SalaryEvent {
   OnChangedWage(this.value, this.type);
 }
 
+class OnDeleteItem extends SalaryEvent {
+  final int id;
+  OnDeleteItem(this.id);
+}
+
 class OnChangedValueItem extends SalaryEvent {
   final int value;
   final int id;

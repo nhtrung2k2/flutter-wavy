@@ -25,7 +25,7 @@ class BaseAPI {
   }
 
   // Helper method to make a POST request
-  Future<Response> post(String url, Map<String, dynamic> data,
+  Future<Response> post(String url, Map<String, dynamic>? data,
       Map<String, dynamic>? headers) async {
     try {
       if (headers != null) {

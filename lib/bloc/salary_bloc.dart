@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:wavy/bloc/employee_change_setting.dart';
 import 'package:wavy/event/salary_event.dart';
 import 'package:wavy/model/item_salary.dart';
 import 'package:wavy/repository/employees_repository.dart';
@@ -8,6 +11,8 @@ import '../state/salary_state.dart';
 import 'dart:developer' as devtool;
 
 class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
+  //   final EmployeeChangeSettingBloc changeSettingBloc;
+  // StreamSubscription todosSubscription;
   final EmployeesRepository _employeesRepository;
   SalaryBloc(this._employeesRepository) : super(SalaryInputState.initial()) {
     on<InitialFetch>(_fetchInputSalary);
@@ -17,6 +22,7 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
     on<OnSubmmited>(_onSubmmited);
     on<OnChangedValueItem>(_onChangeValueItem);
     on<ResetSucess>(_onResetSuccess);
+    on<OnDeleteItem>(_onDelete);
     devtool.log("construstor salary");
   }
   // Future<void> _fetchInputSalary(
@@ -29,6 +35,16 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   Future<void> _fetchInputSalary(
       InitialFetch event, Emitter<SalaryInputState> emit) async {
     emit(state.copywith(inputSalary: event.inputSalary));
+  }
+
+  Future<void> _onDelete(
+    OnDeleteItem event,
+    Emitter<SalaryInputState> emit,
+  ) async {
+    final List<ItemSalary> newList = List.from(state.inputSalary.itemSalary);
+    newList.removeWhere((element) => element.id == event.id);
+    final inputSalary = state.inputSalary.copyWith(itemSalary: newList);
+    emit(state.copywith(inputSalary: inputSalary));
   }
 
   Future<void> _onChangeValueItem(
