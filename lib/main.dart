@@ -126,8 +126,10 @@ class MainApp extends StatelessWidget {
                                   value: ServiceLocator.locator
                                       .get<EmployeeDetailBloc>(),
                                   child: BabySisterDetail(
-                                    babysisterId: state.queryParams['babysisterId'] ?? '',
-                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                    babysisterId:
+                                        state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(
+                                        state.queryParams['shiftId'] ?? '0'),
                                   )),
                             ),
                         routes: [
@@ -141,24 +143,27 @@ class MainApp extends StatelessWidget {
                                 pageBuilder: (context, state) => MaterialPage(
                                     key: state.pageKey,
                                     child: BlocProvider.value(
-                                      value: ServiceLocator.locator.get<CostListBloc>(),
+                                      value: ServiceLocator.locator
+                                          .get<CostListBloc>(),
                                       child: CostList(
-                                          amountId: int.parse(state.queryParams['amountId'] ?? '0')
-                                      ),
-                                    )
-                                ),
+                                          amountId: int.parse(
+                                              state.queryParams['amountId'] ??
+                                                  '0')),
+                                    )),
                               ),
                             ],
                             pageBuilder: (context, state) => MaterialPage(
                                 key: state.pageKey,
                                 child: BlocProvider.value(
-                                    value: ServiceLocator.locator.get<ConfirmTheScheduleBloc>(),
-                                    child: ConfirmTheSchedule(
-                                        babysisterId: state.queryParams['babysisterId'] ?? '',
-                                        shiftId: int.parse(state.queryParams['shiftId'] ?? '0')
-                                    ),
-                                )
-                            ),
+                                  value: ServiceLocator.locator
+                                      .get<ConfirmTheScheduleBloc>(),
+                                  child: ConfirmTheSchedule(
+                                      babysisterId:
+                                          state.queryParams['babysisterId'] ??
+                                              '',
+                                      shiftId: int.parse(
+                                          state.queryParams['shiftId'] ?? '0')),
+                                )),
                           ),
                           GoRoute(
                             path: RoutesName.babysisterPayment.path,
@@ -166,13 +171,15 @@ class MainApp extends StatelessWidget {
                             pageBuilder: (context, state) => MaterialPage(
                                 key: state.pageKey,
                                 child: BlocProvider.value(
-                                  value: ServiceLocator.locator.get<PaymentBloc>(),
+                                  value:
+                                      ServiceLocator.locator.get<PaymentBloc>(),
                                   child: Payment(
-                                    babysisterId: state.queryParams['babysisterId'] ?? '',
-                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                    babysisterId:
+                                        state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(
+                                        state.queryParams['shiftId'] ?? '0'),
                                   ),
-                                )
-                            ),
+                                )),
                           ),
                           GoRoute(
                             path: RoutesName.basicSettingRoute.path,
@@ -210,13 +217,15 @@ class MainApp extends StatelessWidget {
                             pageBuilder: (context, state) => MaterialPage(
                                 key: state.pageKey,
                                 child: BlocProvider.value(
-                                  value: ServiceLocator.locator.get<ReviewBloc>(),
+                                  value:
+                                      ServiceLocator.locator.get<ReviewBloc>(),
                                   child: Review(
-                                    babysistterId: state.queryParams['babysisterId'] ?? '',
-                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                    babysistterId:
+                                        state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(
+                                        state.queryParams['shiftId'] ?? '0'),
                                   ),
-                                )
-                            ),
+                                )),
                           ),
                           GoRoute(
                             path: RoutesName.cancelTheContractRoute.path,
@@ -326,14 +335,15 @@ class MainApp extends StatelessWidget {
                     )
                   ]),
               GoRoute(
-                  path: RoutesName.settingsRoute.path,
-                  name: RoutesName.settingsRoute.name,
-                  pageBuilder: (context, state) => NoTransitionPage(
-                          child: BlocProvider.value(
-                        value: ServiceLocator.locator.get<LoginBloc>(),
-                        child: const SettingsPage(),
-                      )),
-                  redirect: getRouteName)
+                path: RoutesName.settingsRoute.path,
+                name: RoutesName.settingsRoute.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                    child: BlocProvider.value(
+                  value: ServiceLocator.locator.get<LoginBloc>(),
+                  child: const SettingsPage(),
+                )),
+                redirect: getRouteName,
+              )
             ])
       ],
       errorPageBuilder: (context, state) => MaterialPage(
@@ -348,26 +358,15 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: ServiceLocator.locator.allReady(),
-        builder: (context, snapshot){
+        builder: (context, snapshot) {
           return BlocProvider.value(
-              value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
-                  ServiceLocator.locator.get<LoginBloc>()),
-              child: BlocListener<AppBloc, AppState>(
-                listenWhen: (previous, current) => previous != current,
-                listener: (context, state) {
-                  devtool.log("redirect");
-                  devtool.log(state.status.name);
-                  if (state.status == AuthenticationStatus.authenticated ||
-                      state.status == AuthenticationStatus.unauthenticated) {
-                    _router.refresh();
-                  }
-                },
-                child: MaterialApp.router(
-                  routerConfig: _router,
-                ),
-              ));
-        }
-    );
+            value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
+                ServiceLocator.locator.get<LoginBloc>()),
+            child: MaterialApp.router(
+              routerConfig: _router,
+            ),
+          );
+        });
   }
 }
 
