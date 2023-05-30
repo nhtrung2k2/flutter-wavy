@@ -19,6 +19,12 @@ abstract class SheduleState extends Equatable {
   List<Object?> get props => [listSchedule];
 }
 
+class ScheduleFetch extends SheduleState {
+  const ScheduleFetch(super.listSchedule);
+  @override
+  List<Object?> get props => [listSchedule];
+}
+
 class SheduleListState extends SheduleState {
   const SheduleListState(super.listSchedule);
   @override

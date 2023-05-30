@@ -13,6 +13,13 @@ class InitialState extends ChangeSettingState {
   List<Object?> get props => [];
 }
 
+class FetchLoading extends ChangeSettingState {
+  const FetchLoading();
+
+  @override
+  List<Object> get props => [];
+}
+
 class FetchSuccess extends ChangeSettingState {
   final ShiftSalaryEmployee shiftSalaryEmployee;
   const FetchSuccess({required this.shiftSalaryEmployee});

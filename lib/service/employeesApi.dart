@@ -79,10 +79,17 @@ class EmployeesApi {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
       final language = prefs.getString('language');
-
-      final response = await baseAPI.post(url, shiftSalaryEmployee.toJson(),
+      final Map<String, dynamic> data = shiftSalaryEmployee.toJson();
+      // data.forEach((key, value) => {
+      //       devtool.log(key),
+      //       devtool.log(value),
+      //     });
+      final response = await baseAPI.post(url, data,
           {'Authorization': 'Bearer $token', 'X-Localization': language});
-      // devtool.log(response.headers.toString());
+      devtool.log("saveChangeSetting");
+      devtool.log(response.statusCode.toString());
+      devtool.log(response.statusMessage.toString());
+      devtool.log(shiftSalaryEmployee.toString());
       if (response.statusCode == 200) {
         devtool.log("api success");
         return;

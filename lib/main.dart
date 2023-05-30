@@ -19,6 +19,7 @@ import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/schedule.dart';
 import 'package:wavy/repository/employees_repository.dart';
 import 'package:wavy/service/getit/service_locator.dart';
+import 'package:wavy/state/employee_state.dart';
 import 'package:wavy/view/pages/Input_salary.dart';
 
 import 'package:wavy/view/pages/baby_sister_detail.dart';
@@ -36,7 +37,9 @@ import 'package:wavy/view/pages/BaseScreen.dart';
 
 import 'bloc/employee_change_setting.dart';
 import 'bloc/logout_bloc.dart';
+import 'event/salary_event.dart';
 import 'state/app_state.dart';
+import 'state/employee_change_setting.dart';
 import 'utils/routesName.dart';
 import 'view/pages/basic_setting.dart';
 import 'view/pages/register_basic_setting.dart';
@@ -155,12 +158,12 @@ class MainApp extends StatelessWidget {
                                 )),
                           ),
                           GoRoute(
-                            path: RoutesName.cancelTheContractRoute.path,
-                            name: RoutesName.cancelTheContractRoute.name,
-                            pageBuilder: (context, state) => MaterialPage(
-                                key: state.pageKey,
-                                child: const BasicSettingPage()),
-                          )
+                              path: RoutesName.cancelTheContractRoute.path,
+                              name: RoutesName.cancelTheContractRoute.name,
+                              pageBuilder: (context, state) => MaterialPage(
+                                    key: state.pageKey,
+                                    child: const BasicSettingPage(),
+                                  )),
                         ]),
                     GoRoute(
                       path: RoutesName.registerbabysisterIdRoute.path,

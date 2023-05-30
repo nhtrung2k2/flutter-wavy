@@ -9,6 +9,7 @@ abstract class ChangeSettingEvent {
 class OnFetchChangeSettingEvent extends ChangeSettingEvent {
   const OnFetchChangeSettingEvent(this.shiftId);
   final int shiftId;
+
   @override
   List<Object?> get props => [shiftId];
 }

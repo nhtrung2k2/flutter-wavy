@@ -15,6 +15,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
     //   if (listSchedule.isNotEmpty) {
     //     emit(SheduleListState(listSchedule));
     //   } else {
+    devtool.log("constructorScheduleCubic");
     emit(SheduleListState([
       Schedule(
         day: DayOfWeek.Monday,
@@ -39,6 +40,11 @@ class ScheduleCubic extends Cubit<SheduleState> {
   }
   // });
   // }
+  void fetch(List<Schedule> listSchedule) async {
+    devtool.log("fetch_schedule");
+    devtool.log(listSchedule.toString());
+    emit(ScheduleFetch(listSchedule));
+  }
 
   void pickTimeStart(DayOfWeek day, TimeOfDay timeStart) {
     final listupdated = state.listSchedule.map((el) {
@@ -103,9 +109,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
     } catch (e) {
       emit(FailSchedule(state.listSchedule, e.toString()));
     }
-    Future<void> setSchedule(List<Schedule> listSchedule) async {
-      emit(SuccessSchedule(listSchedule));
-    }
+
     //error
   }
 }

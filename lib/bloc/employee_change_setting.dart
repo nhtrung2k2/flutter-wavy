@@ -26,10 +26,16 @@ class EmployeeChangeSettingBloc
     Emitter<ChangeSettingState> emit,
   ) async {
     try {
+      emit(const FetchLoading());
       ShiftSalaryEmployee shiftSalaryEmployee =
           await _employeesRepository.getChangeSetting(event.shiftId);
+      devtool.log("onCallBack1");
+
       emit(FetchSuccess(shiftSalaryEmployee: shiftSalaryEmployee));
+      devtool.log("onCallBack");
     } catch (e) {
+      devtool.log("error");
+      devtool.log(e.toString());
       emit(FetchError(errorMessage: e.toString()));
     }
   }
@@ -56,6 +62,11 @@ class EmployeeChangeSettingBloc
         inputShift: convertScheduleListToInputShiftList(event.inputShifts),
         inputSalary: event.inputSalary,
       );
+      // devtool.log("submitted");
+      // convertScheduleListToInputShiftList(event.inputShifts).forEach((element) {
+      //   devtool.log(element.toJson().toString());
+      // });
+      // devtool.log(event.inputSalary.toJson().toString());
       await _employeesRepository.saveChangeSetting(shiftSalaryEmployee);
 
       emit(SubmittedSuccessChangeSetting(
@@ -71,6 +82,15 @@ List<InputShift> convertScheduleListToInputShiftList(
   List<InputShift> list = [];
   for (int i = 0; i < scheduleList.length; i++) {
     list.add(InputShift.fromJson(scheduleList[i].toJson()));
+  }
+  return list;
+}
+
+List<Schedule> convertInputShiftListToScheduleList(
+    List<InputShift> inputShift) {
+  List<Schedule> list = [];
+  for (int i = 0; i < inputShift.length; i++) {
+    list.add(Schedule.fromJson(i, inputShift[i].toJson()));
   }
   return list;
 }

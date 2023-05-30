@@ -13,6 +13,7 @@ import 'package:wavy/view/components/custom_text.dart';
 import '../../utils/colors/custom_colors.dart';
 import '../components/back_next.dart';
 import '../components/begin_to_match_new_babysiter.dart';
+import 'dart:developer' as devtool;
 
 class RegisterBabySisterSchedulePage extends StatelessWidget {
   const RegisterBabySisterSchedulePage({super.key});
@@ -108,6 +109,7 @@ class RegisterBabySisterScheduleForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = context.watch<ScheduleCubic>().state.listSchedule;
+    devtool.log(context.watch<ScheduleCubic>().toString());
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,

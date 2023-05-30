@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import 'getit/service_locator.dart';
@@ -31,7 +33,15 @@ class BaseAPI {
       if (headers != null) {
         dio.options.headers.addAll(headers);
       }
-      // devtool.log(dio.options.headers.toString());
+      data!.forEach((key, value) {
+        devtool.log(key);
+        try {
+          String jsonString = jsonEncode(value);
+          devtool.log(jsonString);
+        } catch (e) {
+          devtool.log(value);
+        }
+      });
       return await dio.post(url, data: data);
     } catch (e) {
       throw Exception('Failed to make POST request: ${e.toString()}');

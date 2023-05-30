@@ -20,7 +20,7 @@ ItemSalary _$ItemSalaryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ItemSalary {
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'item_type_id')
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'price')
   int get price => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $ItemSalaryCopyWith<$Res> {
       _$ItemSalaryCopyWithImpl<$Res, ItemSalary>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int id,
+      {@JsonKey(name: 'item_type_id') int id,
       @JsonKey(name: 'price') int price,
       @JsonKey(name: 'option') int option});
 }
@@ -88,7 +88,7 @@ abstract class _$$_ItemSalaryCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int id,
+      {@JsonKey(name: 'item_type_id') int id,
       @JsonKey(name: 'price') int price,
       @JsonKey(name: 'option') int option});
 }
@@ -129,7 +129,7 @@ class __$$_ItemSalaryCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ItemSalary implements _ItemSalary {
   const _$_ItemSalary(
-      {@JsonKey(name: 'id') required this.id,
+      {@JsonKey(name: 'item_type_id') required this.id,
       @JsonKey(name: 'price') required this.price,
       @JsonKey(name: 'option') required this.option});
 
@@ -137,7 +137,7 @@ class _$_ItemSalary implements _ItemSalary {
       _$$_ItemSalaryFromJson(json);
 
   @override
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'item_type_id')
   final int id;
   @override
   @JsonKey(name: 'price')
@@ -181,7 +181,7 @@ class _$_ItemSalary implements _ItemSalary {
 
 abstract class _ItemSalary implements ItemSalary {
   const factory _ItemSalary(
-      {@JsonKey(name: 'id') required final int id,
+      {@JsonKey(name: 'item_type_id') required final int id,
       @JsonKey(name: 'price') required final int price,
       @JsonKey(name: 'option') required final int option}) = _$_ItemSalary;
 
@@ -189,7 +189,7 @@ abstract class _ItemSalary implements ItemSalary {
       _$_ItemSalary.fromJson;
 
   @override
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'item_type_id')
   int get id;
   @override
   @JsonKey(name: 'price')

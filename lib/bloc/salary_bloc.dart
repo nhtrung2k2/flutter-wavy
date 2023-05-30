@@ -34,7 +34,9 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   // }
   Future<void> _fetchInputSalary(
       InitialFetch event, Emitter<SalaryInputState> emit) async {
-    emit(state.copywith(inputSalary: event.inputSalary));
+    emit(state.copywith(
+      inputSalary: event.inputSalary,
+    ));
   }
 
   Future<void> _onDelete(
