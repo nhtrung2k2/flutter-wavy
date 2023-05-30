@@ -47,24 +47,22 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
           nameTitle: "Confirm the schedule",
           haveBackButton: true,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: Column(
-        children: [
-          const SizedBox(height: 16.0,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: confirmTheScheduleState.inforStatus==InformationStatus.loading
-              ? const Center(child: CircularProgressIndicator(),)
-              : _babysisterInformationSection(confirmTheScheduleState)
-          ),
-          Padding(
+      body: confirmTheScheduleState.inforStatus==InformationStatus.loading || confirmTheScheduleState.monthScheduleStatus==MonthScheduleStatus.loading
+        ? const Center(child: CircularProgressIndicator(),)
+        : Column(
+          children: [
+            const SizedBox(height: 16.0,),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: _monthYearSelector(confirmTheScheduleState),
-          ),
-          confirmTheScheduleState.monthScheduleStatus==MonthScheduleStatus.loading
-            ? const Center(child: CircularProgressIndicator(),)
-            : _listSchedule(confirmTheScheduleState)
-        ],
-      ),
+              child: _babysisterInformationSection(confirmTheScheduleState)
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _monthYearSelector(confirmTheScheduleState),
+            ),
+            _listSchedule(confirmTheScheduleState)
+          ],
+        ),
     );
   }
 
