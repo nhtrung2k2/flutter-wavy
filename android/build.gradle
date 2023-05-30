@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
@@ -19,26 +19,13 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
-
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
     project.evaluationDependsOn(':app')
-    task clean(type: Delete) {
+}
+
+task clean(type: Delete) {
     delete rootProject.buildDir
-}
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-   keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-}
-android{
- signingConfigs {
-   release {
-       keyAlias keystoreProperties['keyAlias']
-       keyPassword keystoreProperties['keyPassword']
-       storePassword keystoreProperties['storePassword']
-       storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-   }
-}   
-}
+    }
