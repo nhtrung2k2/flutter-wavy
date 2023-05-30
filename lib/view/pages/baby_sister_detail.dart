@@ -17,23 +17,39 @@ import 'package:wavy/view/components/custom_text.dart';
 import '../components/custom_column_infor.dart';
 
 class BabySisterDetail extends StatelessWidget {
-  const BabySisterDetail({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  const BabySisterDetail({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(
+    return Scaffold(
+      appBar: const CustomAppBar(
           nameTitle: "BabySister Detail",
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: BabySisterDetailForm(),
+      body: BabySisterDetailForm(babysisterId: babysisterId, shiftId: shiftId,),
     );
   }
 }
 
 class BabySisterDetailForm extends StatelessWidget {
-  const BabySisterDetailForm({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  const BabySisterDetailForm({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +63,7 @@ class BabySisterDetailForm extends StatelessWidget {
           ),
           Expanded(
             flex: 4,
-            child: CardInforDetail(),
+            child: CardInforDetail(babysisterId: babysisterId, shiftId: shiftId,),
           ),
         ],
       ),
@@ -56,17 +72,40 @@ class BabySisterDetailForm extends StatelessWidget {
 }
 
 class CardInforDetail extends StatelessWidget {
-  CardInforDetail({super.key});
+
+  final String babysisterId;
+  final int shiftId;
+
+  CardInforDetail({
+    required this.babysisterId,
+    required this.shiftId,
+    super.key
+  });
   final details = [
-    {"icon": null, "title": "Confirm the schedule", "colorText": Colors.black},
-    {"icon": null, "title": "Payments", "colorText": Colors.black},
+    {
+      "icon": null,
+      "title": "Confirm the schedule",
+      "colorText": Colors.black,
+      'route': RoutesName.babysisterConfirmTheSchedule.name
+    },
+    {
+      "icon": null,
+      "title": "Payments",
+      "colorText": Colors.black,
+      'route': RoutesName.babysisterPayment.name
+    },
     {
       "icon": null,
       "title": "Basic settings",
       "colorText": Colors.black,
       'route': RoutesName.basicSettingRoute.name
     },
-    {"icon": Icons.star, "title": "Review", "colorText": Colors.black},
+    {
+      "icon": Icons.star,
+      "title": "Review",
+      "colorText": Colors.black,
+      'route': RoutesName.babysisterReview.name
+    },
     {
       "icon": null,
       "title": "Cancel the contracts",
@@ -101,7 +140,16 @@ class CardInforDetail extends StatelessWidget {
                     children: [
                       CustomButtonIconNavigator(
                         onPressed: () {
-                          if (details[index]['route'] != null) {
+                          if(index==0 || index==1 || index ==3){
+                            context.goNamed(
+                                details[index]['route'] as String,
+                                queryParams: {
+                                  'babysisterId': babysisterId,
+                                  'shiftId': '$shiftId'
+                                }
+                            );
+                          }
+                          else if (details[index]['route'] != null) {
                             context.goNamed(details[index]['route'] as String);
                           }
                         },

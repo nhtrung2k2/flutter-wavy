@@ -31,10 +31,10 @@ class ReviewState {
     required this.validateStatus
   });
   factory ReviewState.initial() => const ReviewState(
-    employee: null,
-    review: Review(),
-    reviewStateStatus: ReviewStateStatus.initing,
-    validateStatus: ReviewValidateStatus.empty
+      employee: null,
+      review: Review(),
+      reviewStateStatus: ReviewStateStatus.initing,
+      validateStatus: ReviewValidateStatus.empty
   );
 
   ReviewState copyWith({
@@ -44,10 +44,10 @@ class ReviewState {
     ReviewValidateStatus? validateStatus,
   }) {
     return ReviewState(
-      employee: employee ?? this.employee,
-      review: review ?? this.review,
-      reviewStateStatus: reviewStateStatus ?? this.reviewStateStatus,
-      validateStatus: validateStatus ?? this.validateStatus
+        employee: employee ?? this.employee,
+        review: review ?? this.review,
+        reviewStateStatus: reviewStateStatus ?? this.reviewStateStatus,
+        validateStatus: validateStatus ?? this.validateStatus
     );
   }
 

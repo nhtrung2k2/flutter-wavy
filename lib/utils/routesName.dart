@@ -22,6 +22,14 @@ class RoutesName {
       Route('basic_setting', 'basic_setting');
   static final Route cancelTheContractRoute =
       Route('cancel_the_contract', 'cancel_the_contract');
+  static final Route babysisterConfirmTheSchedule =
+      Route('babysister_confirm_the_schedule', 'babysister_confirm_the_schedule');
+  static final Route babysisterPayment =
+      Route('babysister_payment', 'babysister_payment');
+  static final Route babysisterReview =
+      Route('babysister_review', 'babysister_review');
+  static final Route babysisterCostList =
+      Route('babysister_cost_list', 'babysister_cost_list');
 
   //settings
   static final Route settingsRoute = Route('settingsPage', '/settings');

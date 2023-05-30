@@ -44,6 +44,7 @@ import 'utils/routesName.dart';
 import 'view/pages/basic_setting.dart';
 import 'view/pages/register_basic_setting.dart';
 import 'dart:developer' as devtool;
+import 'package:wavy/view/pages/review.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -124,9 +125,55 @@ class MainApp extends StatelessWidget {
                               child: BlocProvider.value(
                                   value: ServiceLocator.locator
                                       .get<EmployeeDetailBloc>(),
-                                  child: const BabySisterDetail()),
+                                  child: BabySisterDetail(
+                                    babysisterId: state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                  )),
                             ),
                         routes: [
+                          GoRoute(
+                            path: RoutesName.babysisterConfirmTheSchedule.path,
+                            name: RoutesName.babysisterConfirmTheSchedule.name,
+                            routes: [
+                              GoRoute(
+                                path: RoutesName.babysisterCostList.path,
+                                name: RoutesName.babysisterCostList.name,
+                                pageBuilder: (context, state) => MaterialPage(
+                                    key: state.pageKey,
+                                    child: BlocProvider.value(
+                                      value: ServiceLocator.locator.get<CostListBloc>(),
+                                      child: CostList(
+                                          amountId: int.parse(state.queryParams['amountId'] ?? '0')
+                                      ),
+                                    )
+                                ),
+                              ),
+                            ],
+                            pageBuilder: (context, state) => MaterialPage(
+                                key: state.pageKey,
+                                child: BlocProvider.value(
+                                    value: ServiceLocator.locator.get<ConfirmTheScheduleBloc>(),
+                                    child: ConfirmTheSchedule(
+                                        babysisterId: state.queryParams['babysisterId'] ?? '',
+                                        shiftId: int.parse(state.queryParams['shiftId'] ?? '0')
+                                    ),
+                                )
+                            ),
+                          ),
+                          GoRoute(
+                            path: RoutesName.babysisterPayment.path,
+                            name: RoutesName.babysisterPayment.name,
+                            pageBuilder: (context, state) => MaterialPage(
+                                key: state.pageKey,
+                                child: BlocProvider.value(
+                                  value: ServiceLocator.locator.get<PaymentBloc>(),
+                                  child: Payment(
+                                    babysisterId: state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                  ),
+                                )
+                            ),
+                          ),
                           GoRoute(
                             path: RoutesName.basicSettingRoute.path,
                             name: RoutesName.basicSettingRoute.name,
@@ -158,12 +205,26 @@ class MainApp extends StatelessWidget {
                                 )),
                           ),
                           GoRoute(
-                              path: RoutesName.cancelTheContractRoute.path,
-                              name: RoutesName.cancelTheContractRoute.name,
-                              pageBuilder: (context, state) => MaterialPage(
-                                    key: state.pageKey,
-                                    child: const BasicSettingPage(),
-                                  )),
+                            path: RoutesName.babysisterReview.path,
+                            name: RoutesName.babysisterReview.name,
+                            pageBuilder: (context, state) => MaterialPage(
+                                key: state.pageKey,
+                                child: BlocProvider.value(
+                                  value: ServiceLocator.locator.get<ReviewBloc>(),
+                                  child: Review(
+                                    babysistterId: state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                  ),
+                                )
+                            ),
+                          ),
+                          GoRoute(
+                            path: RoutesName.cancelTheContractRoute.path,
+                            name: RoutesName.cancelTheContractRoute.name,
+                            pageBuilder: (context, state) => MaterialPage(
+                                key: state.pageKey,
+                                child: const BasicSettingPage()),
+                          )
                         ]),
                     GoRoute(
                       path: RoutesName.registerbabysisterIdRoute.path,
@@ -285,23 +346,28 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-        value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
-            ServiceLocator.locator.get<LoginBloc>()),
-        child: BlocListener<AppBloc, AppState>(
-          listenWhen: (previous, current) => previous != current,
-          listener: (context, state) {
-            devtool.log("redirect");
-            devtool.log(state.status.name);
-            if (state.status == AuthenticationStatus.authenticated ||
-                state.status == AuthenticationStatus.unauthenticated) {
-              _router.refresh();
-            }
-          },
-          child: MaterialApp.router(
-            routerConfig: _router,
-          ),
-        ));
+    return FutureBuilder(
+        future: ServiceLocator.locator.allReady(),
+        builder: (context, snapshot){
+          return BlocProvider.value(
+              value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
+                  ServiceLocator.locator.get<LoginBloc>()),
+              child: BlocListener<AppBloc, AppState>(
+                listenWhen: (previous, current) => previous != current,
+                listener: (context, state) {
+                  devtool.log("redirect");
+                  devtool.log(state.status.name);
+                  if (state.status == AuthenticationStatus.authenticated ||
+                      state.status == AuthenticationStatus.unauthenticated) {
+                    _router.refresh();
+                  }
+                },
+                child: MaterialApp.router(
+                  routerConfig: _router,
+                ),
+              ));
+        }
+    );
   }
 }
 

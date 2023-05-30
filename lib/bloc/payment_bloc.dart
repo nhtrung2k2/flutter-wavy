@@ -11,9 +11,9 @@ import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/state/payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
+
   final EmployeesRepository _employeesRepository;
-  final PaymentRepository _paymentRepository =
-      ServiceLocator.locator.get<PaymentRepository>();
+  final PaymentRepository _paymentRepository = ServiceLocator.locator.get<PaymentRepository>();
 
   PaymentBloc(this._employeesRepository) : super(PaymentState.initial()) {
     on<LoadPaymentDataEvent>(_onLoadData);
@@ -21,138 +21,170 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<IncludeInPaymentEvent>(_onIncludeItemInPayment);
     on<AddItemEvent>(_onAddNewItem);
     on<RemoveItemEvent>(_onRemoveItem);
-    // on<PayEvent>(_onPay);
+    on<PayEvent>(_onPay);
   }
 
   Future<void> _onLoadData(
-    LoadPaymentDataEvent event,
-    Emitter<PaymentState> emit,
-  ) async {
-    emit(state.copyWith(paymentStateStatus: PaymentStateStatus.loading));
+      LoadPaymentDataEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
+    emit(state.copyWith(
+        month: DateTime.now().month,
+        year: DateTime.now().year,
+        paymentStateStatus: PaymentStateStatus.loading
+    ));
 
     try {
-      Employee_Detail employeeDetail = await _employeesRepository
-          .fetchEmployDetail(event.babysisterId, null);
-      // Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime.now()));
-      Payment paymentData = Payment.fromJson(paymentDummyJson);
+      Employee_Detail employeeDetail = await _employeesRepository.fetchEmployDetail(event.babysisterId, event.shiftId);
+      emit(state.copyWith(employee: employeeDetail));
+
+      Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
 
       DateTime now = DateTime.now();
       int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
-      CanPayStatus canPay = paymentData.paymentStatus == 1
-          ? CanPayStatus.paid
-          : (lastDayOfThisMonth == now.day
-              ? CanPayStatus.payNow
-              : CanPayStatus.beingCalculated);
+      CanPayStatus canPay = paymentData.paymentStatus == 1 ? CanPayStatus.paid : (lastDayOfThisMonth == now.day ? CanPayStatus.payNow : CanPayStatus.beingCalculated);
       List<Item> items = [];
-      items.addAll(paymentData.items.map((e) => e.copyWith(canRemove: false)));
+      items.addAll(paymentData.items.map((e) => e.copyWith(
+          canRemove: false
+      )));
 
       emit(state.copyWith(
-          employee: employeeDetail,
           payment: paymentData.copyWith(items: items),
           paymentStateStatus: PaymentStateStatus.success,
-          canPayStatus: canPay));
+          canPayStatus: canPay
+      ));
     } catch (e) {
-      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.failure));
+      if(e.toString().contains('EMPTY_PAYMENT')){
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.emptyPayment
+        ));
+      }
+      else{
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.failure
+        ));
+      }
     }
+
   }
 
   Future<void> _onChangeMonth(
-    ChangeMonthEvent event,
-    Emitter<PaymentState> emit,
-  ) async {
+      ChangeMonthEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
     emit(state.copyWith(
         year: event.dateTime.year,
         month: event.dateTime.month,
-        paymentStateStatus: PaymentStateStatus.loading));
+        paymentStateStatus: PaymentStateStatus.loading
+    ));
 
     try {
-      Payment paymentData = await _paymentRepository.fetchPaymentData(
-          event.shiftId,
-          DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
+      Payment paymentData = await _paymentRepository.fetchPaymentData(event.shiftId, DateFormat('yyyy-MM').format(DateTime(state.year, state.month)));
 
       DateTime now = DateTime.now();
       int lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
-      CanPayStatus canPay = paymentData.paymentStatus == 1
-          ? CanPayStatus.paid
-          : (lastDayOfThisMonth == now.day
-              ? CanPayStatus.payNow
-              : CanPayStatus.beingCalculated);
+      CanPayStatus canPay = paymentData.paymentStatus == 1 ? CanPayStatus.paid : (lastDayOfThisMonth == now.day ? CanPayStatus.payNow : CanPayStatus.beingCalculated);
       List<Item> items = [];
-      items.addAll(paymentData.items.map((e) => e.copyWith(canRemove: false)));
+      items.addAll(paymentData.items.map((e) => e.copyWith(
+          canRemove: false
+      )));
       emit(state.copyWith(
           payment: paymentData.copyWith(items: items),
           paymentStateStatus: PaymentStateStatus.success,
-          canPayStatus: canPay));
+          canPayStatus: canPay
+      ));
     } catch (e) {
-      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.failure));
+      if(e.toString().contains('EMPTY_PAYMENT')){
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.emptyPayment
+        ));
+      }
+      else{
+        emit(state.copyWith(
+            paymentStateStatus: PaymentStateStatus.failure
+        ));
+      }
     }
+
   }
 
   Future<void> _onIncludeItemInPayment(
-    IncludeInPaymentEvent event,
-    Emitter<PaymentState> emit,
-  ) async {
+      IncludeInPaymentEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
     Payment payment = state.payment!;
     List<Item> items = [];
-    for (int i = 0; i < payment.items.length; i++) {
-      if (i == event.index) {
-        items.add(
-            payment.items[i].copyWith(includeInPayment: event.value ? 1 : 0));
-      } else {
+    for(int i=0; i<payment.items.length; i++){
+      if(i==event.index){
+        items.add(payment.items[i].copyWith(
+            includeInPayment: event.value ? 1 : 0
+        ));
+      }
+      else{
         items.add(payment.items[i]);
       }
     }
 
-    emit(state.copyWith(payment: state.payment?.copyWith(items: items)));
+    emit(state.copyWith(
+        payment: state.payment?.copyWith(
+            items: items
+        )
+    ));
+
   }
 
   Future<void> _onAddNewItem(
-    AddItemEvent event,
-    Emitter<PaymentState> emit,
-  ) async {
+      AddItemEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
     List<Item> items = [];
     items.addAll(state.payment?.items ?? []);
-    items.add(Item(
-        itemId: event.itemId,
-        itemName: itemCost
-            .singleWhere((element) => element['id'] == event.itemId)['name'],
-        itemAmount: event.price,
-        option: event.optionId));
+    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: event.price, option: event.optionId));
 
-    emit(state.copyWith(payment: state.payment!.copyWith(items: items)));
+    emit(state.copyWith(
+        payment: state.payment!.copyWith(
+            items: items
+        )
+    ));
+
   }
 
   Future<void> _onRemoveItem(
-    RemoveItemEvent event,
-    Emitter<PaymentState> emit,
-  ) async {
+      RemoveItemEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
     List<Item> items = [];
     items.addAll(state.payment?.items ?? []);
     items.removeAt(event.index);
 
-    emit(state.copyWith(payment: state.payment!.copyWith(items: items)));
-  }
-}
+    emit(state.copyWith(
+        payment: state.payment!.copyWith(
+            items: items
+        )
+    ));
 
-const paymentDummyJson = {
-  "payment_month": "2023-05",
-  "labour_cost": 8000000,
-  "hour_woking": 8,
-  "hourly_wage": 50000,
-  "payment_amount": 600000,
-  "payment_status": 0,
-  "items": [
-    {
-      "item_id": 8,
-      "item_name": "Tet bonus",
-      "item_amount": 500000,
-      "include_in_payment": 0
-    },
-    {
-      "item_id": 9,
-      "item_name": "Contract-end bonus",
-      "item_amount": 500000,
-      "include_in_payment": 1
-    },
-  ]
-};
+  }
+
+  Future<void> _onPay(
+      PayEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
+    emit(state.copyWith(paymentStateStatus: PaymentStateStatus.paying));
+
+    try {
+      await _paymentRepository.updateItemPayment(state.payment!);
+
+      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.paid));
+    } catch (e) {
+      emit(state.copyWith(paymentStateStatus: PaymentStateStatus.payFailed));
+    }
+
+  }
+
+}

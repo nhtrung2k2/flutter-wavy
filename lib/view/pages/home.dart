@@ -66,7 +66,13 @@ class _HomePageState extends State<HomePage>
         body: BlocListener<EmployeeDetailBloc, EmployeeDetailState>(
           listener: (context, state) {
             if (state is SubmittedEmployeeDetailSuccessState) {
-              context.goNamed("register_baby_sister_detail");
+              context.goNamed(
+                "register_baby_sister_detail",
+                queryParams: {
+                  'babysisterId': state.employeeDetail.id,
+                  'shiftId': '${state.shiftId}',
+                }
+              );
             }
           },
           child: Padding(

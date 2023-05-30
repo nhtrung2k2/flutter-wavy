@@ -22,7 +22,8 @@ class SubmittedEmployeeDetailLoadingState extends EmployeeDetailState {
 
 class SubmittedEmployeeDetailSuccessState extends EmployeeDetailState {
   final Employee_Detail employeeDetail;
-  const SubmittedEmployeeDetailSuccessState({required this.employeeDetail});
+  final int shiftId;
+  const SubmittedEmployeeDetailSuccessState({required this.employeeDetail, required this.shiftId});
 
   @override
   List<Object?> get props => [employeeDetail];

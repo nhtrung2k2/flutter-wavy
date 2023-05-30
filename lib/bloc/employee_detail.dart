@@ -18,7 +18,7 @@ class EmployeeDetailBloc
     try {
       final employee = await employeeRepo.fetchEmployDetail(
           event.babysisterDetailId, event.shiftId);
-      emit(SubmittedEmployeeDetailSuccessState(employeeDetail: employee));
+      emit(SubmittedEmployeeDetailSuccessState(employeeDetail: employee, shiftId: event.shiftId));
     } catch (e) {
       emit(SubmittedEmployeeDetailErrorState(errorMessage: e.toString()));
     }

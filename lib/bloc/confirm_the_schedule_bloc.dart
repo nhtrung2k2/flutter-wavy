@@ -27,6 +27,8 @@ class ConfirmTheScheduleBloc
     Emitter<ConfirmTheScheduleState> emit,
   ) async {
     emit(state.copyWith(
+        month: DateTime.now().month,
+        year: DateTime.now().year,
         informationStatus: InformationStatus.loading,
         monthScheduleStatus: MonthScheduleStatus.loading));
 
