@@ -19,6 +19,7 @@ class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
       LogoutPressed event, Emitter<LogoutState> emit) async {
     emit(const LogoutStateLoading());
     try {
+      devtool.log("logout bloc1");
       await userRepo.logout();
       devtool.log("logout bloc");
       emit(const LogoutStateSuccess());

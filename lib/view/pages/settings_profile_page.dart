@@ -80,6 +80,7 @@ class SettingForm extends StatelessWidget {
                 }),
               ),
               CustomButtonIconNavigator(
+                  disabled: false,
                   onPressed: () {},
                   title: "Cancel membership",
                   colorText: CustomColors.redText,
@@ -106,6 +107,7 @@ class CustomeButtonIconNavigatorDivide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       CustomButtonIconNavigator(
+          disabled: false,
           onPressed: onPressed,
           title: title,
           colorText: colorText,

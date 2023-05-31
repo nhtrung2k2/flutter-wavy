@@ -26,10 +26,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
 //  with WidgetsBindingObserver
+
 {
+  late final EmployeeDetailBloc employeeDetailBloc;
+
   @override
   void initState() {
     super.initState();
+    employeeDetailBloc = context.read<EmployeeDetailBloc>();
     // final EmployeeBloc employeeBloc = context.read<EmployeeBloc>();
     // employeeBloc.add(FetchEmployees());
     // WidgetsBinding.instance.addObserver(this);
@@ -66,13 +70,10 @@ class _HomePageState extends State<HomePage>
         body: BlocListener<EmployeeDetailBloc, EmployeeDetailState>(
           listener: (context, state) {
             if (state is SubmittedEmployeeDetailSuccessState) {
-              context.goNamed(
-                "register_baby_sister_detail",
-                queryParams: {
-                  'babysisterId': state.employeeDetail.id,
-                  'shiftId': '${state.shiftId}',
-                }
-              );
+              context.goNamed("register_baby_sister_detail", queryParams: {
+                'babysisterId': state.employeeDetail.id,
+                'shiftId': '${state.shiftId}',
+              });
             }
           },
           child: Padding(
@@ -95,6 +96,8 @@ class _HomePageState extends State<HomePage>
                       itemBuilder: (BuildContext context, int index) {
                         return Column(children: [
                           CardInforHome(
+                              cancelDateTime:
+                                  employees[index].cancel__contract_date,
                               onPressed: () {
                                 if (employeeDetailBloc.state
                                     is! SubmittedEmployeeDetailLoadingState) {

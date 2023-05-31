@@ -17,15 +17,11 @@ import 'package:wavy/view/components/custom_text.dart';
 import '../components/custom_column_infor.dart';
 
 class BabySisterDetail extends StatelessWidget {
-
   final String babysisterId;
   final int shiftId;
 
-  const BabySisterDetail({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  const BabySisterDetail(
+      {required this.babysisterId, required this.shiftId, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +31,20 @@ class BabySisterDetail extends StatelessWidget {
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: BabySisterDetailForm(babysisterId: babysisterId, shiftId: shiftId,),
+      body: BabySisterDetailForm(
+        babysisterId: babysisterId,
+        shiftId: shiftId,
+      ),
     );
   }
 }
 
 class BabySisterDetailForm extends StatelessWidget {
-
   final String babysisterId;
   final int shiftId;
 
-  const BabySisterDetailForm({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  const BabySisterDetailForm(
+      {required this.babysisterId, required this.shiftId, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +58,10 @@ class BabySisterDetailForm extends StatelessWidget {
           ),
           Expanded(
             flex: 4,
-            child: CardInforDetail(babysisterId: babysisterId, shiftId: shiftId,),
+            child: CardInforDetail(
+              babysisterId: babysisterId,
+              shiftId: shiftId,
+            ),
           ),
         ],
       ),
@@ -72,15 +70,11 @@ class BabySisterDetailForm extends StatelessWidget {
 }
 
 class CardInforDetail extends StatelessWidget {
-
   final String babysisterId;
   final int shiftId;
 
-  CardInforDetail({
-    required this.babysisterId,
-    required this.shiftId,
-    super.key
-  });
+  CardInforDetail(
+      {required this.babysisterId, required this.shiftId, super.key});
   final details = [
     {
       "icon": null,
@@ -115,6 +109,9 @@ class CardInforDetail extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
+    final employee = (context.watch<EmployeeDetailBloc>().state
+            as SubmittedEmployeeDetailSuccessState)
+        .employeeDetail;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,31 +135,44 @@ class CardInforDetail extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomButtonIconNavigator(
-                        onPressed: () {
-                          if(index==0 || index==1 || index ==3){
-                            context.goNamed(
-                                details[index]['route'] as String,
-                                queryParams: {
-                                  'babysisterId': babysisterId,
-                                  'shiftId': '$shiftId'
-                                }
-                            );
-                          }
-                          else if (details[index]['route'] != null) {
-                            context.goNamed(
-                                details[index]['route'] as String,
-                                queryParams: {
-                                  'babysisterId': babysisterId,
-                                  'shiftId': '$shiftId'
-                                }
-                            );
-                          }
-                        },
-                        colorText: details[index]['colorText'] as Color,
-                        title: details[index]['title'] as String,
-                        iconData: details[index]['icon'] as IconData?,
-                      ),
+                      if (index != 2)
+                        CustomButtonIconNavigator(
+                          disabled: false,
+                          onPressed: () {
+                            if (index == 0 || index == 1 || index == 3) {
+                              context.goNamed(details[index]['route'] as String,
+                                  queryParams: {
+                                    'babysisterId': babysisterId,
+                                    'shiftId': '$shiftId'
+                                  });
+                            } else if (details[index]['route'] != null) {
+                              context.goNamed(details[index]['route'] as String,
+                                  queryParams: {
+                                    'babysisterId': babysisterId,
+                                    'shiftId': '$shiftId'
+                                  });
+                            }
+                          },
+                          colorText: details[index]['colorText'] as Color,
+                          title: details[index]['title'] as String,
+                          iconData: details[index]['icon'] as IconData?,
+                        ),
+                      if (index == 2)
+                        CustomButtonIconNavigator(
+                          disabled: employee.cancel__contract_date != null,
+                          onPressed: () {
+                            if (details[index]['route'] != null) {
+                              context.goNamed(details[index]['route'] as String,
+                                  queryParams: {
+                                    'babysisterId': babysisterId,
+                                    'shiftId': '$shiftId'
+                                  });
+                            }
+                          },
+                          colorText: details[index]['colorText'] as Color,
+                          title: details[index]['title'] as String,
+                          iconData: details[index]['icon'] as IconData?,
+                        ),
                       const Divider(
                         thickness: 2,
                       )
@@ -170,6 +180,7 @@ class CardInforDetail extends StatelessWidget {
                   );
                 } else {
                   return CustomButtonIconNavigator(
+                    disabled: false,
                     onPressed: () {
                       if (details[index]['route'] != null) {
                         context.goNamed(
@@ -199,7 +210,8 @@ class CustomButtonIconNavigator extends StatelessWidget {
       required this.onPressed,
       required this.title,
       required this.colorText,
-      required this.iconData})
+      required this.iconData,
+      required this.disabled})
       : icon = iconData != null
             ? Row(children: [
                 Icon(
@@ -217,46 +229,51 @@ class CustomButtonIconNavigator extends StatelessWidget {
   final IconData? iconData;
   final Color colorText;
   final Widget icon;
+  final bool disabled;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 5, 0, 1.5),
-      child: SizedBox(
-        height: 25,
-        child: IconButton(
-            padding: const EdgeInsets.all(0),
-            onPressed: () {
-              onPressed();
-            },
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      icon,
-                      Expanded(
-                        child: CustomText(
-                          title: title,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                          lineHeight: 16 / 14,
-                          colorText: colorText,
-                          textAlign: TextAlign.start,
-                        ),
+    return Container(
+        color: disabled ? CustomColors.backgroundGray : null,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 5, 0, 1.5),
+          child: SizedBox(
+            height: 25,
+            child: IconButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: disabled == true
+                    ? null
+                    : () {
+                        onPressed();
+                      },
+                icon: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          icon,
+                          Expanded(
+                            child: CustomText(
+                              title: title,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14,
+                              lineHeight: 16 / 14,
+                              colorText: colorText,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.navigate_next,
-                    color: CustomColors.blueNextIcon, size: 21.5)
-              ],
-            )),
-      ),
-    );
+                    ),
+                    const Icon(Icons.navigate_next,
+                        color: CustomColors.blueNextIcon, size: 21.5)
+                  ],
+                )),
+          ),
+        ));
   }
 }
 

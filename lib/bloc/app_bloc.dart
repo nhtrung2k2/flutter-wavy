@@ -19,11 +19,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppLogined>(_login);
     on<AppLogoutRequested>(_logout);
     _logoutBloc.stream.listen((state) {
+      // devtool.log("logoutBlocInApp");
+      // devtool.log(state.toString());
       if (state is LogoutStateSuccess) {
         add(const AppLogoutRequested());
       }
     });
     _loginBloc.stream.listen((state) {
+      // devtool.log("loginBlocInApp");
+      // devtool.log(state.toString());
       if (state.formStatus == FormSubmissionStatus.submissionsuccess) {
         add(const AppLogined());
       }
