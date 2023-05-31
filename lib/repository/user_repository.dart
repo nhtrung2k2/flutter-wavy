@@ -7,6 +7,7 @@ import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/service/user_api.dart';
 
 import '../model/User.dart';
+import 'dart:developer' as devtool;
 
 class UserRepository {
   final AuthApi _authApi;

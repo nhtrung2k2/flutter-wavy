@@ -62,6 +62,10 @@ class AuthApi {
       final language = prefs.getString("language");
       final response = await baseApi.post(logoutUrl, null,
           {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
+      devtool.log("apiLogout");
+      devtool.log(response.statusCode.toString());
+      devtool.log(response.statusMessage.toString());
+      devtool.log(response.toString());
       if (response.statusCode == 200) {
         prefs.setString("token", "");
         prefs.setString("language", "");

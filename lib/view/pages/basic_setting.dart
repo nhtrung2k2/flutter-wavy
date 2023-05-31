@@ -72,7 +72,8 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
             .employeeDetail;
     employeeBloc = context.read<EmployeeBloc>();
     shiftId = employeeBloc.state.employees
-        .firstWhere((e) => e.id == employeeDetail.id)
+        .firstWhere(
+            (e) => e.id == employeeDetail.id && e.cancel__contract_date == null)
         .shiftId;
     employeeChangeSettingBloc = context.read<EmployeeChangeSettingBloc>();
     employeeChangeSettingBloc.add(OnFetchChangeSettingEvent(shiftId));
@@ -89,6 +90,8 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
           context.pop();
         }
         if (state is FetchSuccess) {
+          devtool.log("shift_id");
+          devtool.log(state.shiftSalaryEmployee.shiftId.toString());
           scheduleBloc.fetch(convertInputShiftListToScheduleList(
               state.shiftSalaryEmployee.inputShift));
           inputSalaryBloc.add(
@@ -167,6 +170,8 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
                         backgroundColor: CustomColors.blueBorder,
                         borderRadius: 8,
                         onPressed: () {
+                          devtool.log("shift_id_click");
+                          devtool.log(shiftId.toString());
                           context.read<EmployeeChangeSettingBloc>().add(
                               OnSubmmitedChangeSettingEvent(
                                   shiftId: shiftId,
