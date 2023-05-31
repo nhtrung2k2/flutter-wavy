@@ -52,7 +52,7 @@ class ScheduleConfirmApi {
       final response =
       await baseAPI.post(
           url,
-          {'amoundId': amoundId},
+          {'amount_id': amoundId},
           {'Authorization': 'Bearer $token', 'X-Localization': language}
       );
 

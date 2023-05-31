@@ -177,7 +177,7 @@ class _PaymentState extends State<Payment> {
                   height: 16.0,
                 ),
                 AddMoreItemsComponents(
-                  enable: paymentState.canPayStatus == CanPayStatus.payNow,
+                  // enable: paymentState.canPayStatus == CanPayStatus.payNow,
                   onAddedNewItem: _addNewItem,
                   itemList: itemCost.sublist(8),
                 )

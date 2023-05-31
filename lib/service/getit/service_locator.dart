@@ -9,11 +9,13 @@ import 'package:wavy/bloc/employee_detail.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/bloc/payment_bloc.dart';
 import 'package:wavy/bloc/review_bloc.dart';
+import 'package:wavy/bloc/termination_contract_bloc.dart';
 import 'package:wavy/repository/confirm_the_schedule_repository.dart';
 import 'package:wavy/repository/cost_list_repository.dart';
 import 'package:wavy/repository/employees_repository.dart';
 import 'package:wavy/repository/payment_repository.dart';
 import 'package:wavy/repository/review_repository.dart';
+import 'package:wavy/repository/termination_contract_repository.dart';
 import 'package:wavy/repository/user_repository.dart';
 import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/confirm_schedule_api.dart';
@@ -21,6 +23,7 @@ import 'package:wavy/service/cost_list_api.dart';
 import 'package:wavy/service/employeesApi.dart';
 import 'package:wavy/service/payment_api.dart';
 import 'package:wavy/service/review_api.dart';
+import 'package:wavy/service/termination_contract_api.dart';
 import 'package:wavy/service/user_api.dart';
 
 import '../../bloc/app_bloc.dart';
@@ -97,6 +100,12 @@ class ServiceLocator {
     locator.registerSingleton<ReviewRepository>(ReviewRepository());
     locator.registerSingletonWithDependencies<ReviewBloc>(
             () => ReviewBloc(locator.get<EmployeesRepository>()),
+        dependsOn: [EmployeesRepository]);
+
+    locator.registerSingleton<TerminationContractApi>(TerminationContractApi());
+    locator.registerSingleton<TerminationContractRepository>(TerminationContractRepository());
+    locator.registerSingletonWithDependencies<TerminationContractBloc>(
+            () => TerminationContractBloc(locator.get<EmployeesRepository>()),
         dependsOn: [EmployeesRepository]);
 
   }

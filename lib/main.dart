@@ -14,6 +14,7 @@ import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/bloc/payment_bloc.dart';
 import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
+import 'package:wavy/bloc/termination_contract_bloc.dart';
 import 'package:wavy/event/employees_event.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/schedule.dart';
@@ -34,6 +35,7 @@ import 'package:wavy/view/pages/register_baby_sister_schedule.dart';
 import 'package:wavy/view/pages/settings_profile_page.dart';
 import 'package:wavy/view/pages/splash_page.dart';
 import 'package:wavy/view/pages/BaseScreen.dart';
+import 'package:wavy/view/pages/termination_contract.dart';
 
 import 'bloc/employee_change_setting.dart';
 import 'bloc/logout_bloc.dart';
@@ -223,7 +225,14 @@ class MainApp extends StatelessWidget {
                             name: RoutesName.cancelTheContractRoute.name,
                             pageBuilder: (context, state) => MaterialPage(
                                 key: state.pageKey,
-                                child: const BasicSettingPage()),
+                                child: BlocProvider.value(
+                                    value: ServiceLocator.locator.get<TerminationContractBloc>(),
+                                    child: TerminationContract(
+                                      babysistterId: state.queryParams['babysisterId'] ?? '',
+                                      shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
+                                    ),
+                                )
+                            ),
                           )
                         ]),
                     GoRoute(
