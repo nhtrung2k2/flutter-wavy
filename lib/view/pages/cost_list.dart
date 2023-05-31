@@ -15,6 +15,7 @@ import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/view/components/add_more_items_components/add_more_items_component.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_dialog.dart';
+import 'package:wavy/view/components/custom_input_field.dart';
 
 class CostList extends StatefulWidget {
 
@@ -32,6 +33,7 @@ class CostList extends StatefulWidget {
 class _CostListState extends State<CostList> {
 
   late CostListBloc costListBloc;
+  final List<TextEditingController> controllers = [];
 
   @override
   void initState() {
@@ -48,6 +50,12 @@ class _CostListState extends State<CostList> {
         }
         else if(state.costListStatus == CostListStatus.failedUpdated){
           _showToast('Failed');
+        }
+        else if(state.costListStatus == CostListStatus.success || state.costListStatus == CostListStatus.updatedItem){
+          controllers.clear();
+          for(Item item in (state.cost?.items ?? [])){
+            controllers.add(TextEditingController(text: item.itemAmount == 0 ? '' : NumberFormat('###,###').format(item.itemAmount)));
+          }
         }
       });
     });
@@ -145,8 +153,10 @@ class _CostListState extends State<CostList> {
                 ),
                 const SizedBox(height: 8.0,),
                 AddMoreItemsComponents(
-                  onAddedNewItem: _addNewItem,
                   itemList: itemCost.sublist(4, 8),
+                  onPicked: (item){
+                    costListBloc.add(AddNewItemEvent(itemId: item['id']));
+                  },
                 ),
                 const SizedBox(height: 16.0,),
                 Container(
@@ -203,7 +213,8 @@ class _CostListState extends State<CostList> {
       canRemove,
       onTap: (){
         if(canRemove) costListBloc.add(RemoveItemEvent(index: index));
-      }
+      },
+      index: index
   );
 
   Widget workingTimeCost(CostListState state) => baseCostItem(
@@ -232,12 +243,27 @@ class _CostListState extends State<CostList> {
       (state.cost?.hourWorking ?? 0) * (state.cost?.hourlyWave ?? 0),
       false);
 
-  Widget baseCostItem(Widget content, int price, bool canRemove, {Function? onTap}){
+  Widget baseCostItem(Widget content, int price, bool canRemove, {Function? onTap, int index = -1}){
     return Row(
       children: [
         Expanded(child: content),
         const SizedBox(width: 10.0,),
-        Text(
+        canRemove
+        ? SizedBox(
+          width: 200,
+          child: CustomInputField(
+            controller: index >= 0 ? controllers[index] : null,
+            inputType: InputType.currency,
+            onChanged: (value){
+              costListBloc.add(
+                  ChangePriceItemEvent(
+                      index: index >= 0 ? index : -1,
+                      price: int.parse(value.replaceAll(',', '')))
+              );
+            },
+          ),
+        )
+        : Text(
           NumberFormat('###,###').format(price),
           style: const TextStyle(
             color: Colors.black,
@@ -271,10 +297,6 @@ class _CostListState extends State<CostList> {
         )
       ],
     );
-  }
-
-  _addNewItem(int itemId, int price, int optionId){
-    costListBloc.add(AddItemEvent(itemId: itemId, price: price, optionId: optionId));
   }
 
   Widget _uploadImage(CostListState state){

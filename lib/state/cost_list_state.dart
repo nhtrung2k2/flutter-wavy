@@ -14,7 +14,9 @@ enum CostListStatus {
   failedUpdated,
   uploadedImage,
   failedUploadImageMore3,
-  removedImage
+  removedImage,
+  updatedItem,
+  priceChanging
 }
 
 class CostListState {

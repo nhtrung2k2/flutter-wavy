@@ -21,7 +21,8 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     on<UploadImagesEvent>(_onUploadImages);
     on<RemoveImageEvent>(_onRemoveImage);
     on<UpdateCostListEvent>(_onUpdateCostList);
-    on<AddItemEvent>(_onAddNewItem);
+    on<AddNewItemEvent>(_onAddNewItem);
+    on<ChangePriceItemEvent>(_onChangePrice);
     on<RemoveItemEvent>(_onRemoveItem);
   }
 
@@ -150,18 +151,44 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
   }
 
   Future<void> _onAddNewItem(
-      AddItemEvent event,
+      AddNewItemEvent event,
       Emitter<CostListState> emit,
       ) async {
 
     List<Item> items = [];
     items.addAll(state.cost?.items ?? []);
-    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: event.price, option: event.optionId));
+    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: 0));
     
     emit(state.copyWith(
       cost: state.cost!.copyWith(
         items: items
-      )
+      ),
+      costListStatus: CostListStatus.updatedItem
+    ));
+
+  }
+
+  Future<void> _onChangePrice(
+      ChangePriceItemEvent event,
+      Emitter<CostListState> emit,
+      ) async {
+
+    List<Item> items = [];
+    List<Item> oldItems = state.cost?.items ?? [];
+    for(int i = 0; i < oldItems.length; i++){
+      if(event.index == i){
+        items.add(oldItems[i].copyWith(itemAmount: event.price));
+      }
+      else {
+        items.add(oldItems[i]);
+      }
+    }
+
+    emit(state.copyWith(
+        cost: state.cost!.copyWith(
+            items: items
+        ),
+        costListStatus: CostListStatus.priceChanging
     ));
 
   }
@@ -178,7 +205,8 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     emit(state.copyWith(
         cost: state.cost!.copyWith(
             items: items
-        )
+        ),
+        costListStatus: CostListStatus.updatedItem
     ));
 
   }

@@ -24,6 +24,8 @@ mixin _$Payment {
   int get paymentId => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_month')
   String get paymentMonth => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_days')
+  int get totalDays => throw _privateConstructorUsedError;
   @JsonKey(name: 'labour_cost')
   int get labourCost => throw _privateConstructorUsedError;
   @JsonKey(name: 'hour_working')
@@ -50,6 +52,7 @@ abstract class $PaymentCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'payment_id') int paymentId,
       @JsonKey(name: 'payment_month') String paymentMonth,
+      @JsonKey(name: 'total_days') int totalDays,
       @JsonKey(name: 'labour_cost') int labourCost,
       @JsonKey(name: 'hour_working') int hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWage,
@@ -73,6 +76,7 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
   $Res call({
     Object? paymentId = null,
     Object? paymentMonth = null,
+    Object? totalDays = null,
     Object? labourCost = null,
     Object? hourWorking = null,
     Object? hourlyWage = null,
@@ -89,6 +93,10 @@ class _$PaymentCopyWithImpl<$Res, $Val extends Payment>
           ? _value.paymentMonth
           : paymentMonth // ignore: cast_nullable_to_non_nullable
               as String,
+      totalDays: null == totalDays
+          ? _value.totalDays
+          : totalDays // ignore: cast_nullable_to_non_nullable
+              as int,
       labourCost: null == labourCost
           ? _value.labourCost
           : labourCost // ignore: cast_nullable_to_non_nullable
@@ -127,6 +135,7 @@ abstract class _$$_PaymentCopyWith<$Res> implements $PaymentCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'payment_id') int paymentId,
       @JsonKey(name: 'payment_month') String paymentMonth,
+      @JsonKey(name: 'total_days') int totalDays,
       @JsonKey(name: 'labour_cost') int labourCost,
       @JsonKey(name: 'hour_working') int hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWage,
@@ -147,6 +156,7 @@ class __$$_PaymentCopyWithImpl<$Res>
   $Res call({
     Object? paymentId = null,
     Object? paymentMonth = null,
+    Object? totalDays = null,
     Object? labourCost = null,
     Object? hourWorking = null,
     Object? hourlyWage = null,
@@ -163,6 +173,10 @@ class __$$_PaymentCopyWithImpl<$Res>
           ? _value.paymentMonth
           : paymentMonth // ignore: cast_nullable_to_non_nullable
               as String,
+      totalDays: null == totalDays
+          ? _value.totalDays
+          : totalDays // ignore: cast_nullable_to_non_nullable
+              as int,
       labourCost: null == labourCost
           ? _value.labourCost
           : labourCost // ignore: cast_nullable_to_non_nullable
@@ -197,6 +211,7 @@ class _$_Payment implements _Payment {
   const _$_Payment(
       {@JsonKey(name: 'payment_id') required this.paymentId,
       @JsonKey(name: 'payment_month') required this.paymentMonth,
+      @JsonKey(name: 'total_days') required this.totalDays,
       @JsonKey(name: 'labour_cost') required this.labourCost,
       @JsonKey(name: 'hour_working') required this.hourWorking,
       @JsonKey(name: 'hourly_wage') required this.hourlyWage,
@@ -214,6 +229,9 @@ class _$_Payment implements _Payment {
   @override
   @JsonKey(name: 'payment_month')
   final String paymentMonth;
+  @override
+  @JsonKey(name: 'total_days')
+  final int totalDays;
   @override
   @JsonKey(name: 'labour_cost')
   final int labourCost;
@@ -240,7 +258,7 @@ class _$_Payment implements _Payment {
 
   @override
   String toString() {
-    return 'Payment(paymentId: $paymentId, paymentMonth: $paymentMonth, labourCost: $labourCost, hourWorking: $hourWorking, hourlyWage: $hourlyWage, paymentAmount: $paymentAmount, paymentStatus: $paymentStatus, items: $items)';
+    return 'Payment(paymentId: $paymentId, paymentMonth: $paymentMonth, totalDays: $totalDays, labourCost: $labourCost, hourWorking: $hourWorking, hourlyWage: $hourlyWage, paymentAmount: $paymentAmount, paymentStatus: $paymentStatus, items: $items)';
   }
 
   @override
@@ -252,6 +270,8 @@ class _$_Payment implements _Payment {
                 other.paymentId == paymentId) &&
             (identical(other.paymentMonth, paymentMonth) ||
                 other.paymentMonth == paymentMonth) &&
+            (identical(other.totalDays, totalDays) ||
+                other.totalDays == totalDays) &&
             (identical(other.labourCost, labourCost) ||
                 other.labourCost == labourCost) &&
             (identical(other.hourWorking, hourWorking) ||
@@ -271,6 +291,7 @@ class _$_Payment implements _Payment {
       runtimeType,
       paymentId,
       paymentMonth,
+      totalDays,
       labourCost,
       hourWorking,
       hourlyWage,
@@ -296,6 +317,7 @@ abstract class _Payment implements Payment {
   const factory _Payment(
       {@JsonKey(name: 'payment_id') required final int paymentId,
       @JsonKey(name: 'payment_month') required final String paymentMonth,
+      @JsonKey(name: 'total_days') required final int totalDays,
       @JsonKey(name: 'labour_cost') required final int labourCost,
       @JsonKey(name: 'hour_working') required final int hourWorking,
       @JsonKey(name: 'hourly_wage') required final int hourlyWage,
@@ -311,6 +333,9 @@ abstract class _Payment implements Payment {
   @override
   @JsonKey(name: 'payment_month')
   String get paymentMonth;
+  @override
+  @JsonKey(name: 'total_days')
+  int get totalDays;
   @override
   @JsonKey(name: 'labour_cost')
   int get labourCost;

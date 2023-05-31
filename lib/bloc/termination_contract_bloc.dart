@@ -51,13 +51,28 @@ class TerminationContractBloc extends Bloc<TerminationContractEvent, Termination
 
     try {
       Response response = await _terminationContractRepository.terminationContract(event.shiftId);
-      emit(state.copyWith(
-          terminationContractStatus: TerminationContractStatus.terminated,
-          messages: response.data['message']
-      ));
+      if(response.statusCode==200){
+        emit(state.copyWith(
+            terminationContractStatus: TerminationContractStatus.terminated,
+            messages: response.data['message']
+        ));
+      }
+      else if(response.statusCode==404){
+        emit(state.copyWith(
+            terminationContractStatus: TerminationContractStatus.terminateFailed,
+            messages: response.data['message']
+        ));
+        emit(state.copyWith(
+            terminationContractStatus: TerminationContractStatus.confirming,
+        ));
+      }
     } catch (e) {
       emit(state.copyWith(
-          terminationContractStatus: TerminationContractStatus.terminateFailed
+          terminationContractStatus: TerminationContractStatus.terminateFailed,
+          messages: {'message': 'This contract haven\'t paid so you can\'t end the contract'}
+      ));
+      emit(state.copyWith(
+          terminationContractStatus: TerminationContractStatus.confirming,
       ));
     }
 

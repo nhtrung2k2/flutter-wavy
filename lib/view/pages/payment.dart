@@ -9,6 +9,7 @@ import 'package:wavy/state/payment_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/view/components/add_more_items_components/add_more_items_component.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
+import 'package:wavy/view/components/custom_input_field.dart';
 import 'package:wavy/view/components/personal_information/user_info.dart';
 import 'package:wavy/view/components/custom_radius_checkbox.dart';
 
@@ -30,17 +31,23 @@ class Payment extends StatefulWidget {
 class _PaymentState extends State<Payment> {
 
   late PaymentBloc paymentBloc;
+  final List<TextEditingController> controllers = [];
 
   @override
   void initState() {
     super.initState();
     paymentBloc = context.read<PaymentBloc>();
     paymentBloc.add(LoadPaymentDataEvent(babysisterId: widget.babysisterId, shiftId: widget.shiftId));
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   costListBloc.stream.listen((state) {
-    //
-    //   });
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      paymentBloc.stream.listen((state) {
+        if(state.paymentStateStatus == PaymentStateStatus.success || state.paymentStateStatus == PaymentStateStatus.updatedItem){
+          controllers.clear();
+          for(Item item in (state.payment?.items ?? [])){
+            controllers.add(TextEditingController(text: item.itemAmount == 0 ? '' : NumberFormat('###,###').format(item.itemAmount)));
+          }
+        }
+      });
+    });
   }
 
   @override
@@ -116,71 +123,76 @@ class _PaymentState extends State<Payment> {
                 const SizedBox(height: 16.0,),
                 Visibility(
                   visible: paymentState.paymentStateStatus != PaymentStateStatus.emptyPayment,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 32.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Labour cost',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontFamily: "Roboto",
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0,),
-                                Text(
-                                  'Hourly wage: ${paymentState.payment?.hourlyWage ?? 0}',
-                                  style: const TextStyle(
-                                    color: CustomColors.gray,
-                                    fontSize: 14,
-                                    fontFamily: "Roboto",
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0,),
-                                Text(
-                                  '20 days - ${paymentState.payment?.hourWorking ?? 0} hours',
-                                  style: const TextStyle(
-                                    color: CustomColors.gray,
-                                    fontSize: 14,
-                                    fontFamily: "Roboto",
-                                  ),
-                                ),
-                              ],
-                            )
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 32.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Labour cost',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: "Roboto",
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0,),
+                                    Text(
+                                      'Hourly wage: ${paymentState.payment?.hourlyWage ?? 0}',
+                                      style: const TextStyle(
+                                        color: CustomColors.gray,
+                                        fontSize: 14,
+                                        fontFamily: "Roboto",
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0,),
+                                    Text(
+                                      '${paymentState.payment?.totalDays ?? 0} days - ${paymentState.payment?.hourWorking ?? 0} hours',
+                                      style: const TextStyle(
+                                        color: CustomColors.gray,
+                                        fontSize: 14,
+                                        fontFamily: "Roboto",
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            ),
+                            Text(
+                              NumberFormat('###,###').format(paymentState.payment?.labourCost ?? 0),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontFamily: "Roboto",
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          NumberFormat('###,###').format(paymentState.payment?.labourCost ?? 0),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: "Roboto",
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Column(
+                        children: (paymentState.payment?.items ?? []).map((item) => Padding(
+                          padding: EdgeInsets.only(bottom: paymentState.payment!.items.last == item ? 0.0 : 16.0),
+                          child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
+                        )).toList(),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                    ],
                   )
                 ),
-                Column(
-                  children: (paymentState.payment?.items ?? []).map((item) => Padding(
-                    padding: EdgeInsets.only(bottom: paymentState.payment!.items.last == item ? 0.0 : 16.0),
-                    child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
-                  )).toList(),
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
                 AddMoreItemsComponents(
-                  // enable: paymentState.canPayStatus == CanPayStatus.payNow,
-                  onAddedNewItem: _addNewItem,
                   itemList: itemCost.sublist(8),
-                )
+                  onPicked: (item){
+                    paymentBloc.add(AddNewItemEvent(itemId: item['id']));
+                  },
+                ),
               ],
             ),
           ),
@@ -309,7 +321,22 @@ class _PaymentState extends State<Payment> {
           ),
         ),
         const SizedBox(width: 16.0,),
-        Text(
+        item.canRemove
+        ? SizedBox(
+          width: 130,
+          child: CustomInputField(
+            controller: controllers[index],
+            inputType: InputType.currency,
+            onChanged: (value){
+              paymentBloc.add(
+                  ChangePriceEvent(
+                      index: index,
+                      price: int.parse(value.replaceAll(',', '')))
+              );
+            },
+          ),
+        )
+        : Text(
           NumberFormat('###,###').format(item.itemAmount),
           style: const TextStyle(
             color: Colors.black,
@@ -343,10 +370,6 @@ class _PaymentState extends State<Payment> {
         )
       ],
     );
-  }
-
-  _addNewItem(int itemId, int price, int optionId){
-    paymentBloc.add(AddItemEvent(itemId: itemId, price: price, optionId: optionId));
   }
 
 }

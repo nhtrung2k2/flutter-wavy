@@ -19,7 +19,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<LoadPaymentDataEvent>(_onLoadData);
     on<ChangeMonthEvent>(_onChangeMonth);
     on<IncludeInPaymentEvent>(_onIncludeItemInPayment);
-    on<AddItemEvent>(_onAddNewItem);
+    on<AddNewItemEvent>(_onAddNewItem);
+    on<ChangePriceEvent>(_onChangePrice);
     on<RemoveItemEvent>(_onRemoveItem);
     on<PayEvent>(_onPay);
   }
@@ -137,18 +138,44 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   }
 
   Future<void> _onAddNewItem(
-      AddItemEvent event,
+      AddNewItemEvent event,
       Emitter<PaymentState> emit,
       ) async {
 
     List<Item> items = [];
     items.addAll(state.payment?.items ?? []);
-    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: event.price, option: event.optionId));
+    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: 0));
 
     emit(state.copyWith(
         payment: state.payment!.copyWith(
             items: items
-        )
+        ),
+        paymentStateStatus: PaymentStateStatus.updatedItem
+    ));
+
+  }
+
+  Future<void> _onChangePrice(
+      ChangePriceEvent event,
+      Emitter<PaymentState> emit,
+      ) async {
+
+    List<Item> items = [];
+    List<Item> oldItems = state.payment?.items ?? [];
+    for(int i = 0; i < oldItems.length; i++){
+      if(event.index == i){
+        items.add(oldItems[i].copyWith(itemAmount: event.price));
+      }
+      else {
+        items.add(oldItems[i]);
+      }
+    }
+
+    emit(state.copyWith(
+        payment: state.payment!.copyWith(
+            items: items
+        ),
+        paymentStateStatus: PaymentStateStatus.priceChanging
     ));
 
   }
@@ -165,7 +192,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     emit(state.copyWith(
         payment: state.payment!.copyWith(
             items: items
-        )
+        ),
+        paymentStateStatus: PaymentStateStatus.updatedItem
     ));
 
   }

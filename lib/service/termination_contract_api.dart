@@ -28,8 +28,11 @@ class TerminationContractApi {
 
       if (response.statusCode == 200) {
         return response;
-      } else {
-        throw Exception("Can't terminate contract");
+      } else if (response.statusCode == 404) {
+        return response;
+      }
+      else{
+        throw Exception('Can not terminate contract');
       }
     } catch (e) {
       throw e.toString();

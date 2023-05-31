@@ -10,7 +10,9 @@ enum PaymentStateStatus {
   emptyPayment,
   paying,
   paid,
-  payFailed
+  payFailed,
+  priceChanging,
+  updatedItem
 }
 
 enum CanPayStatus{

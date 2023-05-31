@@ -44,6 +44,9 @@ class _TerminationContractState extends State<TerminationContract> {
           _showToast('Loaded Failed');
           if(mounted) context.pop();
         }
+        else if(state.terminationContractStatus == TerminationContractStatus.terminateFailed){
+          _showToast(state.messages?['message'] ?? 'Failed');
+        }
       });
     });
   }

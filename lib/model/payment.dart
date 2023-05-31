@@ -12,6 +12,8 @@ abstract class Payment with _$Payment {
       required int paymentId,
       @JsonKey(name: 'payment_month')
       required String paymentMonth,
+      @JsonKey(name: 'total_days')
+      required int totalDays,
       @JsonKey(name: 'labour_cost')
       required int labourCost,
       @JsonKey(name: 'hour_working')

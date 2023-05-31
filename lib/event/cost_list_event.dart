@@ -22,11 +22,15 @@ class UpdateCostListEvent extends CostListEvent {
   UpdateCostListEvent({required this.amountId});
 }
 
-class AddItemEvent extends CostListEvent {
+class AddNewItemEvent extends CostListEvent {
   final int itemId;
+  AddNewItemEvent({required this.itemId});
+}
+
+class ChangePriceItemEvent extends CostListEvent {
   final int price;
-  final int optionId;
-  AddItemEvent({required this.itemId, required this.price, required this.optionId});
+  final int index;
+  ChangePriceItemEvent({required this.index, required this.price});
 }
 
 class RemoveItemEvent extends CostListEvent {
