@@ -147,7 +147,7 @@ class _TerminationContractState extends State<TerminationContract> {
         ),
         const SizedBox(height: 16.0,),
         const Text(
-          '* PLease confirm contract-end bonus with your nanny',
+          '* Please confirm contract-end bonus with your nanny',
           style: TextStyle(
               fontSize: 14,
               fontFamily: "Roboto"
