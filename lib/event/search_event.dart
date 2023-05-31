@@ -9,3 +9,8 @@ class OnSubmmited extends SearchEvent {
   final String value;
   OnSubmmited({required this.value});
 }
+
+class RestartEmployeeSearchEvent extends SearchEvent {
+  final String value;
+  RestartEmployeeSearchEvent({required this.value});
+}

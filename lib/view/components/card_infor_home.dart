@@ -9,8 +9,10 @@ class CardInforHome extends StatelessWidget {
   final String age;
   final String city;
   final Function onPressed;
+  final DateTime? cancelDateTime;
   const CardInforHome(
       {super.key,
+      required this.cancelDateTime,
       required this.avatar,
       required this.name,
       required this.age,
@@ -23,7 +25,8 @@ class CardInforHome extends StatelessWidget {
       onTap: () => onPressed(),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: Colors.white,
+        color:
+            cancelDateTime == null ? Colors.white : CustomColors.backgroundGray,
         elevation: 16,
         shadowColor: CustomColors.grayShadow,
         child: Padding(

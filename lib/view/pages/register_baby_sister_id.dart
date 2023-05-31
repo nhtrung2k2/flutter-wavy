@@ -11,6 +11,7 @@ import 'package:wavy/view/components/custom_text.dart';
 
 import '../../event/search_event.dart';
 import '../../utils/colors/custom_colors.dart';
+import 'dart:developer' as devtool;
 
 class RegisterBabySisterId extends StatelessWidget {
   const RegisterBabySisterId({super.key});
@@ -30,7 +31,6 @@ class RegisterBabySisterId extends StatelessWidget {
 
 class RegisterBabySisterIdForm extends StatelessWidget {
   const RegisterBabySisterIdForm({super.key});
-
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<EmployeeSearchBloc>();
@@ -102,6 +102,11 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                         if (bloc.state is ChangedState) {
                           bloc.add(OnSubmmited(
                               value: (bloc.state as ChangedState).value));
+                        } else if (bloc.state is SubmittedSuccess) {
+                          bloc.add(OnSubmmited(
+                              value: (bloc.state as SubmittedSuccess)
+                                  .employeeDetail
+                                  .id));
                         }
                         // context.goNamed("register_baby_sister_infor");
                       },

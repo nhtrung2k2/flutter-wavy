@@ -14,6 +14,7 @@ import 'package:wavy/bloc/salary_bloc.dart';
 import 'package:wavy/bloc/payment_bloc.dart';
 import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
+
 import 'package:wavy/event/employees_event.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/schedule.dart';
@@ -34,6 +35,7 @@ import 'package:wavy/view/pages/register_baby_sister_schedule.dart';
 import 'package:wavy/view/pages/settings_profile_page.dart';
 import 'package:wavy/view/pages/splash_page.dart';
 import 'package:wavy/view/pages/BaseScreen.dart';
+import 'package:wavy/view/pages/termination_contract.dart';
 
 import 'bloc/employee_change_setting.dart';
 import 'bloc/logout_bloc.dart';
@@ -227,13 +229,6 @@ class MainApp extends StatelessWidget {
                                   ),
                                 )),
                           ),
-                          GoRoute(
-                            path: RoutesName.cancelTheContractRoute.path,
-                            name: RoutesName.cancelTheContractRoute.name,
-                            pageBuilder: (context, state) => MaterialPage(
-                                key: state.pageKey,
-                                child: const BasicSettingPage()),
-                          )
                         ]),
                     GoRoute(
                       path: RoutesName.registerbabysisterIdRoute.path,
@@ -335,15 +330,14 @@ class MainApp extends StatelessWidget {
                     )
                   ]),
               GoRoute(
-                path: RoutesName.settingsRoute.path,
-                name: RoutesName.settingsRoute.name,
-                pageBuilder: (context, state) => NoTransitionPage(
-                    child: BlocProvider.value(
-                  value: ServiceLocator.locator.get<LoginBloc>(),
-                  child: const SettingsPage(),
-                )),
-                redirect: getRouteName,
-              )
+                  path: RoutesName.settingsRoute.path,
+                  name: RoutesName.settingsRoute.name,
+                  pageBuilder: (context, state) => NoTransitionPage(
+                          child: BlocProvider.value(
+                        value: ServiceLocator.locator.get<LoginBloc>(),
+                        child: const SettingsPage(),
+                      )),
+                  redirect: getRouteName)
             ])
       ],
       errorPageBuilder: (context, state) => MaterialPage(
@@ -360,12 +354,22 @@ class MainApp extends StatelessWidget {
         future: ServiceLocator.locator.allReady(),
         builder: (context, snapshot) {
           return BlocProvider.value(
-            value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
-                ServiceLocator.locator.get<LoginBloc>()),
-            child: MaterialApp.router(
-              routerConfig: _router,
-            ),
-          );
+              value: AppBloc(ServiceLocator.locator.get<LogoutBloc>(),
+                  ServiceLocator.locator.get<LoginBloc>()),
+              child: BlocListener<AppBloc, AppState>(
+                listenWhen: (previous, current) => previous != current,
+                listener: (context, state) {
+                  devtool.log("redirect");
+                  devtool.log(state.status.name);
+                  if (state.status == AuthenticationStatus.authenticated ||
+                      state.status == AuthenticationStatus.unauthenticated) {
+                    _router.refresh();
+                  }
+                },
+                child: MaterialApp.router(
+                  routerConfig: _router,
+                ),
+              ));
         });
   }
 }

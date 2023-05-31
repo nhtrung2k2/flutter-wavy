@@ -10,8 +10,14 @@ class EmployeeSearchBloc extends Bloc<SearchEvent, SearchState> {
   EmployeeSearchBloc(this.employeeRepo) : super(const InitialState()) {
     on<OnChangedValue>(_onValueChanged);
     on<OnSubmmited>(_onSubmitted);
+    on<RestartEmployeeSearchEvent>(_onRestart);
   }
   void _onValueChanged(OnChangedValue event, Emitter<SearchState> emit) {
+    emit(ChangedState(value: event.value));
+  }
+
+  void _onRestart(
+      RestartEmployeeSearchEvent event, Emitter<SearchState> emit) async {
     emit(ChangedState(value: event.value));
   }
 
