@@ -178,7 +178,8 @@ class _PaymentState extends State<Payment> {
                       Column(
                         children: (paymentState.payment?.items ?? []).map((item) => Padding(
                           padding: EdgeInsets.only(bottom: paymentState.payment!.items.last == item ? 0.0 : 16.0),
-                          child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
+                          child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), true),
+                          // child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
                         )).toList(),
                       ),
                       const SizedBox(
@@ -230,42 +231,43 @@ class _PaymentState extends State<Payment> {
   Widget _payButton(PaymentState state){
     return GestureDetector(
       onTap: (){
-        if(state.canPayStatus == CanPayStatus.payNow){
-          paymentBloc.add(PayEvent());
-        }
+        // if(state.canPayStatus == CanPayStatus.payNow){
+        paymentBloc.add(PayEvent());
+        // }
       },
       child: Container(
         height: 35,
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: state.canPayStatus == CanPayStatus.paid ? Colors.green : (state.canPayStatus == CanPayStatus.payNow ? CustomColors.bluetext : Colors.grey),
+          color: CustomColors.bluetext,//state.canPayStatus == CanPayStatus.paid ? Colors.green : (state.canPayStatus == CanPayStatus.payNow ? CustomColors.bluetext : Colors.grey),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            state.canPayStatus == CanPayStatus.paid
-              ? const Padding(
-                padding: EdgeInsets.only(right: 5.0),
-                child: Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              )
-              : state.canPayStatus == CanPayStatus.beingCalculated
-                  ? const Padding(
-                    padding: EdgeInsets.only(right: 5.0),
-                    child: Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  )
-                  : Container(),
+          children: const [
+            // state.canPayStatus == CanPayStatus.paid
+            //   ? const Padding(
+            //     padding: EdgeInsets.only(right: 5.0),
+            //     child: Icon(
+            //       Icons.check_circle,
+            //       color: Colors.white,
+            //       size: 20,
+            //     ),
+            //   )
+            //   : state.canPayStatus == CanPayStatus.beingCalculated
+            //       ? const Padding(
+            //         padding: EdgeInsets.only(right: 5.0),
+            //         child: Icon(
+            //           Icons.settings,
+            //           color: Colors.white,
+            //           size: 20,
+            //         ),
+            //       )
+            //       : Container(),
             Text(
-              state.canPayStatus == CanPayStatus.paid ? 'Paid' : (state.canPayStatus == CanPayStatus.payNow ? 'Pay Now' : 'Being calculated'),
+              'Pay Now',
+              // state.canPayStatus == CanPayStatus.paid ? 'Paid' : (state.canPayStatus == CanPayStatus.payNow ? 'Pay Now' : 'Being calculated'),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
