@@ -235,13 +235,15 @@ class MainApp extends StatelessWidget {
                             pageBuilder: (context, state) => MaterialPage(
                                 key: state.pageKey,
                                 child: BlocProvider.value(
-                                    value: ServiceLocator.locator.get<TerminationContractBloc>(),
-                                    child: TerminationContract(
-                                      babysistterId: state.queryParams['babysisterId'] ?? '',
-                                      shiftId: int.parse(state.queryParams['shiftId'] ?? '0'),
-                                    ),
-                                )
-                            ),
+                                  value: ServiceLocator.locator
+                                      .get<TerminationContractBloc>(),
+                                  child: TerminationContract(
+                                    babysistterId:
+                                        state.queryParams['babysisterId'] ?? '',
+                                    shiftId: int.parse(
+                                        state.queryParams['shiftId'] ?? '0'),
+                                  ),
+                                )),
                           )
                         ]),
                     GoRoute(
@@ -373,8 +375,8 @@ class MainApp extends StatelessWidget {
               child: BlocListener<AppBloc, AppState>(
                 listenWhen: (previous, current) => previous != current,
                 listener: (context, state) {
-                  devtool.log("redirect");
-                  devtool.log(state.status.name);
+                  // devtool.log("redirect");
+                  // devtool.log(state.status.name);
                   if (state.status == AuthenticationStatus.authenticated ||
                       state.status == AuthenticationStatus.unauthenticated) {
                     _router.refresh();
@@ -390,14 +392,14 @@ class MainApp extends StatelessWidget {
 
 String? getRouteName(BuildContext context, state) {
   final appBlocState = ServiceLocator.locator.get<AppBloc>().state;
-  devtool.log("getRouteName");
-  devtool.log(appBlocState.status.name);
+  // devtool.log("getRouteName");
+  // devtool.log(appBlocState.status.name);
   final isInitial = appBlocState.status == AuthenticationStatus.unknow;
 
   final isLoggedIn = appBlocState.status == AuthenticationStatus.authenticated;
   final isLoggingIn = state.location == RoutesName.loginRoute.path;
-  devtool.log("go_router");
-  devtool.log(isLoggedIn.toString());
+  // devtool.log("go_router");
+  // devtool.log(isLoggedIn.toString());
   if (!isInitial && !isLoggedIn && !isLoggingIn) {
     return RoutesName.loginRoute.path;
   }

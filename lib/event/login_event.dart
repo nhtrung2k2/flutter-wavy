@@ -4,6 +4,10 @@ class LoginRestart extends LoginEvent {
   LoginRestart();
 }
 
+class LoginIniTial extends LoginEvent {
+  LoginIniTial();
+}
+
 class LoginButtonPressed extends LoginEvent {
   final String email;
   final String password;

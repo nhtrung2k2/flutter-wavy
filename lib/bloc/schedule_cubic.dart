@@ -15,34 +15,40 @@ class ScheduleCubic extends Cubit<SheduleState> {
     //   if (listSchedule.isNotEmpty) {
     //     emit(SheduleListState(listSchedule));
     //   } else {
-    devtool.log("constructorScheduleCubic");
+
     emit(SheduleListState([
       Schedule(
         day: DayOfWeek.Monday,
-        timeStart: '',
-        timeEnd: '',
+        timeStart: '09:00',
+        timeEnd: '21:00',
       ),
       Schedule(
         day: DayOfWeek.Tuesday,
-        timeStart: '12:00',
-        timeEnd: '12:00',
+        timeStart: '09:00',
+        timeEnd: '21:00',
       ),
       Schedule(
         day: DayOfWeek.Wednesday,
-        timeStart: '12:00',
-        timeEnd: '12:00',
+        timeStart: '09:00',
+        timeEnd: '21:00',
       ),
-      Schedule(day: DayOfWeek.Thursday, timeStart: '12:00', timeEnd: '12:00'),
-      Schedule(day: DayOfWeek.Friday, timeStart: '12:00', timeEnd: '12:00'),
-      Schedule(day: DayOfWeek.Saturday, timeStart: '12:00', timeEnd: '12:00'),
-      Schedule(day: DayOfWeek.Sunday, timeStart: '12:00', timeEnd: '12:00')
+      Schedule(
+        day: DayOfWeek.Thursday,
+        timeStart: '09:00',
+        timeEnd: '21:00',
+      ),
+      Schedule(
+        day: DayOfWeek.Friday,
+        timeStart: '09:00',
+        timeEnd: '21:00',
+      ),
+      Schedule(day: DayOfWeek.Saturday, timeStart: '', timeEnd: ''),
+      Schedule(day: DayOfWeek.Sunday, timeStart: '', timeEnd: '')
     ]));
   }
   // });
   // }
   void fetch(List<Schedule> listSchedule) async {
-    devtool.log("fetch_schedule");
-    devtool.log(listSchedule.toString());
     emit(ScheduleFetch(listSchedule));
   }
 
@@ -99,7 +105,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
 
   Future<void> submitSchedule() async {
     //submit
-    devtool.log(state.listSchedule.toString());
+
     try {
       emit(SubmittedLoading(state.listSchedule));
       // await employeeRepo.saveScheduleToCache(state.listSchedule);

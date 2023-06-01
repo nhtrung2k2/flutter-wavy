@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
+import 'package:wavy/event/cancel_membership_event.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_row_divide.dart';
 import 'package:wavy/view/components/custom_text.dart';
 import 'package:wavy/view/pages/baby_sister_detail.dart';
 
+import '../../bloc/cancel_membership.dart';
 import '../../bloc/logout_bloc.dart';
 import '../../event/logout_event.dart';
 import '../../utils/colors/custom_colors.dart';
@@ -32,8 +34,20 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class SettingForm extends StatelessWidget {
+class SettingForm extends StatefulWidget {
   const SettingForm({super.key});
+
+  @override
+  State<SettingForm> createState() => _SettingFormState();
+}
+
+class _SettingFormState extends State<SettingForm> {
+  late final LogoutBloc blocLogout;
+  @override
+  void initState() {
+    blocLogout = ServiceLocator.locator.get<LogoutBloc>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,25 +80,36 @@ class SettingForm extends StatelessWidget {
                         width: 30,
                         height: 20,
                       ))),
-              BlocProvider(
-                create: (context) => ServiceLocator.locator.get<LogoutBloc>(),
+              BlocProvider.value(
+                value: blocLogout,
                 child: Builder(builder: (context) {
                   return CustomeButtonIconNavigatorDivide(
                     title: "Logout",
                     colorText: Colors.black,
                     iconData: null,
                     onPressed: () {
+                      context.read<LogoutBloc>().add(LogoutInitEvent());
                       context.read<LogoutBloc>().add(LogoutPressed());
                     },
                   );
                 }),
               ),
-              CustomButtonIconNavigator(
-                  disabled: false,
-                  onPressed: () {},
-                  title: "Cancel membership",
-                  colorText: CustomColors.redText,
-                  iconData: null)
+              BlocProvider(
+                create: (context) =>
+                    ServiceLocator.locator.get<CancelMemberShipBloc>(),
+                child: Builder(builder: (context) {
+                  return CustomButtonIconNavigator(
+                      disabled: false,
+                      onPressed: () {
+                        context
+                            .read<CancelMemberShipBloc>()
+                            .add(CancelMembershipPressed());
+                      },
+                      title: "Cancel membership",
+                      colorText: CustomColors.redText,
+                      iconData: null);
+                }),
+              )
             ])));
   }
 }

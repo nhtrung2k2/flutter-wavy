@@ -18,12 +18,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this._userRepository)
       // : _appBloc = appBloc,
       : super(LoginState.initial()) {
+    on<LoginIniTial>(_loginInitial);
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LanguageChanged>(_onLanguageChanged);
     on<Validate>(_validate);
     on<LoginButtonPressed>(_onSubmitted);
     on<LoginRestart>(_loginRestart);
+  }
+
+  void _loginInitial(
+    LoginIniTial event,
+    Emitter<LoginState> emit,
+  ) {
+    emit(LoginState.initial());
   }
 
   void _onEmailChanged(

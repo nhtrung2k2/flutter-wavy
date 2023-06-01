@@ -29,13 +29,9 @@ class EmployeeChangeSettingBloc
       emit(const FetchLoading());
       ShiftSalaryEmployee shiftSalaryEmployee =
           await _employeesRepository.getChangeSetting(event.shiftId);
-      devtool.log("onCallBack1");
 
       emit(FetchSuccess(shiftSalaryEmployee: shiftSalaryEmployee));
-      devtool.log("onCallBack");
     } catch (e) {
-      devtool.log("error");
-      devtool.log(e.toString());
       emit(FetchError(errorMessage: e.toString()));
     }
   }
@@ -72,6 +68,7 @@ class EmployeeChangeSettingBloc
       emit(SubmittedSuccessChangeSetting(
           shiftSalaryEmployee: shiftSalaryEmployee));
     } catch (e) {
+      devtool.log(e.toString());
       emit(SubmittedErrorChangeSetting(errorMessage: e.toString()));
     }
   }

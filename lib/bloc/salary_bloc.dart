@@ -23,7 +23,6 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
     on<OnChangedValueItem>(_onChangeValueItem);
     on<ResetSucess>(_onResetSuccess);
     on<OnDeleteItem>(_onDelete);
-    devtool.log("construstor salary");
   }
   // Future<void> _fetchInputSalary(
   //     InitialFetch event, Emitter<SalaryInputState> emit) async {

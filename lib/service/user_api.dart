@@ -28,14 +28,23 @@ class UserApi {
 
   Future<void> cancelMembership() async {
     final cancelUrl = '$baseUrl/api/cancel_membership';
-    final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
-    final token = prefs.getString("token");
-    final language = prefs.getString("language");
-    final userId = prefs.getString('userId');
-    final data = {'user_id': userId};
-    if (userId != null) {
-      final response = await baseApi.post(cancelUrl, data,
-          {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
+    try {
+      final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
+      final token = prefs.getString("token");
+      final language = prefs.getString("language");
+      final userId = prefs.getString('userId');
+      final data = {'user_id': userId};
+      if (userId != null) {
+        final response = await baseApi.post(cancelUrl, data,
+            {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
+        if (response.statusCode == 200) {
+          return;
+        } else if (response.statusCode == 400) {
+          throw Exception("Token could not be parsed from the request.");
+        }
+      }
+    } catch (e) {
+      throw e.toString();
     }
   }
 }

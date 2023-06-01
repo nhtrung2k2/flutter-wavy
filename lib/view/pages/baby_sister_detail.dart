@@ -14,6 +14,7 @@ import 'package:wavy/utils/routesName.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
+import '../../utils/makePhoneCall.dart';
 import '../components/custom_column_infor.dart';
 
 class BabySisterDetail extends StatelessWidget {
@@ -183,13 +184,7 @@ class CardInforDetail extends StatelessWidget {
                     disabled: false,
                     onPressed: () {
                       if (details[index]['route'] != null) {
-                        context.goNamed(
-                            details[index]['route'] as String,
-                            queryParams: {
-                              'babysisterId': babysisterId,
-                              'shiftId': '$shiftId'
-                            }
-                        );
+                        context.goNamed(details[index]['route'] as String);
                       }
                     },
                     colorText: details[index]['colorText'] as Color,
@@ -331,6 +326,9 @@ class CardContact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final employee = (context.watch<EmployeeDetailBloc>().state
+            as SubmittedEmployeeDetailSuccessState)
+        .employeeDetail;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -362,7 +360,11 @@ class CardContact extends StatelessWidget {
                           const EdgeInsets.all(0)),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white)),
-                  onPressed: () {},
+                  onPressed: () {
+                    if ((contact['title'] as String) == "Call to BabySister") {
+                      makePhoneCall(employee.phone);
+                    }
+                  },
                   icon: Icon(contact['icon'] as IconData,
                       color: CustomColors.bluetext, size: 25),
                   label: CustomText(

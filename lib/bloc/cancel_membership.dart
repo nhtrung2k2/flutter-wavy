@@ -22,7 +22,6 @@ class CancelMemberShipBloc
     emit(const CancelMembershipStateLoading());
     try {
       await userRepo.cancelMembership();
-
       emit(const CancelMembershipStateSuccess());
     } catch (e) {
       emit(CancelMembershipStateFail(e.toString()));

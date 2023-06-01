@@ -13,6 +13,7 @@ import 'dart:developer' as devtool;
 
 import '../../service/getit/service_locator.dart';
 import '../../utils/form_submission_status.dart';
+import '../../utils/go_to_browser.dart';
 
 void showErrorDialog(BuildContext context, final String title,
     final String message, final String textButton, void Function() onPressed) {
@@ -77,7 +78,7 @@ class LoginPage extends StatelessWidget {
 typedef StringValidator = String? Function();
 
 class LoginForm extends StatelessWidget {
-  LoginForm({super.key});
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +123,11 @@ class LoginForm extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CustomTextButton(content: "Forgot password?", onPressed: () {})
+          CustomTextButton(
+              content: "Forgot password?",
+              onPressed: () {
+                onViewDetail('https://wavy-wavy.com/forgot-password');
+              })
         ],
       ),
       SizedBox(height: 8.resizeheight(context)),
@@ -144,7 +149,9 @@ class LoginForm extends StatelessWidget {
       SizedBox(height: 16.resizeheight(context)),
       CustomTextButton(
         content: "Create new account",
-        onPressed: () {},
+        onPressed: () {
+          onViewDetail('https://wavy-wavy.com/register');
+        },
       ),
       Flags(
         height: 20,

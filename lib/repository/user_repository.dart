@@ -36,4 +36,8 @@ class UserRepository {
   Future<void> logout() async {
     await _authApi.logout();
   }
+
+  Future<void> cancelMembership() async {
+    await _userApi.cancelMembership();
+  }
 }

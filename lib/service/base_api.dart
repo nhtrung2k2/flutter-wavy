@@ -33,6 +33,18 @@ class BaseAPI {
       if (headers != null) {
         dio.options.headers.addAll(headers);
       }
+      dio.options.validateStatus = (statusCode) {
+        if (statusCode == 422) {
+          return true;
+        }
+        if (statusCode == 200) {
+          return true;
+        }
+        if (statusCode == 401) {
+          return true;
+        }
+        return false;
+      };
       // data!.forEach((key, value) {
       //   devtool.log(key);
       //   try {
@@ -42,9 +54,19 @@ class BaseAPI {
       //     devtool.log(value);
       //   }
       // });
-      return await dio.post(url, data: data);
-    } catch (e) {
-      throw Exception('Failed to make POST request: ${e.toString()}');
+      devtool.log("dio");
+      devtool.log(dio.toString());
+      final response = await dio.post(url, data: data);
+      return response;
+    } catch (error) {
+      if (error is DioError && error.type == DioErrorType.badResponse) {
+        // Handle DioError.badResponse error
+
+        throw Exception('Failed to make POST request: ${error.toString()}');
+      } else {
+        // Handle other types of errors
+        throw Exception('Failed to make POST request: ${error.toString()}');
+      }
     }
   }
 

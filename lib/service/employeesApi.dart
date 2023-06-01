@@ -84,8 +84,11 @@ class EmployeesApi {
       //       devtool.log(key),
       //       devtool.log(value),
       //     });
-      final response = await baseAPI.post(url, data,
-          {'Authorization': 'Bearer $token', 'X-Localization': language});
+      final response = await baseAPI.post(url, data, {
+        'Accept': "application/json",
+        'Authorization': 'Bearer $token',
+        'X-Localization': language
+      });
       devtool.log("saveChangeSetting");
       devtool.log(response.statusCode.toString());
       devtool.log(response.statusMessage.toString());

@@ -39,7 +39,7 @@ class EmployeesRepository {
     try {
       final employeeDetail =
           await _employeeApi.fetchEmployeDetail(babySisterId, shiftId);
-      // devtool.log(employeeDetail.toString());
+
       if (employeeDetail == null) {
         throw Exception("Can't not find this employee");
       }

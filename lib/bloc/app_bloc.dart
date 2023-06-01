@@ -6,6 +6,8 @@ import 'package:wavy/state/app_state.dart';
 import 'package:wavy/state/logout_state.dart';
 import 'package:wavy/utils/form_submission_status.dart';
 
+import '../event/login_event.dart';
+import '../event/logout_event.dart';
 import 'logout_bloc.dart';
 import 'dart:developer' as devtool;
 
@@ -19,15 +21,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppLogined>(_login);
     on<AppLogoutRequested>(_logout);
     _logoutBloc.stream.listen((state) {
-      // devtool.log("logoutBlocInApp");
-      // devtool.log(state.toString());
       if (state is LogoutStateSuccess) {
+        _loginBloc.add(LoginIniTial());
         add(const AppLogoutRequested());
       }
     });
     _loginBloc.stream.listen((state) {
-      // devtool.log("loginBlocInApp");
-      // devtool.log(state.toString());
       if (state.formStatus == FormSubmissionStatus.submissionsuccess) {
         add(const AppLogined());
       }
