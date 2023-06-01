@@ -184,7 +184,11 @@ class CardInforDetail extends StatelessWidget {
                     disabled: false,
                     onPressed: () {
                       if (details[index]['route'] != null) {
-                        context.goNamed(details[index]['route'] as String);
+                        context.goNamed(details[index]['route'] as String,
+                            queryParams: {
+                              'babysisterId': babysisterId,
+                              'shiftId': '$shiftId'
+                            });
                       }
                     },
                     colorText: details[index]['colorText'] as Color,
