@@ -15,6 +15,7 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   // StreamSubscription todosSubscription;
   final EmployeesRepository _employeesRepository;
   SalaryBloc(this._employeesRepository) : super(SalaryInputState.initial()) {
+    on<InitEvent>(_initEvent);
     on<InitialFetch>(_fetchInputSalary);
     on<OnChangedWage>(_onChangeWage);
     on<AddItem>(_addItem);
@@ -31,6 +32,10 @@ class SalaryBloc extends Bloc<SalaryEvent, SalaryInputState> {
   //     emit(state.copywith(inputSalary: inputSalary));
   //   }
   // }
+  void _initEvent(InitEvent event, Emitter<SalaryInputState> emit) {
+    emit(SalaryInputState.initial());
+  }
+
   Future<void> _fetchInputSalary(
       InitialFetch event, Emitter<SalaryInputState> emit) async {
     emit(state.copywith(

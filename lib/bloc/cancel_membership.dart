@@ -15,6 +15,11 @@ class CancelMemberShipBloc
   final UserRepository userRepo;
   CancelMemberShipBloc(this.userRepo) : super(const CancelMembershipInit()) {
     on<CancelMembershipPressed>(_onSubmitted);
+    on<CancelMembershipConfirmEvent>(_onConfirm);
+  }
+  void _onConfirm(
+      CancelMembershipConfirmEvent event, Emitter<CancelMembershipState> emit) {
+    emit(const CancelMembershipConfirmStateSuccess());
   }
 
   Future<void> _onSubmitted(CancelMembershipPressed event,

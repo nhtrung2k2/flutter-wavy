@@ -24,3 +24,7 @@ class CancelMembershipStateFail extends CancelMembershipState {
 class CancelMembershipStateSuccess extends CancelMembershipState {
   const CancelMembershipStateSuccess();
 }
+
+class CancelMembershipConfirmStateSuccess extends CancelMembershipState {
+  const CancelMembershipConfirmStateSuccess();
+}

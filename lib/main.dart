@@ -16,11 +16,9 @@ import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/bloc/schedule_cubic.dart';
 import 'package:wavy/bloc/termination_contract_bloc.dart';
 import 'package:wavy/event/employees_event.dart';
-import 'package:wavy/model/employee.dart';
-import 'package:wavy/model/schedule.dart';
 import 'package:wavy/repository/employees_repository.dart';
 import 'package:wavy/service/getit/service_locator.dart';
-import 'package:wavy/state/employee_state.dart';
+
 import 'package:wavy/view/pages/Input_salary.dart';
 
 import 'package:wavy/view/pages/baby_sister_detail.dart';
@@ -39,34 +37,32 @@ import 'package:wavy/view/pages/termination_contract.dart';
 
 import 'bloc/employee_change_setting.dart';
 import 'bloc/logout_bloc.dart';
-import 'event/salary_event.dart';
 import 'state/app_state.dart';
-import 'state/employee_change_setting.dart';
+
 import 'utils/routesName.dart';
 import 'view/pages/basic_setting.dart';
 import 'view/pages/register_basic_setting.dart';
 import 'dart:developer' as devtool;
 import 'package:wavy/view/pages/review.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.registerAll();
-
-  runApp(MainApp());
-}
-
-class App extends StatelessWidget {
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: ServiceLocator.locator.get<AppBloc>(),
-      child: Builder(builder: (context) {
-        return MainApp();
-      }),
-    );
-  }
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+      saveLocale: true,
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ja'),
+        Locale('vi'),
+      ],
+      fallbackLocale: const Locale('en'),
+      path: 'assets/translations',
+      child: MainApp(),
+    ),
+  );
 }
 
 final GlobalKey<NavigatorState> _rootNavitator = GlobalKey(debugLabel: 'root');
@@ -383,6 +379,9 @@ class MainApp extends StatelessWidget {
                   }
                 },
                 child: MaterialApp.router(
+                  localizationsDelegates: context.localizationDelegates,
+                  supportedLocales: context.supportedLocales,
+                  locale: context.locale,
                   routerConfig: _router,
                 ),
               ));

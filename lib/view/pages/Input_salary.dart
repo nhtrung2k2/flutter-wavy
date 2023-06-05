@@ -139,8 +139,8 @@ class InputSalaryForm extends StatelessWidget {
             borderRadius: 8,
             onPressed: () {
               showChoiceDialog(context, const [
-                ItemSalary(id: 1, price: 0, option: 1),
-                ItemSalary(id: 2, price: 0, option: 1),
+                ItemSalary(id: 1, price: 0, option: 2),
+                ItemSalary(id: 2, price: 0, option: 2),
                 ItemSalary(id: 3, price: 0, option: 2),
                 ItemSalary(id: 4, price: 0, option: 2),
               ]);

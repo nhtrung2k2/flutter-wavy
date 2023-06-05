@@ -53,7 +53,8 @@ class ServiceLocator {
         () => CancelMemberShipBloc(locator.get<UserRepository>()),
         dependsOn: [UserRepository]);
     locator.registerSingletonWithDependencies<LogoutBloc>(
-        () => LogoutBloc(locator.get<UserRepository>()),
+        () => LogoutBloc(
+            locator.get<UserRepository>(), locator.get<CancelMemberShipBloc>()),
         dependsOn: [UserRepository, CancelMemberShipBloc]);
     locator.registerSingletonWithDependencies<AppBloc>(
         () => AppBloc(locator.get<LogoutBloc>(), locator.get<LoginBloc>()),

@@ -8,6 +8,7 @@ import 'package:wavy/utils/convert_id_to_name.dart';
 import 'package:wavy/view/components/custom_elevated_button.dart';
 
 import '../model/item_salary.dart';
+import 'dart:developer' as devtool;
 
 void showChoiceDialog(BuildContext context, List<ItemSalary> list) {
   showDialog(
@@ -15,7 +16,7 @@ void showChoiceDialog(BuildContext context, List<ItemSalary> list) {
     builder: (BuildContext dialogcontext) {
       final salaryBloc = context.read<SalaryBloc>();
       return AlertDialog(
-        title: Text('Choose an Option'),
+        title: const Text('Choose an Option'),
         content: SingleChildScrollView(
           child: ListBody(
               children: list
@@ -29,6 +30,7 @@ void showChoiceDialog(BuildContext context, List<ItemSalary> list) {
                             backgroundColor: CustomColors.blueBorder,
                             borderRadius: 16,
                             onPressed: () {
+                              devtool.log(item.toString());
                               salaryBloc.add(AddItem(item: item));
                               GoRouter.of(dialogcontext).pop();
                             }),

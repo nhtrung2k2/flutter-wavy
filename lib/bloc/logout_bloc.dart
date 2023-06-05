@@ -13,13 +13,13 @@ import 'dart:developer' as devtool;
 
 class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
   final UserRepository userRepo;
-  final CancelMemberShipBloc _cancelMemberShipBloc =
-      ServiceLocator.locator.get<CancelMemberShipBloc>();
-  LogoutBloc(this.userRepo) : super(const LogoutInit()) {
+  final CancelMemberShipBloc cancelMemberShipBloc;
+  LogoutBloc(this.userRepo, this.cancelMemberShipBloc)
+      : super(const LogoutInit()) {
     on<LogoutInitEvent>(_onLogoutInit);
     on<LogoutPressed>(_onSubmitted);
-    _cancelMemberShipBloc.stream.listen((event) {
-      if (state is CancelMembershipStateSuccess) {
+    cancelMemberShipBloc.stream.listen((state) {
+      if (state is CancelMembershipConfirmStateSuccess) {
         add(LogoutPressed());
       }
     });

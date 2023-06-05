@@ -36,11 +36,14 @@ class AuthApi {
         prefs.setString('userId', user.id);
         return user;
       } else if (response.statusCode == 401) {
-        throw Exception(response.statusMessage);
+        throw "Email or password is not correct";
+      } else if (response.statusCode == 403) {
+        devtool.log(response.toString());
+        throw "User is inactive. Please contact to admin";
       }
     } catch (e) {
-      // devtool.log(e.toString());
-      throw e.toString();
+      devtool.log(e.toString());
+      rethrow;
     }
   }
 

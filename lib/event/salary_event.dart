@@ -10,6 +10,10 @@ class InitialFetch extends SalaryEvent {
   InitialFetch({required this.inputSalary});
 }
 
+class InitEvent extends SalaryEvent {
+  InitEvent();
+}
+
 class OnChangedWage extends SalaryEvent {
   final int value;
   final Wage type;

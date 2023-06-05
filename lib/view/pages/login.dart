@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/event/login_event.dart';
@@ -56,10 +57,8 @@ class LoginPage extends StatelessWidget {
                     FormSubmissionStatus.submissionfailed) {
                   LoadingOverlay.hide();
                   showErrorDialog(
-                      context,
-                      "Error",
-                      "The email or password you entered is incorrect. Please try again.",
-                      "OK", () {
+                      context, "Error", state.errorMessage.toString(), "OK",
+                      () {
                     context.pop();
                   });
                   context.read<LoginBloc>().add(LoginRestart());
@@ -99,7 +98,7 @@ class LoginForm extends StatelessWidget {
       ),
       SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
-          title: "Email",
+          title: "email".tr(),
           hintText: "Enter email",
           inputType: TextInputType.emailAddress,
           validator: validate,
@@ -110,7 +109,7 @@ class LoginForm extends StatelessWidget {
           }),
       SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
-          title: "Password",
+          title: "password".tr(),
           hintText: "Text",
           inputType: TextInputType.visiblePassword,
           validator: validate,
@@ -124,7 +123,7 @@ class LoginForm extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CustomTextButton(
-              content: "Forgot password?",
+              content: "forgotPassword".tr(),
               onPressed: () {
                 onViewDetail('https://wavy-wavy.com/forgot-password');
               })
@@ -142,13 +141,13 @@ class LoginForm extends StatelessWidget {
               password: bloc.state.password.value,
               language: bloc.state.language));
         },
-        title: "Login",
+        title: "login".tr(),
         horizontal: 50,
         vertical: 10,
       ),
       SizedBox(height: 16.resizeheight(context)),
       CustomTextButton(
-        content: "Create new account",
+        content: "createNewAcount".tr(),
         onPressed: () {
           onViewDetail('https://wavy-wavy.com/register');
         },
@@ -189,6 +188,8 @@ class Flags extends StatelessWidget {
                 return IconButton(
                     iconSize: 30,
                     onPressed: () {
+                      context.setLocale(
+                          Locale(convertFlagToLanguage(languageimages[index])));
                       bloc.add(LanguageChanged(
                           language:
                               convertFlagToLanguage(languageimages[index])));
@@ -291,7 +292,7 @@ class _CustomInputState extends State<CustomInput> {
             onChanged: (value) {
               widget.onchanged(value);
             },
-            obscureText: widget.title == "Password" ? !_visible : false,
+            obscureText: widget.title == "password".tr() ? !_visible : false,
             style: const TextStyle(height: 1, fontStyle: FontStyle.normal),
             keyboardType: widget.inputType,
             textAlignVertical: TextAlignVertical.center,
@@ -301,7 +302,7 @@ class _CustomInputState extends State<CustomInput> {
                   minHeight: 16.resizeheight(context),
                   minWidth: 16.resizewidth(context)),
               isCollapsed: true,
-              contentPadding: widget.title == "Password"
+              contentPadding: widget.title == "password".tr()
                   ? const EdgeInsets.fromLTRB(16.0, 16, 50, 16)
                   : const EdgeInsets.fromLTRB(16.0, 16, 16, 16),
               border: OutlineInputBorder(
@@ -319,7 +320,7 @@ class _CustomInputState extends State<CustomInput> {
                   fontWeight: FontWeight.w200),
             ),
           ),
-          widget.title == "Password"
+          widget.title == "password".tr()
               ? togglePassword()
               : const SizedBox(
                   width: 0,

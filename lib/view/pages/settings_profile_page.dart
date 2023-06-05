@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/event/cancel_membership_event.dart';
 import 'package:wavy/service/getit/service_locator.dart';
+import 'package:wavy/state/cancel_membership_state.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_row_divide.dart';
 import 'package:wavy/view/components/custom_text.dart';
@@ -94,20 +95,32 @@ class _SettingFormState extends State<SettingForm> {
                   );
                 }),
               ),
-              BlocProvider(
-                create: (context) =>
-                    ServiceLocator.locator.get<CancelMemberShipBloc>(),
+              BlocProvider.value(
+                value: ServiceLocator.locator.get<CancelMemberShipBloc>(),
                 child: Builder(builder: (context) {
-                  return CustomButtonIconNavigator(
-                      disabled: false,
-                      onPressed: () {
-                        context
-                            .read<CancelMemberShipBloc>()
-                            .add(CancelMembershipPressed());
-                      },
-                      title: "Cancel membership",
-                      colorText: CustomColors.redText,
-                      iconData: null);
+                  return BlocListener<CancelMemberShipBloc,
+                      CancelMembershipState>(
+                    listener: (context, state) {
+                      if (state is CancelMembershipStateSuccess) {
+                        showErrorDialog(context, "Message",
+                            "User successfully canceled membership", "OK", () {
+                          context
+                              .read<CancelMemberShipBloc>()
+                              .add(CancelMembershipConfirmEvent());
+                        });
+                      }
+                    },
+                    child: CustomButtonIconNavigator(
+                        disabled: false,
+                        onPressed: () {
+                          context
+                              .read<CancelMemberShipBloc>()
+                              .add(CancelMembershipPressed());
+                        },
+                        title: "Cancel membership",
+                        colorText: CustomColors.redText,
+                        iconData: null),
+                  );
                 }),
               )
             ])));

@@ -98,10 +98,10 @@ class EmployeesApi {
         return;
       } else if (response.statusCode == 422) {
         // devtool.log("api 400");
-        throw Exception("The babysitter was registered contract.");
+        throw "The babysitter was registered contract.";
       } else if (response.statusCode == 400) {
         // devtool.log("api 400");
-        throw Exception("Token could not be parsed from the request.");
+        throw "Token could not be parsed from the request.";
       }
     } catch (e) {
       // devtool.log(e.toString());

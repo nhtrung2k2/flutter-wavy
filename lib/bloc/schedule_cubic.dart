@@ -15,7 +15,14 @@ class ScheduleCubic extends Cubit<SheduleState> {
     //   if (listSchedule.isNotEmpty) {
     //     emit(SheduleListState(listSchedule));
     //   } else {
+  }
+  // });
+  // }
+  void fetch(List<Schedule> listSchedule) async {
+    emit(ScheduleFetch(listSchedule));
+  }
 
+  void initEvent() {
     emit(SheduleListState([
       Schedule(
         day: DayOfWeek.Monday,
@@ -45,11 +52,6 @@ class ScheduleCubic extends Cubit<SheduleState> {
       Schedule(day: DayOfWeek.Saturday, timeStart: '', timeEnd: ''),
       Schedule(day: DayOfWeek.Sunday, timeStart: '', timeEnd: '')
     ]));
-  }
-  // });
-  // }
-  void fetch(List<Schedule> listSchedule) async {
-    emit(ScheduleFetch(listSchedule));
   }
 
   void pickTimeStart(DayOfWeek day, TimeOfDay timeStart) {

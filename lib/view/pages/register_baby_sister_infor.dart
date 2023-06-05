@@ -4,6 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:wavy/bloc/employee_search_bloc.dart';
+import 'package:wavy/bloc/salary_bloc.dart';
+import 'package:wavy/bloc/schedule_cubic.dart';
+import 'package:wavy/model/schedule.dart';
+import 'package:wavy/service/getit/service_locator.dart';
 
 import 'package:wavy/state/employee_search_state.dart';
 import 'package:wavy/utils/convertBase64Image.dart';
@@ -12,6 +16,7 @@ import 'package:wavy/view/components/back_next.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_text.dart';
 
+import '../../event/salary_event.dart';
 import '../../utils/colors/custom_colors.dart';
 
 class RegisterBabySisterInforPage extends StatelessWidget {
@@ -108,20 +113,33 @@ class RegisterBabySisterInfor extends StatelessWidget {
                       height: (16 / 14),
                       color: CustomColors.blacktext)),
               SizedBox(height: 26.resizeheight(context)),
-              BackNext(
-                horizontalPadding: 10.resizewidth(context),
-                firstButton: "No",
-                secondButton: "Yes",
-                verticalfirstButton: 16,
-                horizontalfirstButton: 41,
-                verticalsecondButton: 16,
-                horizontalsecondButton: 38.5,
-                onPressedButtonFirst: () {
-                  GoRouter.of(context).pop();
-                },
-                onPressedButtonSecond: () {
-                  context.goNamed("register_baby_sister_schedule");
-                },
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(
+                    value: ServiceLocator.locator.get<ScheduleCubic>(),
+                  ),
+                  BlocProvider.value(
+                      value: ServiceLocator.locator.get<SalaryBloc>()),
+                ],
+                child: Builder(builder: (context) {
+                  return BackNext(
+                    horizontalPadding: 10.resizewidth(context),
+                    firstButton: "No",
+                    secondButton: "Yes",
+                    verticalfirstButton: 16,
+                    horizontalfirstButton: 41,
+                    verticalsecondButton: 16,
+                    horizontalsecondButton: 38.5,
+                    onPressedButtonFirst: () {
+                      GoRouter.of(context).pop();
+                    },
+                    onPressedButtonSecond: () {
+                      context.read<ScheduleCubic>().initEvent();
+                      context.read<SalaryBloc>().add(InitEvent());
+                      context.goNamed("register_baby_sister_schedule");
+                    },
+                  );
+                }),
               ),
             ],
           ),

@@ -90,8 +90,6 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
           context.pop();
         }
         if (state is FetchSuccess) {
-          devtool.log("shift_id");
-          devtool.log(state.shiftSalaryEmployee.shiftId.toString());
           scheduleBloc.fetch(convertInputShiftListToScheduleList(
               state.shiftSalaryEmployee.inputShift));
           inputSalaryBloc.add(

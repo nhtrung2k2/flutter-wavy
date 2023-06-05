@@ -43,6 +43,9 @@ class BaseAPI {
         if (statusCode == 401) {
           return true;
         }
+        if (statusCode == 403) {
+          return true;
+        }
         return false;
       };
       // data!.forEach((key, value) {
