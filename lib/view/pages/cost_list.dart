@@ -143,7 +143,7 @@ class _CostListState extends State<CostList> {
                                   children: [
                                     singleCostItem(
                                       (costListState.cost?.items ?? [])[index]
-                                          .itemName,
+                                          .itemName.tr(),
                                       (costListState.cost?.items ?? [])[index]
                                           .itemAmount,
                                       index: index,

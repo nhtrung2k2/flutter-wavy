@@ -5,22 +5,22 @@ part 'item.freezed.dart';
 part 'item.g.dart';
 
 const List<Map<String, dynamic>> itemCost = [
-  {'id': 1, 'name': 'Transportation'},
-  {'id': 2, 'name': 'Parking'},
-  {'id': 3, 'name': 'Meal'},
-  {'id': 4, 'name': 'Other'},
-  {'id': 5, 'name': 'Grocery'},
-  {'id': 6, 'name': 'Other paid cost'},
-  {'id': 7, 'name': 'Overtime'},
-  {'id': 8, 'name': 'Other'},
-  {'id': 9, 'name': 'Tet bonus'},
-  {'id': 10, 'name': 'Contract-end bonus'},
-  {'id': 11, 'name': 'Other'}
+  {'id': 1, 'name': 'transportation'},
+  {'id': 2, 'name': 'parking'},
+  {'id': 3, 'name': 'meal'},
+  {'id': 4, 'name': 'other'},
+  {'id': 5, 'name': 'grocery'},
+  {'id': 6, 'name': 'otherPaidCost'},
+  {'id': 7, 'name': 'overtime'},
+  {'id': 8, 'name': 'other'},
+  {'id': 9, 'name': 'tetBonus'},
+  {'id': 10, 'name': 'contractEndBonus'},
+  {'id': 11, 'name': 'other'}
 ];
 
 const List<Map<String, dynamic>> itemOption = [
-  {'id': 1, 'name': 'Once a month'},
-  {'id': 2, 'name': 'Once per worked day'}
+  {'id': 1, 'name': 'oncePerDay'},
+  {'id': 2, 'name': 'oncePerMonth'}
 ];
 
 @freezed

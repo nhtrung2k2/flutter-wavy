@@ -79,7 +79,7 @@ class _AddMoreItemsComponentsState extends State<AddMoreItemsComponents> {
                     .map((item) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: CustomElevatedButton(
-                              title: item['name'],
+                              title: '${item['name']}'.tr(),
                               vertical: 8,
                               horizontal: 16,
                               textColor: Colors.white,

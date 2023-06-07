@@ -106,8 +106,8 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
                 ),
               ),
               Text(
-                convertMonthToOtherLanguage(DateFormat('MMMM yyyy')
-                    .format(DateTime(state.year, state.month, 1))),
+                DateFormat('MMMM yyyy', context.locale.toString())
+                    .format(DateTime(state.year, state.month, 1)),
                 style: const TextStyle(
                     color: CustomColors.bluetext,
                     fontSize: 17,
@@ -224,8 +224,7 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
                       shiftId: widget.shiftId));
                 },
                 child: scheduleItem(
-                    date: convertDateToOtherLanguage(
-                        state.scheduleConfirms[index].amountDate),
+                    date: state.scheduleConfirms[index].amountDate,
                     workingTime: state.scheduleConfirms[index].workingTime,
                     cost: state.scheduleConfirms[index].amount,
                     isChecked: state.scheduleConfirms[index].confirmFlag == 1,
@@ -233,16 +232,4 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
               );
             }));
   }
-}
-
-String convertDateToOtherLanguage(String date) {
-  final list = date.split(" ");
-  list[0] = list[0].tr();
-  return list.join(" ");
-}
-
-String convertMonthToOtherLanguage(String monthYear) {
-  final list = monthYear.split(" ");
-  list[0] = list[0].tr();
-  return list.join(" ");
 }

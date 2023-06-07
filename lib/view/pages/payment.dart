@@ -316,7 +316,7 @@ class _PaymentState extends State<Payment> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              item.itemName,
+              item.itemName.tr(),
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 14,
