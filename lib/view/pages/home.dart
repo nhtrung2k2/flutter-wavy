@@ -9,11 +9,13 @@ import 'package:wavy/event/employee_detail_event.dart';
 
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/state/employee_detail_state.dart';
+import 'package:wavy/state/employee_state.dart';
 
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/card_infor_home.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
+import 'package:wavy/view/components/loadingOverlay.dart';
 
 import '../components/custom_button.dart';
 import "dart:developer" as devtool;
@@ -35,26 +37,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     employeeDetailBloc = context.read<EmployeeDetailBloc>();
-    // final EmployeeBloc employeeBloc = context.read<EmployeeBloc>();
-    // employeeBloc.add(FetchEmployees());
-    // WidgetsBinding.instance.addObserver(this);
   }
-
-  @override
-  void dispose() {
-    // WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   // super.didChangeAppLifecycleState(state);
-  //   devtool.log(state.name);
-  //   if (state == AppLifecycleState.resumed) {
-  //     final EmployeeBloc employeeBloc = context.read<EmployeeBloc>();
-  //     employeeBloc.add(FetchEmployees());
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,54 +51,65 @@ class _HomePageState extends State<HomePage>
             nameTitle: "home".tr(),
             haveBackButton: false,
             backgroundColorAppBar: CustomColors.blueLight),
-        body: BlocListener<EmployeeDetailBloc, EmployeeDetailState>(
+        body: BlocListener<EmployeeBloc, EmployeesState>(
           listener: (context, state) {
-            if (state is SubmittedEmployeeDetailSuccessState) {
-              context.goNamed("register_baby_sister_detail", queryParams: {
-                'babysisterId': state.employeeDetail.id,
-                'shiftId': '${state.shiftId}',
-              });
+            if (state.isLoading == true) {
+              LoadingOverlay.show(context);
+            } else if (state.employees != []) {
+              LoadingOverlay.hide();
+            } else if (state.errorMessage != null) {
+              LoadingOverlay.hide();
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                CustomButton(
-                  onPressed: () {
-                    context.goNamed("register-babysister-id");
-                  },
-                  title: "registerNewBabysitter".tr(),
-                  vertical: 8.resizeheight(context),
-                  horizontal: 16.resizewidth(context),
-                ),
-                SizedBox(height: 16.resizeheight(context)),
-                Flexible(
-                  child: ListView.builder(
-                      itemCount: employees.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(children: [
-                          CardInforHome(
-                              cancelDateTime:
-                                  employees[index].cancel__contract_date,
-                              onPressed: () {
-                                if (employeeDetailBloc.state
-                                    is! SubmittedEmployeeDetailLoadingState) {
-                                  employeeDetailBloc.add(OnSubmmited(
-                                      babysisterDetailId: employees[index].id,
-                                      shiftId: employees[index].shiftId));
-                                }
-                              },
-                              avatar: employees[index].avatar,
-                              name: employees[index].name,
-                              age: employees[index].age,
-                              city: employees[index].city),
-                          SizedBox(height: 16.resizeheight(context)),
-                        ]);
-                      }),
-                ),
-              ],
+          child: BlocListener<EmployeeDetailBloc, EmployeeDetailState>(
+            listener: (context, state) {
+              if (state is SubmittedEmployeeDetailSuccessState) {
+                context.goNamed("register_baby_sister_detail", queryParams: {
+                  'babysisterId': state.employeeDetail.id,
+                  'shiftId': '${state.shiftId}',
+                });
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CustomButton(
+                    onPressed: () {
+                      context.goNamed("register-babysister-id");
+                    },
+                    title: "registerNewBabysitter".tr(),
+                    vertical: 8.resizeheight(context),
+                    horizontal: 16.resizewidth(context),
+                  ),
+                  SizedBox(height: 16.resizeheight(context)),
+                  Flexible(
+                    child: ListView.builder(
+                        itemCount: employees.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(children: [
+                            CardInforHome(
+                                cancelDateTime:
+                                    employees[index].cancel__contract_date,
+                                onPressed: () {
+                                  if (employeeDetailBloc.state
+                                      is! SubmittedEmployeeDetailLoadingState) {
+                                    employeeDetailBloc.add(OnSubmmited(
+                                        babysisterDetailId: employees[index].id,
+                                        shiftId: employees[index].shiftId));
+                                  }
+                                },
+                                avatar: employees[index].avatar,
+                                name: employees[index].name,
+                                age: employees[index].age,
+                                city: employees[index].city),
+                            SizedBox(height: 16.resizeheight(context)),
+                          ]);
+                        }),
+                  ),
+                ],
+              ),
             ),
           ),
         ));

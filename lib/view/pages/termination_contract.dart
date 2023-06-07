@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,6 @@ import 'package:wavy/view/components/custom_input_field.dart';
 import 'package:wavy/view/components/personal_information/user_info.dart';
 
 class TerminationContract extends StatefulWidget {
-
   final String babysistterId;
   final int shiftId;
 
@@ -30,138 +30,136 @@ class TerminationContract extends StatefulWidget {
 }
 
 class _TerminationContractState extends State<TerminationContract> {
-
   late TerminationContractBloc terminationContractBloc;
 
   @override
   void initState() {
     super.initState();
     terminationContractBloc = context.read<TerminationContractBloc>();
-    terminationContractBloc.add(LoadingTerminationContractEvent(babysistterId: widget.babysistterId, shiftId: widget.shiftId));
+    terminationContractBloc.add(LoadingTerminationContractEvent(
+        babysistterId: widget.babysistterId, shiftId: widget.shiftId));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       terminationContractBloc.stream.listen((state) {
-        if(state.terminationContractStatus == TerminationContractStatus.loadFailed){
+        if (state.terminationContractStatus ==
+            TerminationContractStatus.loadFailed) {
           _showToast('Loaded Failed');
-        }
-        else if(state.terminationContractStatus == TerminationContractStatus.terminateFailed){
+        } else if (state.terminationContractStatus ==
+            TerminationContractStatus.terminateFailed) {
           _showToast(state.messages?['message'] ?? 'Failed');
         }
       });
     });
   }
 
-  _showToast(String message){
-    if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  _showToast(String message) {
+    if (mounted)
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
-
-    var terminationContractState = context.select((TerminationContractBloc bloc) => bloc.state);
+    var terminationContractState =
+        context.select((TerminationContractBloc bloc) => bloc.state);
 
     return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
             textColor: CustomColors.blueDark,
-            nameTitle: "Termination of contract",
+            nameTitle: "terminationOfContract".tr(),
             haveBackButton: true,
             backgroundColorAppBar: CustomColors.blueLight),
         body: Center(
-          child: terminationContractState.terminationContractStatus == TerminationContractStatus.loading
-              || terminationContractState.terminationContractStatus == TerminationContractStatus.terminating
-            ? const CircularProgressIndicator()
-            : terminationContractState.terminationContractStatus == TerminationContractStatus.confirming
-              ? _confirmingTerminationContract(terminationContractState)
-              : terminationContractState.terminationContractStatus == TerminationContractStatus.terminated
-                ? _terminatedContractSuccessfully(terminationContractState)
-                : Container(),
-        )
-    );
+          child: terminationContractState.terminationContractStatus ==
+                      TerminationContractStatus.loading ||
+                  terminationContractState.terminationContractStatus ==
+                      TerminationContractStatus.terminating
+              ? const CircularProgressIndicator()
+              : terminationContractState.terminationContractStatus ==
+                      TerminationContractStatus.confirming
+                  ? _confirmingTerminationContract(terminationContractState)
+                  : terminationContractState.terminationContractStatus ==
+                          TerminationContractStatus.terminated
+                      ? _terminatedContractSuccessfully(
+                          terminationContractState)
+                      : Container(),
+        ));
   }
 
-  Widget _confirmingTerminationContract(TerminationContractState state){
+  Widget _confirmingTerminationContract(TerminationContractState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
-          'Have you confirmed with your nanny?',
-          style: TextStyle(
+        Text(
+          'haveYouConfirmedWithYourNanny'.tr(),
+          style: const TextStyle(
               color: CustomColors.bluetext,
               fontSize: 15,
               fontFamily: "Roboto",
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 16.0,),
-        const Text(
-          '[Termination of contract]',
-          style: TextStyle(
-              fontSize: 14,
-              fontFamily: "Roboto",
-              fontWeight: FontWeight.bold
-          ),
+        const SizedBox(
+          height: 16.0,
         ),
-        const SizedBox(height: 8.0,),
+        Text(
+          'terminationOfContractHaveIcon'.tr(),
+          style: const TextStyle(
+              fontSize: 14, fontFamily: "Roboto", fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 8.0,
+        ),
         RichText(
-          text: TextSpan(
-              children: [
-                const TextSpan(
-                  text: 'Nanny name: ',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: "Roboto",
-                      color: Colors.black
-                  ),
-                ),
-                TextSpan(
-                  text: state.employee?.name ?? '',
-                  style: const TextStyle(
-                      color: CustomColors.bluetext,
-                      fontSize: 14,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ]
-          ),
+          text: TextSpan(children: [
+            TextSpan(
+              text: 'nannyName'.tr(),
+              style: const TextStyle(
+                  fontSize: 14, fontFamily: "Roboto", color: Colors.black),
+            ),
+            TextSpan(
+              text: state.employee?.name ?? '',
+              style: const TextStyle(
+                  color: CustomColors.bluetext,
+                  fontSize: 14,
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.bold),
+            ),
+          ]),
         ),
-        const SizedBox(height: 8.0,),
+        const SizedBox(
+          height: 8.0,
+        ),
         RichText(
-          text: TextSpan(
-              children: [
-                const TextSpan(
-                  text: 'Date of termination: ',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: "Roboto",
-                      color: Colors.black
-                  ),
-                ),
-                TextSpan(
-                  text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                  style: const TextStyle(
-                      color: CustomColors.redText,
-                      fontSize: 14,
-                      fontFamily: "Roboto"
-                  ),
-                ),
-              ]
-          ),
+          text: TextSpan(children: [
+            TextSpan(
+              text: '${'dateOfTermination'.tr()} : ',
+              style: const TextStyle(
+                  fontSize: 14, fontFamily: "Roboto", color: Colors.black),
+            ),
+            TextSpan(
+              text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+              style: const TextStyle(
+                  color: CustomColors.redText,
+                  fontSize: 14,
+                  fontFamily: "Roboto"),
+            ),
+          ]),
         ),
-        const SizedBox(height: 16.0,),
-        const Text(
-          '* Please confirm contract-end bonus with your nanny',
-          style: TextStyle(
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+        const SizedBox(
+          height: 16.0,
         ),
-        const SizedBox(height: 32.0,),
+        Text(
+          'pleaseConfirmContractEndBonusWithYourNanny'.tr(),
+          style: const TextStyle(fontSize: 14, fontFamily: "Roboto"),
+        ),
+        const SizedBox(
+          height: 32.0,
+        ),
         _submitButton(onPress: () => _submit())
       ],
     );
   }
 
-  Widget _terminatedContractSuccessfully(TerminationContractState state){
+  Widget _terminatedContractSuccessfully(TerminationContractState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -171,36 +169,35 @@ class _TerminationContractState extends State<TerminationContract> {
               color: CustomColors.bluetext,
               fontSize: 15,
               fontFamily: "Roboto",
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 16.0,),
+        const SizedBox(
+          height: 16.0,
+        ),
         Text(
           state.messages?['description_1'] ?? '',
-          style: const TextStyle(
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+          style: const TextStyle(fontSize: 14, fontFamily: "Roboto"),
         ),
-        const SizedBox(height: 16.0,),
+        const SizedBox(
+          height: 16.0,
+        ),
         Text(
           state.messages?['description_2'] ?? '',
           textAlign: TextAlign.center,
-          style: const TextStyle(
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+          style: const TextStyle(fontSize: 14, fontFamily: "Roboto"),
         ),
-        const SizedBox(height: 32.0,),
+        const SizedBox(
+          height: 32.0,
+        ),
         _homeButton(onPress: () => _homeNavigate())
       ],
     );
   }
 
-  Widget _submitButton({Function? onPress}){
+  Widget _submitButton({Function? onPress}) {
     return GestureDetector(
-      onTap: (){
-        if(onPress!=null) onPress();
+      onTap: () {
+        if (onPress != null) onPress();
       },
       child: Container(
         alignment: Alignment.center,
@@ -210,10 +207,10 @@ class _TerminationContractState extends State<TerminationContract> {
           color: CustomColors.bluetext,
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: const Text(
-          'Confirmed above.\nRegister evaluation & Proceed termination,',
+        child: Text(
+          'confirmedAboveRegisterEvaluationProceedTermination'.tr(),
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
             fontFamily: "Roboto",
@@ -223,14 +220,15 @@ class _TerminationContractState extends State<TerminationContract> {
     );
   }
 
-  _submit(){
-    terminationContractBloc.add(ConfirmTerminationContractEvent(shiftId: widget.shiftId));
+  _submit() {
+    terminationContractBloc
+        .add(ConfirmTerminationContractEvent(shiftId: widget.shiftId));
   }
 
-  Widget _homeButton({Function? onPress}){
+  Widget _homeButton({Function? onPress}) {
     return GestureDetector(
-      onTap: (){
-        if(onPress!=null) onPress();
+      onTap: () {
+        if (onPress != null) onPress();
       },
       child: Container(
         alignment: Alignment.center,
@@ -240,10 +238,10 @@ class _TerminationContractState extends State<TerminationContract> {
           color: CustomColors.bluetext,
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: const Text(
-          'TOP',
+        child: Text(
+          'top'.tr(),
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
             fontFamily: "Roboto",
@@ -253,7 +251,7 @@ class _TerminationContractState extends State<TerminationContract> {
     );
   }
 
-  _homeNavigate(){
+  _homeNavigate() {
     while (GoRouter.of(context).location != RoutesName.homeRoute.path) {
       GoRouter.of(context).pop();
     }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +13,19 @@ class BottomNavigationWidget extends StatefulWidget {
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _selectedIndex = 0;
+  late Locale _currentLocale;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _currentLocale = context.locale;
+
+    // Listen for locale changes
+    context.localizationDelegates
+        .whereType<LocalizationsDelegate>()
+        .forEach((delegate) => delegate.load(_currentLocale));
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -33,14 +47,14 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         currentIndex: _selectedIndex,
         selectedItemColor: CustomColors.blueBorder,
         onTap: _onItemTapped,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
+            icon: const Icon(Icons.home),
+            label: "home".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
+            icon: const Icon(Icons.settings),
+            label: "setting".tr(),
           )
         ]);
   }

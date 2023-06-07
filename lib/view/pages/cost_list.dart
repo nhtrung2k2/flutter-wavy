@@ -1,6 +1,6 @@
-
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +18,6 @@ import 'package:wavy/view/components/custom_dialog.dart';
 import 'package:wavy/view/components/custom_input_field.dart';
 
 class CostList extends StatefulWidget {
-
   final int amountId;
 
   const CostList({
@@ -31,7 +30,6 @@ class CostList extends StatefulWidget {
 }
 
 class _CostListState extends State<CostList> {
-
   late CostListBloc costListBloc;
   final List<TextEditingController> controllers = [];
 
@@ -42,196 +40,207 @@ class _CostListState extends State<CostList> {
     costListBloc.add(FetchCostListDataEvent(amountId: widget.amountId));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       costListBloc.stream.listen((state) {
-        if(state.costListStatus == CostListStatus.failedUploadImageMore3){
+        if (state.costListStatus == CostListStatus.failedUploadImageMore3) {
           _showPopup(context);
-        }
-        else if(state.costListStatus == CostListStatus.updated){
+        } else if (state.costListStatus == CostListStatus.updated) {
           _showToast('Success');
-        }
-        else if(state.costListStatus == CostListStatus.failedUpdated){
+        } else if (state.costListStatus == CostListStatus.failedUpdated) {
           _showToast('Failed');
-        }
-        else if(state.costListStatus == CostListStatus.success || state.costListStatus == CostListStatus.updatedItem){
+        } else if (state.costListStatus == CostListStatus.success ||
+            state.costListStatus == CostListStatus.updatedItem) {
           controllers.clear();
-          for(Item item in (state.cost?.items ?? [])){
-            controllers.add(TextEditingController(text: item.itemAmount == 0 ? '' : NumberFormat('###,###').format(item.itemAmount)));
+          for (Item item in (state.cost?.items ?? [])) {
+            controllers.add(TextEditingController(
+                text: item.itemAmount == 0
+                    ? ''
+                    : NumberFormat('###,###').format(item.itemAmount)));
           }
         }
       });
     });
   }
 
-  _showPopup(context){
-    CustomDialog().show(
-      context,
-      title: 'Upload image failed',
-      message: 'Only upload three images',
-      actions: [
-        CustomDialogAction(actionContent: 'OK', onAction: (){})
-      ]
-    );
+  _showPopup(context) {
+    CustomDialog().show(context,
+        title: 'Upload image failed',
+        message: 'Only upload three images',
+        actions: [CustomDialogAction(actionContent: 'OK', onAction: () {})]);
   }
 
-  _showToast(String message){
-    if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  _showToast(String message) {
+    if (mounted)
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
-
     var costListState = context.select((CostListBloc bloc) => bloc.state);
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
           textColor: CustomColors.blueDark,
-          nameTitle: "Cost list",
+          nameTitle: "costList".tr(),
           haveBackButton: true,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: costListState.costListStatus==CostListStatus.loading
-        ? const Center(
-          child: CircularProgressIndicator(),
-        )
-        : SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: 'Date: ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.bold
+      body: costListState.costListStatus == CostListStatus.loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: '${'date'.tr()} : ',
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      TextSpan(
-                        text: costListState.cost?.amountDate ?? '',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontFamily: "Roboto",
-                        ),
-                      ),
-                    ]
-                  ),
-                ),
-                const SizedBox(height: 16.0,),
-                const Text(
-                  'Cost list',
-                  style: TextStyle(
-                    color: CustomColors.bluetext,
-                    fontSize: 14,
-                    fontFamily: "Roboto",
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-                const SizedBox(height: 16.0,),
-                singleCostItem('Labour cost', costListState.cost?.labourCost ?? 0),
-                const SizedBox(height: 16.0,),
-                workingTimeCost(costListState),
-                const SizedBox(height: 16.0,),
-                Column(
-                  children: List.generate(
-                      (costListState.cost?.items ?? []).length,
-                      (index) => Column(
-                        children: [
-                          singleCostItem(
-                            (costListState.cost?.items ?? [])[index].itemName,
-                            (costListState.cost?.items ?? [])[index].itemAmount,
-                            index: index,
-                            canRemove: true,
+                        TextSpan(
+                          text: costListState.cost?.amountDate ?? '',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: "Roboto",
                           ),
-                          const SizedBox(height: 16.0,),
-                        ],
-                      )
-                  )
-                ),
-                const SizedBox(height: 8.0,),
-                AddMoreItemsComponents(
-                  itemList: itemCost.sublist(4, 8),
-                  onPicked: (item){
-                    costListBloc.add(AddNewItemEvent(itemId: item['id']));
-                  },
-                ),
-                const SizedBox(height: 16.0,),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.centerRight,
-                  child: RichText(
-                    text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Total: ',
-                            style: TextStyle(
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Text(
+                      "costList".tr(),
+                      style: const TextStyle(
+                          color: CustomColors.bluetext,
+                          fontSize: 14,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    singleCostItem(
+                        'labourCost'.tr(), costListState.cost?.labourCost ?? 0),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    workingTimeCost(costListState),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Column(
+                        children: List.generate(
+                            (costListState.cost?.items ?? []).length,
+                            (index) => Column(
+                                  children: [
+                                    singleCostItem(
+                                      (costListState.cost?.items ?? [])[index]
+                                          .itemName,
+                                      (costListState.cost?.items ?? [])[index]
+                                          .itemAmount,
+                                      index: index,
+                                      canRemove: true,
+                                    ),
+                                    const SizedBox(
+                                      height: 16.0,
+                                    ),
+                                  ],
+                                ))),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    AddMoreItemsComponents(
+                      itemList: itemCost.sublist(4, 8),
+                      onPicked: (item) {
+                        costListBloc.add(AddNewItemEvent(itemId: item['id']));
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerRight,
+                      child: RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: '${'total'.tr()} :',
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,
                               fontFamily: "Roboto",
                             ),
                           ),
                           TextSpan(
-                            text: NumberFormat('####,###VND').format(costListState.totalCost()),
+                            text: NumberFormat('####,###VND')
+                                .format(costListState.totalCost()),
                             style: const TextStyle(
-                              color: CustomColors.redText,
-                              fontSize: 14,
-                              fontFamily: "Roboto",
-                              fontWeight: FontWeight.bold
-                            ),
+                                color: CustomColors.redText,
+                                fontSize: 14,
+                                fontFamily: "Roboto",
+                                fontWeight: FontWeight.bold),
                           ),
-                        ]
+                        ]),
+                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    _uploadImage(costListState),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    _submitButton(
+                        title: 'confirmSchedule',
+                        onPress: () => _onSubmitSchedule())
+                  ],
                 ),
-                const SizedBox(height: 16.0,),
-                _uploadImage(costListState),
-                const SizedBox(height: 20.0,),
-                _submitButton(
-                  title: 'Confirm Schedule',
-                  onPress: () => _onSubmitSchedule()
-                )
-              ],
+              ),
             ),
-          ),
-        ),
     );
   }
 
-  Widget singleCostItem(String content, int price, {bool canRemove = false, int index = -1}) => baseCostItem(
-      Text(
-        content,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 14,
-          fontFamily: "Roboto",
-        ),
-      ),
-      price,
-      canRemove,
-      onTap: (){
-        if(canRemove) costListBloc.add(RemoveItemEvent(index: index));
-      },
-      index: index
-  );
-
-  Widget workingTimeCost(CostListState state) => baseCostItem(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+  Widget singleCostItem(String content, int price,
+          {bool canRemove = false, int index = -1}) =>
+      baseCostItem(
           Text(
-            'Working time: ${state.cost?.workingTime}',
+            content,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
             ),
           ),
-          const SizedBox(height: 10.0,),
+          price,
+          canRemove, onTap: () {
+        if (canRemove) costListBloc.add(RemoveItemEvent(index: index));
+      }, index: index);
+
+  Widget workingTimeCost(CostListState state) => baseCostItem(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
-            '${state.cost?.hourWorking} hours - ${NumberFormat('###,###').format(state.cost?.hourlyWave)}VND/h',
+            '${'workingTime'.tr()} : ' '${state.cost?.workingTime}',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontFamily: "Roboto",
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            '${state.cost?.hourWorking} ${'hours'.tr()} - ${NumberFormat('###,###').format(state.cost?.hourlyWave)}VND/h',
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
@@ -243,71 +252,72 @@ class _CostListState extends State<CostList> {
       (state.cost?.hourWorking ?? 0) * (state.cost?.hourlyWave ?? 0),
       false);
 
-  Widget baseCostItem(Widget content, int price, bool canRemove, {Function? onTap, int index = -1}){
+  Widget baseCostItem(Widget content, int price, bool canRemove,
+      {Function? onTap, int index = -1}) {
     return Row(
       children: [
         Expanded(child: content),
-        const SizedBox(width: 10.0,),
-        canRemove
-        ? SizedBox(
-          width: 200,
-          child: CustomInputField(
-            controller: index >= 0 ? controllers[index] : null,
-            inputType: InputType.currency,
-            onChanged: (value){
-              costListBloc.add(
-                  ChangePriceItemEvent(
-                      index: index >= 0 ? index : -1,
-                      price: int.parse(value.replaceAll(',', '')))
-              );
-            },
-          ),
-        )
-        : Text(
-          NumberFormat('###,###').format(price),
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontFamily: "Roboto",
-          ),
+        const SizedBox(
+          width: 10.0,
         ),
-        const SizedBox(width: 10.0,),
+        canRemove
+            ? SizedBox(
+                width: 200,
+                child: CustomInputField(
+                  controller: index >= 0 ? controllers[index] : null,
+                  inputType: InputType.currency,
+                  onChanged: (value) {
+                    costListBloc.add(ChangePriceItemEvent(
+                        index: index >= 0 ? index : -1,
+                        price: int.parse(value.replaceAll(',', ''))));
+                  },
+                ),
+              )
+            : Text(
+                NumberFormat('###,###').format(price),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontFamily: "Roboto",
+                ),
+              ),
+        const SizedBox(
+          width: 10.0,
+        ),
         SizedBox(
           height: 22,
           width: 22,
           child: Visibility(
-            visible: canRemove,
-            child: GestureDetector(
-              onTap: (){
-                if(onTap!=null) onTap();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: CustomColors.redText,
-                  borderRadius: BorderRadius.circular(3.0)
+              visible: canRemove,
+              child: GestureDetector(
+                onTap: () {
+                  if (onTap != null) onTap();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: CustomColors.redText,
+                      borderRadius: BorderRadius.circular(3.0)),
+                  child: const Icon(
+                    Icons.horizontal_rule,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.horizontal_rule,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            )
-          ),
+              )),
         )
       ],
     );
   }
 
-  Widget _uploadImage(CostListState state){
+  Widget _uploadImage(CostListState state) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Images',
-              style: TextStyle(
+            Text(
+              'images'.tr(),
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 14,
                 fontFamily: "Roboto",
@@ -316,34 +326,35 @@ class _CostListState extends State<CostList> {
             _buttonUploadImages()
           ],
         ),
-        const SizedBox(height: 16.0,),
+        const SizedBox(
+          height: 16.0,
+        ),
         _imageRow(state)
       ],
     );
   }
 
-  Widget _buttonUploadImages(){
+  Widget _buttonUploadImages() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         _onTapUploadImage();
       },
       child: Container(
         height: 35,
         width: 150,
         decoration: BoxDecoration(
-          color: CustomColors.bluetext,
-          borderRadius: BorderRadius.circular(10.0)
-        ),
+            color: CustomColors.bluetext,
+            borderRadius: BorderRadius.circular(10.0)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            Icon(
+          children: [
+            const Icon(
               Icons.cloud_upload,
               color: Colors.white,
             ),
             Text(
-              'Upload images',
-              style: TextStyle(
+              'uploadImages'.tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontFamily: "Roboto",
@@ -355,72 +366,67 @@ class _CostListState extends State<CostList> {
     );
   }
 
-  Widget _imageRow(CostListState state){
-
+  Widget _imageRow(CostListState state) {
     List<dynamic> imageList = state.getImages();
 
     return Row(
-      children: List.generate(imageList.length, (index) => _image(imageList[index], index))
-    );
+        children: List.generate(
+            imageList.length, (index) => _image(imageList[index], index)));
   }
 
-  Widget _image(image, int index){
+  Widget _image(image, int index) {
     return Expanded(
-        child: image!=null
+        child: image != null
             ? GestureDetector(
-              onTap: (){
-                costListBloc.add(RemoveImageEvent(index: index));
-              },
-              child: Padding(
-                padding: EdgeInsets.only(right: index==2 ? 5.0 : 0.0),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 80,
-                      margin: const EdgeInsets.only(top: 6.0, right: 6.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          image: DecorationImage(
-                              image: image.runtimeType == XFile ? Image.file(File((image as XFile).path)).image : Image.memory(image).image,
-                              fit: BoxFit.cover
-                          )
+                onTap: () {
+                  costListBloc.add(RemoveImageEvent(index: index));
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(right: index == 2 ? 5.0 : 0.0),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 80,
+                        margin: const EdgeInsets.only(top: 6.0, right: 6.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            image: DecorationImage(
+                                image: image.runtimeType == XFile
+                                    ? Image.file(File((image as XFile).path))
+                                        .image
+                                    : Image.memory(image).image,
+                                fit: BoxFit.cover)),
                       ),
-                    ),
-                    Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(0.5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: CustomColors.redText,
-                                  width: 1.5
-                              )
-                          ),
-                          child: const Icon(
-                            Icons.clear_rounded,
-                            size: 11,
-                            color: CustomColors.redText,
-                          ),
-                        )
-                    ),
-                  ],
+                      Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(0.5),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: CustomColors.redText, width: 1.5)),
+                            child: const Icon(
+                              Icons.clear_rounded,
+                              size: 11,
+                              color: CustomColors.redText,
+                            ),
+                          )),
+                    ],
+                  ),
                 ),
-              ),
-            )
-            : Container()
-    );
+              )
+            : Container());
   }
 
-  _onTapUploadImage(){
+  _onTapUploadImage() {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         actions: <Widget>[
           CupertinoActionSheetAction(
-            child: const Text('Photo Gallery'),
+            child: Text('photoGallery'.tr()),
             onPressed: () async {
               Navigator.pop(context);
               List<XFile> images = await ImagePicker().pickMultiImage();
@@ -428,12 +434,13 @@ class _CostListState extends State<CostList> {
             },
           ),
           CupertinoActionSheetAction(
-            child: const Text('Camera'),
+            child: Text('camera'.tr()),
             onPressed: () async {
               Navigator.pop(context);
-              XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+              XFile? image =
+                  await ImagePicker().pickImage(source: ImageSource.camera);
               List<XFile> listImages = [];
-              if(image!=null) listImages.add(image);
+              if (image != null) listImages.add(image);
               costListBloc.add(UploadImagesEvent(files: listImages));
             },
           )
@@ -443,16 +450,16 @@ class _CostListState extends State<CostList> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: Text('cancel'.tr()),
         ),
       ),
     );
   }
 
-  _submitButton({String title = 'Submit', Function? onPress}){
+  _submitButton({String title = 'submit', Function? onPress}) {
     return GestureDetector(
-      onTap: (){
-        if(onPress!=null) onPress();
+      onTap: () {
+        if (onPress != null) onPress();
       },
       child: Container(
         height: 35,
@@ -463,7 +470,7 @@ class _CostListState extends State<CostList> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Text(
-          title,
+          title.tr(),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
@@ -474,9 +481,8 @@ class _CostListState extends State<CostList> {
     );
   }
 
-  _onSubmitSchedule(){
+  _onSubmitSchedule() {
     costListBloc.add(UpdateCostListEvent(amountId: widget.amountId));
     context.pop();
   }
-
 }

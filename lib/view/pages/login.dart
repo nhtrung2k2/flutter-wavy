@@ -40,6 +40,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.select((LoginBloc bloc) {
+      if (bloc.state.formStatus == FormSubmissionStatus.initial) {
+        bloc.add(LanguageChanged(language: context.locale.languageCode));
+      }
+    });
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -56,9 +61,8 @@ class LoginPage extends StatelessWidget {
                 } else if (state.formStatus ==
                     FormSubmissionStatus.submissionfailed) {
                   LoadingOverlay.hide();
-                  showErrorDialog(
-                      context, "Error", state.errorMessage.toString(), "OK",
-                      () {
+                  showErrorDialog(context, "Error",
+                      state.errorMessage.toString(), "yes".tr(), () {
                     context.pop();
                   });
                   context.read<LoginBloc>().add(LoginRestart());
@@ -67,7 +71,7 @@ class LoginPage extends StatelessWidget {
                   LoadingOverlay.show(context);
                 }
               },
-              child: LoginForm(),
+              child: const LoginForm(),
             )),
       ),
     );
@@ -83,11 +87,23 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<LoginBloc>();
     final state = context.watch<LoginBloc>().state;
-    devtool.log(state.status.name);
-    String? validate() {
-      return state.status == LoginStatus.invalid
-          ? 'invalid email or password'
-          : null;
+
+    String? validateEmail() {
+      if (state.invalidError == InvalidError.invalidEmailAndPassword) {
+        return 'emailIsEnteredInvalid'.tr();
+      } else if (state.invalidError == InvalidError.invalidEmail) {
+        return 'emailIsEnteredInvalid'.tr();
+      }
+      return null;
+    }
+
+    String? validatePassword() {
+      if (state.invalidError == InvalidError.invalidEmailAndPassword) {
+        return 'passwordIsRequired'.tr();
+      } else if (state.invalidError == InvalidError.invalidPassword) {
+        return 'passwordIsRequired'.tr();
+      }
+      return null;
     }
 
     return Form(
@@ -99,9 +115,9 @@ class LoginForm extends StatelessWidget {
       SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
           title: "email".tr(),
-          hintText: "Enter email",
+          hintText: "enterEmail".tr(),
           inputType: TextInputType.emailAddress,
-          validator: validate,
+          validator: validateEmail,
           onchanged: (value) {
             if (value != null) {
               bloc.add(LoginEmailChanged(email: value));
@@ -110,9 +126,9 @@ class LoginForm extends StatelessWidget {
       SizedBox(height: 23.25.resizeheight(context)),
       CustomInput(
           title: "password".tr(),
-          hintText: "Text",
+          hintText: "enterPassword".tr(),
           inputType: TextInputType.visiblePassword,
-          validator: validate,
+          validator: validatePassword,
           onchanged: (value) {
             if (value != null) {
               bloc.add(LoginPasswordChanged(password: value));
@@ -147,12 +163,12 @@ class LoginForm extends StatelessWidget {
       ),
       SizedBox(height: 16.resizeheight(context)),
       CustomTextButton(
-        content: "createNewAcount".tr(),
+        content: "createNewAccount".tr(),
         onPressed: () {
           onViewDetail('https://wavy-wavy.com/register');
         },
       ),
-      Flags(
+      const Flags(
         height: 20,
         width: 30,
       )
@@ -161,7 +177,7 @@ class LoginForm extends StatelessWidget {
 }
 
 class Flags extends StatelessWidget {
-  Flags({super.key, required this.height, required this.width});
+  const Flags({super.key, required this.height, required this.width});
   final double height;
   final double width;
   final List<String> languageimages = const [
@@ -169,10 +185,10 @@ class Flags extends StatelessWidget {
     "assets/images/japan-flag.png",
     "assets/images/vietnam-flag.png"
   ];
-  final LoginBloc bloc = ServiceLocator.locator.get<LoginBloc>();
 
   @override
   Widget build(BuildContext context) {
+    final LoginBloc bloc = context.read<LoginBloc>();
     return SizedBox(
       height: 40,
       child: Row(
@@ -188,11 +204,13 @@ class Flags extends StatelessWidget {
                 return IconButton(
                     iconSize: 30,
                     onPressed: () {
-                      context.setLocale(
-                          Locale(convertFlagToLanguage(languageimages[index])));
+                      final flag =
+                          convertFlagToLanguageLocale(languageimages[index]);
+
                       bloc.add(LanguageChanged(
                           language:
                               convertFlagToLanguage(languageimages[index])));
+                      context.setLocale(Locale(flag[0], flag[1]));
                     },
                     icon: Image.asset(
                       fit: BoxFit.cover,
@@ -217,6 +235,19 @@ String convertFlagToLanguage(flag) {
       return "vi";
     default:
       return "en";
+  }
+}
+
+List<String> convertFlagToLanguageLocale(flag) {
+  switch (flag) {
+    case "assets/images/england-flag.png":
+      return ['en', 'US'];
+    case "assets/images/japan-flag.png":
+      return ['ja', 'JP'];
+    case "assets/images/vietnam-flag.png":
+      return ['vi', 'VN'];
+    default:
+      return ['en', 'US'];
   }
 }
 

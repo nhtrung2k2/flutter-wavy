@@ -7,6 +7,8 @@ import '../utils/form_submission_status.dart';
 
 enum LoginStatus { pure, valid, invalid }
 
+enum InvalidError { invalidPassword, invalidEmail, invalidEmailAndPassword }
+
 class LoginState extends Equatable {
   final Email email;
   final Password password;
@@ -14,6 +16,7 @@ class LoginState extends Equatable {
   final LoginStatus status;
   final String? errorMessage;
   final FormSubmissionStatus formStatus;
+  final InvalidError? invalidError;
   final User? user;
   const LoginState({
     required this.email,
@@ -22,6 +25,7 @@ class LoginState extends Equatable {
     required this.status,
     required this.formStatus,
     required this.user,
+    required this.invalidError,
     this.errorMessage,
   });
   factory LoginState.initial() => const LoginState(
@@ -29,12 +33,21 @@ class LoginState extends Equatable {
       password: Password.pure(),
       language: 'en',
       status: LoginStatus.pure,
+      invalidError: null,
       errorMessage: null,
       user: null,
       formStatus: FormSubmissionStatus.initial);
   @override
-  List<Object?> get props =>
-      [email, password, language, status, errorMessage, formStatus];
+  List<Object?> get props => [
+        email,
+        password,
+        language,
+        status,
+        errorMessage,
+        formStatus,
+        user,
+        invalidError
+      ];
   LoginState copyWith({
     Email? email,
     Password? password,
@@ -43,6 +56,7 @@ class LoginState extends Equatable {
     String? errorMessage,
     FormSubmissionStatus? formStatus,
     User? user,
+    InvalidError? invalidError,
   }) {
     return LoginState(
         email: email ?? this.email,
@@ -51,6 +65,7 @@ class LoginState extends Equatable {
         status: status ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage,
         formStatus: formStatus ?? this.formStatus,
-        user: user ?? this.user);
+        user: user ?? this.user,
+        invalidError: invalidError);
   }
 }

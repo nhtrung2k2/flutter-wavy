@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,13 +21,13 @@ class RegisterBabySisterSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Register new babysister",
+          nameTitle: "registerNewBabysitter".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: RegisterBabySisterScheduleInfor(),
+      body: const RegisterBabySisterScheduleInfor(),
     );
   }
 }
@@ -46,8 +47,8 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
           SizedBox(
             height: 20.resizeheight(context),
           ),
-          const CustomText(
-            title: "Please input shift",
+          CustomText(
+            title: "pleaseInputShift".tr(),
             fontWeight: FontWeight.bold,
             fontSize: 16,
             lineHeight: (18 / 16),
@@ -60,13 +61,16 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Column(children: [
-              CustomText(
-                title: "Not available",
-                fontWeight: FontWeight.normal,
-                fontSize: 14,
-                lineHeight: (18 / 14).resizeheight(context),
-                colorText: CustomColors.blacktext,
-                textAlign: TextAlign.center,
+              SizedBox(
+                width: 90.resizewidth(context),
+                child: CustomText(
+                  title: "notAvailable".tr(),
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                  lineHeight: (18 / 14).resizeheight(context),
+                  colorText: CustomColors.blacktext,
+                  textAlign: TextAlign.center,
+                ),
               ),
               SizedBox(
                 height: 10.resizeheight(context),
@@ -79,8 +83,8 @@ class RegisterBabySisterScheduleInfor extends StatelessWidget {
           ),
           BackNext(
             horizontalPadding: 10.resizewidth(context),
-            firstButton: "Back",
-            secondButton: "Next",
+            firstButton: "back".tr(),
+            secondButton: "next".tr(),
             verticalfirstButton: 16,
             horizontalfirstButton: 38.5,
             verticalsecondButton: 16,
@@ -158,7 +162,7 @@ class TimePickerRow extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: CustomText(
-              title: day.name,
+              title: day.name.tr(),
               fontWeight: FontWeight.bold,
               fontSize: 14,
               lineHeight: (18 / 14).resizeheight(context),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,13 +31,13 @@ class ReigsterBasicSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Register new babysister",
+          nameTitle: "registerNewBabysitter".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: RegisterBasicSetting(),
+      body: const RegisterBasicSetting(),
     );
   }
 }
@@ -56,8 +57,8 @@ class RegisterBasicSetting extends StatelessWidget {
               SizedBox(
                 height: 20.resizeheight(context),
               ),
-              const CustomText(
-                title: "Registering with following informations",
+              CustomText(
+                title: "registeringWithFollowingInformations".tr(),
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 lineHeight: (18 / 16),
@@ -85,9 +86,8 @@ class RegisterBasicSettingForm extends StatelessWidget {
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
         if (state is SubmittedErrorChangeSetting) {
-          showErrorDialog(
-              context, "Error", "The babysitter was registered contract.", "OK",
-              () {
+          showErrorDialog(context, "Error",
+              "theBabysitterWasRegisteredContract".tr(), "yes".tr(), () {
             context.pop();
             Navigator.of(context).popUntil((route) => route.isFirst);
           });
@@ -103,8 +103,8 @@ class RegisterBasicSettingForm extends StatelessWidget {
           SizedBox(
             height: 16.resizeheight(context),
           ),
-          const CustomText(
-            title: '* You can change the details in "Basic setting"',
+          CustomText(
+            title: 'youCanChangeTheDetailsInBasicSetting'.tr(),
             fontWeight: FontWeight.normal,
             fontSize: 14,
             lineHeight: 18 / 16,
@@ -116,8 +116,8 @@ class RegisterBasicSettingForm extends StatelessWidget {
           ),
           BackNext(
             horizontalPadding: 10.resizewidth(context),
-            firstButton: "Back",
-            secondButton: "Next",
+            firstButton: "back".tr(),
+            secondButton: "next".tr(),
             verticalfirstButton: 16,
             horizontalfirstButton: 38.5,
             verticalsecondButton: 16,
@@ -150,8 +150,8 @@ class ShiftTime extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomText(
-          title: "Shift time",
+        CustomText(
+          title: "shiftTime".tr(),
           fontWeight: FontWeight.bold,
           fontSize: 20,
           lineHeight: 32 / 20,
@@ -163,7 +163,7 @@ class ShiftTime extends StatelessWidget {
         ),
         ...listSchedule.map((schedule) => CustomRowDevide(
             firstChild: CustomText(
-              title: schedule.day.name,
+              title: schedule.day.name.tr(),
               fontWeight: FontWeight.normal,
               fontSize: 16,
               lineHeight: 18 / 16,
@@ -171,8 +171,8 @@ class ShiftTime extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
             secondChild: schedule.notHaveAvailable
-                ? const CustomText(
-                    title: "Not Available",
+                ? CustomText(
+                    title: "notAvailable".tr(),
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     lineHeight: 18 / 16,
@@ -201,8 +201,8 @@ class Salary extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomText(
-          title: "Salary",
+        CustomText(
+          title: "salary".tr(),
           fontWeight: FontWeight.bold,
           fontSize: 20,
           lineHeight: 32 / 20,
@@ -214,7 +214,9 @@ class Salary extends StatelessWidget {
         ),
         CustomRowDevide(
           firstChild: CustomText(
-            title: inputSalary.hourlyWage != 0 ? "Hourly Wage" : "Monthly Wage",
+            title: inputSalary.hourlyWage != 0
+                ? "hourlyWage".tr()
+                : "monthlyWage".tr(),
             fontWeight: FontWeight.normal,
             fontSize: 16,
             lineHeight: 18 / 16,

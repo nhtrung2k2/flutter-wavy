@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wavy/service/getit/service_locator.dart';
@@ -20,8 +21,8 @@ class BeginToMatchBabySister extends StatelessWidget {
         SizedBox(
           height: 4.resizeheight(context),
         ),
-        const CustomText(
-          title: "Begin to match new babysister",
+        CustomText(
+          title: "beginToMatchNewBabysitter".tr(),
           fontWeight: FontWeight.bold,
           fontSize: 16,
           lineHeight: 19 / 16,

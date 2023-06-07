@@ -33,6 +33,7 @@ class CustomOutLineButtonPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
+        isExpanded: true,
         iconSize: 30,
 // Adjust the icon size as needed
         // Other DropdownButton properties

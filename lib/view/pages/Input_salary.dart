@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -19,19 +20,20 @@ import '../components/back_next.dart';
 import '../components/begin_to_match_new_babysiter.dart';
 import '../components/custom_app_bar.dart';
 import '../components/custom_text.dart';
+import 'dart:developer' as devtool;
 
 class InputSalaryPage extends StatelessWidget {
   const InputSalaryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Register new babysistter",
+          nameTitle: "registerNewBabysitter".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: InputSalaryView(),
+      body: const InputSalaryView(),
     );
   }
 }
@@ -60,8 +62,8 @@ class InputSalaryView extends StatelessWidget {
               SizedBox(
                 height: 32.resizeheight(context),
               ),
-              const CustomText(
-                title: "Please input salary",
+              CustomText(
+                title: "pleaseInputSalary".tr(),
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 lineHeight: (18 / 16),
@@ -75,8 +77,8 @@ class InputSalaryView extends StatelessWidget {
               ),
               BackNext(
                 horizontalPadding: 10.resizewidth(context),
-                firstButton: "Back",
-                secondButton: "Next",
+                firstButton: "back".tr(),
+                secondButton: "next".tr(),
                 verticalfirstButton: 16,
                 horizontalfirstButton: 38.5,
                 verticalsecondButton: 16,
@@ -103,12 +105,6 @@ class InputSalaryView extends StatelessWidget {
 
 class InputSalaryForm extends StatelessWidget {
   const InputSalaryForm({super.key});
-  // List<ItemSalary> listItem = const [
-  //   ItemSalary(id: 1, price: 10, option: 1),
-  //   ItemSalary(id: 2, price: 10, option: 1),
-  //   ItemSalary(id: 3, price: 10, option: 2),
-  //   ItemSalary(id: 4, price: 10, option: 2),
-  // ];
   @override
   Widget build(BuildContext context) {
     List<ItemSalary> listItem =
@@ -116,10 +112,10 @@ class InputSalaryForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 8, right: 8),
+        Padding(
+          padding: const EdgeInsets.only(left: 8, right: 8),
           child: ItemSalaryRowNonSlidable(
-            title: "Wage",
+            title: "wage".tr(),
           ),
         ),
         SizedBox(
@@ -131,7 +127,7 @@ class InputSalaryForm extends StatelessWidget {
                 child: ItemSalaryRowSlidable(item: item)))
             .toList(),
         CustomElevatedButton(
-            title: '+ Add more item',
+            title: 'addMoreItem'.tr(),
             vertical: 8,
             horizontal: 16,
             textColor: Colors.white,
@@ -150,8 +146,52 @@ class InputSalaryForm extends StatelessWidget {
   }
 }
 
+enum EnumType {
+  month,
+  day,
+}
+
+extension EnumTypeX on EnumType {
+  String get content {
+    switch (this) {
+      case EnumType.day:
+        return "oncePerDay".tr();
+      case EnumType.month:
+        return "oncePerMonth".tr();
+    }
+  }
+
+  int get indexEnum {
+    switch (this) {
+      case EnumType.day:
+        return 2;
+      case EnumType.month:
+        return 1;
+    }
+  }
+}
+
+class OptionModel {
+  final EnumType enumtype;
+
+  OptionModel(this.enumtype);
+}
+
+int convertOption(String option) {
+  devtool.log("convertOption");
+  if (option == EnumType.day.content) {
+    devtool.log(EnumType.day.indexEnum.toString());
+    devtool.log(EnumType.day.content);
+    return EnumType.day.indexEnum;
+  } else {
+    devtool.log(EnumType.month.indexEnum.toString());
+    devtool.log(EnumType.month.content);
+    return EnumType.month.indexEnum;
+  }
+}
+
 class ItemSalaryRowSlidable extends StatelessWidget {
-  const ItemSalaryRowSlidable({
+  ItemSalaryRowSlidable({
     super.key,
     required this.item,
   });
@@ -164,7 +204,7 @@ class ItemSalaryRowSlidable extends StatelessWidget {
     return Slidable(
         endActionPane: ActionPane(motion: const StretchMotion(), children: [
           SlidableAction(
-              label: 'Delete',
+              label: 'delete'.tr(),
               icon: Icons.cancel,
               onPressed: (context) {
                 bloc.add(OnDeleteItem(item.id));
@@ -198,9 +238,9 @@ class ItemSalaryRowSlidable extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
+                Flexible(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CustomInputUnit(
                           borderColor: CustomColors.blueBorder,
@@ -232,8 +272,8 @@ class ItemSalaryRowSlidable extends StatelessWidget {
                                     option: convertOption(value), id: item.id));
                               }
                             },
-                            selectedValue: "Once per day",
-                            options: const ['Once per month', 'Once per day']),
+                            selectedValue: "oncePerDay".tr(),
+                            options: ["oncePerDay".tr(), "oncePerMonth".tr()]),
                       ),
                     ],
                   ),
@@ -245,14 +285,19 @@ class ItemSalaryRowSlidable extends StatelessWidget {
   }
 }
 
+extension IndexExtension on OptionModel {}
+
 class ItemSalaryRowNonSlidable extends StatelessWidget {
-  const ItemSalaryRowNonSlidable({
+  ItemSalaryRowNonSlidable({
     super.key,
     required this.title,
   });
 
   final String title;
-
+  final List<OptionModel> listOption = [
+    OptionModel(EnumType.day),
+    OptionModel(EnumType.month)
+  ];
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SalaryBloc>();
@@ -319,8 +364,8 @@ class ItemSalaryRowNonSlidable extends StatelessWidget {
                             convertOptionSalary(value)));
                       }
                     },
-                    selectedValue: "Once per day",
-                    options: const ['Once per month', 'Once per day']),
+                    selectedValue: "oncePerDay".tr(),
+                    options: ["oncePerDay".tr(), "oncePerMonth".tr()]),
               ),
             ],
           ),
@@ -330,35 +375,26 @@ class ItemSalaryRowNonSlidable extends StatelessWidget {
   }
 }
 
-int convertOption(String option) {
-  switch (option) {
-    case "Once per day":
-      return 2;
-    case "Once per month":
-      return 1;
-    default:
-      return 2;
-  }
-}
-
-String convertIdOptiontoOption(int option) {
-  switch (option) {
-    case 2:
-      return "Once per day";
-    case 1:
-      return "Once per month";
-    default:
-      return "Once per day";
+String convertIdOptiontoOption(int index) {
+  devtool.log("convertIdOptiontoOption");
+  if (index == EnumType.day.indexEnum) {
+    devtool.log(EnumType.day.indexEnum.toString());
+    devtool.log(EnumType.day.content);
+    return EnumType.day.content;
+  } else {
+    devtool.log(EnumType.month.indexEnum.toString());
+    devtool.log(EnumType.month.content);
+    return EnumType.month.content;
   }
 }
 
 Wage convertOptionSalary(String option) {
-  switch (option) {
-    case "Once per day":
-      return Wage.hourlyWage;
-    case "Once per month":
-      return Wage.monthlyWage;
-    default:
-      return Wage.hourlyWage;
+  devtool.log("convertOptionSalary");
+  if (option == EnumType.day.content) {
+    devtool.log(EnumType.day.content);
+    return Wage.hourlyWage;
+  } else {
+    devtool.log(EnumType.month.content);
+    return Wage.monthlyWage;
   }
 }

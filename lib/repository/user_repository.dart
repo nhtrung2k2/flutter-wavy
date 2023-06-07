@@ -25,6 +25,10 @@ class UserRepository {
     }
   }
 
+  Future<void> setLanguage(String language) async {
+    await _authApi.setLanguage(language);
+  }
+
   Future<String?> getUserId() async {
     return _authApi.getUserId();
   }

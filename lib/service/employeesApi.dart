@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/model/employee_detail.dart';
@@ -37,11 +38,10 @@ class EmployeesApi {
               convertedList.map((json) => Employee.fromJson(json)).toList();
           return employees;
         } catch (e) {
-          // devtool.log(e.toString());
-          throw Exception(e.toString());
+          rethrow;
         }
       } else if (response.statusCode == 404) {
-        throw Exception("Can't get list employees");
+        throw "Can't get list employees";
       }
     } catch (e) {
       throw e.toString();
@@ -65,7 +65,7 @@ class EmployeesApi {
         final employeeDetail = Employee_Detail.fromJson(data);
         return employeeDetail;
       } else if (response.statusCode == 400) {
-        throw Exception("Token could not be parsed from the request.");
+        throw "Token could not be parsed from the request.";
       }
     } catch (e) {
       throw e.toString();
@@ -89,18 +89,12 @@ class EmployeesApi {
         'Authorization': 'Bearer $token',
         'X-Localization': language
       });
-      devtool.log("saveChangeSetting");
-      devtool.log(response.statusCode.toString());
-      devtool.log(response.statusMessage.toString());
-      devtool.log(shiftSalaryEmployee.toString());
+
       if (response.statusCode == 200) {
-        devtool.log("api success");
         return;
       } else if (response.statusCode == 422) {
-        // devtool.log("api 400");
-        throw "The babysitter was registered contract.";
+        throw "theBabysitterWasRegisteredContract".tr();
       } else if (response.statusCode == 400) {
-        // devtool.log("api 400");
         throw "Token could not be parsed from the request.";
       }
     } catch (e) {
@@ -124,7 +118,7 @@ class EmployeesApi {
         final shiftSalaryEmployee = ShiftSalaryEmployee.fromJson(data);
         return shiftSalaryEmployee;
       } else {
-        throw Exception("Some thing went wrong with get change setting");
+        throw "Some thing went wrong with get change setting";
       }
     } catch (e) {
       // devtool.log(e.toString());

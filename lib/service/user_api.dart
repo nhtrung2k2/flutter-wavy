@@ -40,7 +40,7 @@ class UserApi {
         if (response.statusCode == 200) {
           return;
         } else if (response.statusCode == 400) {
-          throw Exception("Token could not be parsed from the request.");
+          throw "Token could not be parsed from the request.";
         }
       }
     } catch (e) {

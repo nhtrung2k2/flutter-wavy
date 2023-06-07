@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,13 +25,13 @@ class RegisterBabySisterInforPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Register new babysister",
+          nameTitle: "registerNewBabysitter".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: RegisterBabySisterInfor(),
+      body: const RegisterBabySisterInfor(),
     );
   }
 }
@@ -56,9 +57,9 @@ class RegisterBabySisterInfor extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                "Begin to match new babysister",
-                style: TextStyle(
+              Text(
+                "beginToMatchNewBabysitter".tr(),
+                style: const TextStyle(
                   fontFamily: "Roboto",
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -67,9 +68,9 @@ class RegisterBabySisterInfor extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 48.resizeheight(context)),
-              const Text(
-                "BabySistter",
-                style: TextStyle(
+              Text(
+                "babysitter".tr(),
+                style: const TextStyle(
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -104,9 +105,9 @@ class RegisterBabySisterInfor extends StatelessWidget {
                   colorText: CustomColors.gray,
                   textAlign: TextAlign.center),
               SizedBox(height: 48.resizeheight(context)),
-              const Text("Are you sure the babysister above is correct?",
+              Text("areYouSureTheBabysitterAboveIsCorrect".tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -124,8 +125,8 @@ class RegisterBabySisterInfor extends StatelessWidget {
                 child: Builder(builder: (context) {
                   return BackNext(
                     horizontalPadding: 10.resizewidth(context),
-                    firstButton: "No",
-                    secondButton: "Yes",
+                    firstButton: "no".tr(),
+                    secondButton: "yes".tr(),
                     verticalfirstButton: 16,
                     horizontalfirstButton: 41,
                     verticalsecondButton: 16,

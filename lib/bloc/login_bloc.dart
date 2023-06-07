@@ -40,6 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) {
     final email = Email.dirty(event.email);
     emit(state.copyWith(
+      invalidError: null,
       email: email,
     ));
   }
@@ -51,6 +52,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final password = Password.dirty(event.password);
     emit(
       state.copyWith(
+        invalidError: null,
         password: password,
       ),
     );
@@ -61,6 +63,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) {
     final language = event.language;
+    _userRepository.setLanguage(language);
     emit(
       state.copyWith(language: language),
     );
@@ -72,17 +75,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) {
     final email = Email.dirty(event.email);
     final password = Password.dirty(event.password);
+    final invalidError = statusValidate(email, password);
     emit(state.copyWith(
+        invalidError: invalidError,
         status: Formz.validate([email, password])
             ? LoginStatus.valid
             : LoginStatus.invalid));
+  }
+
+  InvalidError? statusValidate(Email email, Password password) {
+    if (Formz.validate([email, password])) {
+      return null;
+    } else {
+      if (email.isNotValid && password.isNotValid) {
+        return InvalidError.invalidEmailAndPassword;
+      } else if (password.isNotValid) {
+        return InvalidError.invalidPassword;
+      } else if (email.isNotValid) {
+        return InvalidError.invalidEmail;
+      }
+    }
   }
 
   void _loginRestart(
     LoginRestart event,
     Emitter<LoginState> emit,
   ) {
-    emit(state.copyWith(formStatus: FormSubmissionStatus.initial));
+    emit(state.copyWith(
+        invalidError: null, formStatus: FormSubmissionStatus.initial));
   }
 
   Future<void> _onSubmitted(

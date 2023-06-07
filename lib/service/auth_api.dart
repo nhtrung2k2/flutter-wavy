@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import '../model/User.dart';
@@ -14,6 +15,15 @@ class AuthApi {
   AuthApi()
       : baseUrl = "https://wavy-api.starboardasiavn.com",
         baseApi = BaseAPI();
+
+  Future<void> setLanguage(String language) async {
+    try {
+      final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
+      prefs.setString('language', language);
+    } catch (e) {
+      devtool.log(e.toString());
+    }
+  }
 
   Future<User?> login(String email, String password, String language) async {
     final loginUrl = '$baseUrl/api/login';
@@ -36,13 +46,11 @@ class AuthApi {
         prefs.setString('userId', user.id);
         return user;
       } else if (response.statusCode == 401) {
-        throw "Email or password is not correct";
+        throw "emailOrPasswordIsNotCorrect".tr();
       } else if (response.statusCode == 403) {
-        devtool.log(response.toString());
-        throw "User is inactive. Please contact to admin";
+        throw "userIsInactivePleaseContactToAdmin".tr();
       }
     } catch (e) {
-      devtool.log(e.toString());
       rethrow;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,12 +7,12 @@ import 'package:wavy/bloc/review_bloc.dart';
 import 'package:wavy/event/review_event.dart';
 import 'package:wavy/state/review_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_input_field.dart';
 import 'package:wavy/view/components/personal_information/user_info.dart';
 
 class Review extends StatefulWidget {
-
   final String babysistterId;
   final int shiftId;
 
@@ -26,11 +27,11 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
-
   late ReviewBloc reviewBloc;
 
   final TextEditingController nameTextController = TextEditingController();
-  final TextEditingController overallEvaluationTextController = TextEditingController();
+  final TextEditingController overallEvaluationTextController =
+      TextEditingController();
   final TextEditingController cleaningTextController = TextEditingController();
   final TextEditingController laundryTextController = TextEditingController();
   final TextEditingController petcareTextController = TextEditingController();
@@ -47,46 +48,46 @@ class _ReviewState extends State<Review> {
   void initState() {
     super.initState();
     reviewBloc = context.read<ReviewBloc>();
-    reviewBloc.add(InitDataEvent(babysistterId: widget.babysistterId, shiftId: widget.shiftId));
+    reviewBloc.add(InitDataEvent(
+        babysistterId: widget.babysistterId, shiftId: widget.shiftId));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       reviewBloc.stream.listen((state) {
-        if(state.reviewStateStatus == ReviewStateStatus.submitted){
+        if (state.reviewStateStatus == ReviewStateStatus.submitted) {
           _showToast('Successfully');
-          if(mounted) context.pop();
-        }
-        else if(state.reviewStateStatus == ReviewStateStatus.cannotSubmit){
+          if (mounted) context.pop();
+        } else if (state.reviewStateStatus == ReviewStateStatus.cannotSubmit) {
           _showToast('Failed');
         }
 
-        if(state.validateStatus == ReviewValidateStatus.emptyName){
-          _showToast('Empty Name');
-        }
-        else if(state.validateStatus == ReviewValidateStatus.startDateFormat){
-          _showToast('Invalid Start Date');
-        }
-        else if(state.validateStatus == ReviewValidateStatus.endDateFormat){
-          _showToast('Invalid End Date');
-        }
-        else if(state.validateStatus == ReviewValidateStatus.emptyOverallComment){
-          _showToast('Empty Overall Comment');
+        if (state.validateStatus == ReviewValidateStatus.emptyName) {
+          _showToast('pleaseEnterYourName'.tr());
+        } else if (state.validateStatus ==
+            ReviewValidateStatus.startDateFormat) {
+          _showToast('invalidStartDate'.tr());
+        } else if (state.validateStatus == ReviewValidateStatus.endDateFormat) {
+          _showToast('invalidEndDate'.tr());
+        } else if (state.validateStatus ==
+            ReviewValidateStatus.emptyOverallComment) {
+          _showToast('pleaseEnterOverallEvaluation'.tr());
         }
       });
     });
   }
 
-  _showToast(String message){
-    if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  _showToast(String message) {
+    if (mounted)
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
-
     var reviewState = context.select((ReviewBloc bloc) => bloc.state);
 
     return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
             textColor: CustomColors.blueDark,
-            nameTitle: "Review",
+            nameTitle: "review".tr(),
             haveBackButton: true,
             backgroundColorAppBar: CustomColors.blueLight),
         body: Column(
@@ -99,40 +100,61 @@ class _ReviewState extends State<Review> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       reviewState.reviewStateStatus == ReviewStateStatus.initing
-                          ? const Center(child: CircularProgressIndicator(),)
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
                           : UserInfo(
-                        infoType: const [UserInfoType.avatar, UserInfoType.name, UserInfoType.id],
-                        avatarBase64: reviewState.employee?.avatar ?? '',
-                        name: reviewState.employee?.name ?? '',
-                        id: reviewState.employee?.id ?? '',
+                              infoType: const [
+                                UserInfoType.avatar,
+                                UserInfoType.name,
+                                UserInfoType.id
+                              ],
+                              avatarBase64: reviewState.employee?.avatar ?? '',
+                              name: reviewState.employee?.name ?? '',
+                              id: reviewState.employee?.id ?? '',
+                            ),
+                      const SizedBox(
+                        height: 16.0,
                       ),
-                      const SizedBox(height: 16.0,),
-                      _titleText('Add Review'),
-                      const SizedBox(height: 16.0,),
+                      _titleText('addReview'.tr()),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
                       CustomInputField(
                         controller: nameTextController,
                         inputType: InputType.string,
-                        hintText: 'Enter your name',
-                        verticalLabel: 'Your name',
+                        hintText: 'enterYourName'.tr(),
+                        verticalLabel: 'yourName'.tr(),
                         isRequiredField: true,
                       ),
-                      const SizedBox(height: 10.0,),
-                      const Text(
-                        '* We suggest you input your real full name for reviews (for the credibility of them), but for privacy purposes, you can also opt to provide just a username.',
-                        style: TextStyle(
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        '※ ${'weSuggestReview'.tr()}',
+                        style: const TextStyle(
                             color: CustomColors.redText,
                             fontSize: 14,
                             fontFamily: "Roboto",
-                            fontStyle: FontStyle.italic
-                        ),
+                            fontStyle: FontStyle.italic),
                       ),
-                      const SizedBox(height: 16.0,),
-                      _titleText('Working period'),
-                      const SizedBox(height: 16.0,),
-                      _workingDate('From', fromDayTextController, fromMonthTextController, fromYearTextController),
-                      const SizedBox(height: 16.0,),
-                      _workingDate('To', toDayTextController, toMonthTextController, toYearTextController),
-                      const SizedBox(height: 16.0,),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      _titleText('workingPeriod'.tr()),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      _workingDate('from'.tr(), fromDayTextController,
+                          fromMonthTextController, fromYearTextController),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      _workingDate('to'.tr(), toDayTextController,
+                          toMonthTextController, toYearTextController),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
                       _rattingPart(reviewState),
                     ],
                   ),
@@ -140,42 +162,40 @@ class _ReviewState extends State<Review> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: _submitButton(
-                  onPress: () => _submit()
-              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: _submitButton(onPress: () => _submit()),
             )
           ],
-        )
-    );
+        ));
   }
 
-  Widget _titleText(String text){
+  Widget _titleText(String text) {
     return Text(
       text,
       style: const TextStyle(
           color: Colors.black,
           fontSize: 17,
           fontFamily: "Roboto",
-          fontWeight: FontWeight.bold
-      ),
+          fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _workingDate(String title, TextEditingController dayController, TextEditingController monthController, TextEditingController yearController){
+  Widget _workingDate(
+      String title,
+      TextEditingController dayController,
+      TextEditingController monthController,
+      TextEditingController yearController) {
     return Row(
       children: [
         Text(
           title,
           style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+              color: Colors.black, fontSize: 14, fontFamily: "Roboto"),
         ),
         const Spacer(),
         SizedBox(
-          width: 50,
+          width: 50.resizewidth(context),
           child: CustomInputField(
             controller: dayController,
           ),
@@ -183,19 +203,16 @@ class _ReviewState extends State<Review> {
         const SizedBox(
           width: 5.0,
         ),
-        const Text(
-          'Day',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+        Text(
+          'day'.tr(),
+          style: const TextStyle(
+              color: Colors.black, fontSize: 14, fontFamily: "Roboto"),
         ),
         const SizedBox(
           width: 5.0,
         ),
         SizedBox(
-          width: 50,
+          width: 50.resizewidth(context),
           child: CustomInputField(
             controller: monthController,
           ),
@@ -203,19 +220,16 @@ class _ReviewState extends State<Review> {
         const SizedBox(
           width: 5.0,
         ),
-        const Text(
-          'Month',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+        Text(
+          'month'.tr(),
+          style: const TextStyle(
+              color: Colors.black, fontSize: 14, fontFamily: "Roboto"),
         ),
         const SizedBox(
           width: 5.0,
         ),
         SizedBox(
-          width: 70,
+          width: 70.resizewidth(context),
           child: CustomInputField(
             controller: yearController,
           ),
@@ -223,121 +237,119 @@ class _ReviewState extends State<Review> {
         const SizedBox(
           width: 5.0,
         ),
-        const Text(
-          'Year',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: "Roboto"
-          ),
+        Text(
+          'year'.tr(),
+          style: const TextStyle(
+              color: Colors.black, fontSize: 14, fontFamily: "Roboto"),
         ),
       ],
     );
   }
 
-  Widget _rattingPart(ReviewState state){
+  Widget _rattingPart(ReviewState state) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _rattingSection(
-          'Overall evaluation',
+          'overallEvaluation'.tr(),
           state.review.overallRating,
           overallEvaluationTextController,
-              (ratingNumber){
+          (ratingNumber) {
             reviewBloc.add(ChangeOverallRateEvent(rate: ratingNumber));
           },
         ),
-        const SizedBox(height: 16.0,),
-        const Text(
-          'Evaluation by service',
-          style: TextStyle(
+        const SizedBox(
+          height: 16.0,
+        ),
+        Text(
+          'evaluationByService'.tr(),
+          style: const TextStyle(
               color: Colors.black,
               fontSize: 16,
               fontFamily: "Roboto",
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10.0,),
+        const SizedBox(
+          height: 10.0,
+        ),
         _rattingSection(
-            'Cleaning',
+            'cleaning'.tr(),
             state.review.cleanningRating,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            cleaningTextController,
-                (ratingNumber){
-              reviewBloc.add(ChangeCleaningRateEvent(rate: ratingNumber));
-            }
+            cleaningTextController, (ratingNumber) {
+          reviewBloc.add(ChangeCleaningRateEvent(rate: ratingNumber));
+        }),
+        const SizedBox(
+          height: 10.0,
         ),
-        const SizedBox(height: 10.0,),
         _rattingSection(
-            'Laundry',
+            'laundry'.tr(),
             state.review.laundryRating,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            laundryTextController,
-                (ratingNumber){
-              reviewBloc.add(ChangeLaundryRateEvent(rate: ratingNumber));
-            }
+            laundryTextController, (ratingNumber) {
+          reviewBloc.add(ChangeLaundryRateEvent(rate: ratingNumber));
+        }),
+        const SizedBox(
+          height: 10.0,
         ),
-        const SizedBox(height: 10.0,),
         _rattingSection(
-            'Petcare',
+            'petcare'.tr(),
             state.review.babysittingRating,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            petcareTextController,
-                (ratingNumber){
-              reviewBloc.add(ChangePetcareRateEvent(rate: ratingNumber));
-            }
+            petcareTextController, (ratingNumber) {
+          reviewBloc.add(ChangePetcareRateEvent(rate: ratingNumber));
+        }),
+        const SizedBox(
+          height: 10.0,
         ),
-        const SizedBox(height: 10.0,),
-        _rattingSection(
-            'Shopping',
-            state.review.communicationRating,
-            shoppingTextController,
-                (ratingNumber){
-              reviewBloc.add(ChangeShoppingRateEvent(rate: ratingNumber));
-            },
+        _rattingSection('shopping'.tr(), state.review.communicationRating,
+            shoppingTextController, (ratingNumber) {
+          reviewBloc.add(ChangeShoppingRateEvent(rate: ratingNumber));
+        },
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
-            )
-        ),
+            )),
       ],
     );
   }
 
-  Widget _rattingSection(String title, int rate, TextEditingController controller, Function(int) onRating, {TextStyle? style}){
+  Widget _rattingSection(String title, int rate,
+      TextEditingController controller, Function(int) onRating,
+      {TextStyle? style}) {
     return Column(
       children: [
         Row(
           children: [
             Text(
               title,
-              style: style ?? const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.bold
-              ),
+              style: style ??
+                  const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.bold),
             ),
             const Spacer(),
-            _ratingComponent(
-                rate,
-                    (index) => onRating(index+1)
-            )
+            _ratingComponent(rate, (index) => onRating(index + 1))
           ],
         ),
-        const SizedBox(height: 10.0,),
+        const SizedBox(
+          height: 10.0,
+        ),
         CustomInputField(
           controller: controller,
           maxLines: 5,
@@ -346,23 +358,26 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  Widget _ratingComponent(int rate, Function(int) onChanged, {int max = 5}){
+  Widget _ratingComponent(int rate, Function(int) onChanged, {int max = 5}) {
     return Row(
-      children: List.generate(max, (index) => InkWell(
-          onTap: () => onChanged(index),
-          child: Icon(
-            index >= rate ? Icons.star_border_rounded : Icons.star_rate_rounded,
-            size: 35.0,
-            color: CustomColors.blueBorder,
-          )
-      )),
+      children: List.generate(
+          max,
+          (index) => InkWell(
+              onTap: () => onChanged(index),
+              child: Icon(
+                index >= rate
+                    ? Icons.star_border_rounded
+                    : Icons.star_rate_rounded,
+                size: 35.0,
+                color: CustomColors.blueBorder,
+              ))),
     );
   }
 
-  Widget _submitButton({String title = 'Submit', Function? onPress}){
+  Widget _submitButton({Function? onPress}) {
     return GestureDetector(
-      onTap: (){
-        if(onPress!=null) onPress();
+      onTap: () {
+        if (onPress != null) onPress();
       },
       child: Container(
         height: 35,
@@ -373,7 +388,7 @@ class _ReviewState extends State<Review> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Text(
-          title,
+          'submit'.tr(),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
@@ -384,10 +399,11 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  _submit(){
-
-    String dateStart = '${fromYearTextController.text}-${fromMonthTextController.text}-${fromDayTextController.text}';
-    String dateEnd = '${toYearTextController.text}-${toMonthTextController.text}-${toDayTextController.text}';
+  _submit() {
+    String dateStart =
+        '${fromYearTextController.text}-${fromMonthTextController.text}-${fromDayTextController.text}';
+    String dateEnd =
+        '${toYearTextController.text}-${toMonthTextController.text}-${toDayTextController.text}';
 
     reviewBloc.add(SubmitEvent(
         babysistterId: widget.babysistterId,
@@ -398,8 +414,6 @@ class _ReviewState extends State<Review> {
         babysisttingComment: petcareTextController.text,
         cleanningComment: cleaningTextController.text,
         laundryComment: laundryTextController.text,
-        communicationComment: shoppingTextController.text
-    ));
+        communicationComment: shoppingTextController.text));
   }
-
 }

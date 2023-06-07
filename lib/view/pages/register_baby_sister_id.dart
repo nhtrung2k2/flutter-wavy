@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,22 +19,36 @@ class RegisterBabySisterId extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Register new babysister",
+          nameTitle: "registerNewBabysitter".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: RegisterBabySisterIdForm(),
+      body: const RegisterBabySisterIdForm(),
     );
   }
 }
 
-class RegisterBabySisterIdForm extends StatelessWidget {
+class RegisterBabySisterIdForm extends StatefulWidget {
   const RegisterBabySisterIdForm({super.key});
+
+  @override
+  State<RegisterBabySisterIdForm> createState() =>
+      _RegisterBabySisterIdFormState();
+}
+
+class _RegisterBabySisterIdFormState extends State<RegisterBabySisterIdForm> {
+  late final EmployeeSearchBloc bloc;
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read<EmployeeSearchBloc>();
+    bloc.add(RestartEmployeeSearchEvent(value: ""));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<EmployeeSearchBloc>();
     return BlocListener<EmployeeSearchBloc, SearchState>(
       listener: (context, state) {
         if (bloc.state is SubmittedSuccess) {
@@ -47,9 +62,9 @@ class RegisterBabySisterIdForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                "Begin to match new babysiter",
-                style: TextStyle(
+              Text(
+                "beginToMatchNewBabysitter".tr(),
+                style: const TextStyle(
                   fontFamily: "Roboto",
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -58,9 +73,9 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 32.resizeheight(context)),
-              const Text(
-                "Please input the babysister ID",
-                style: TextStyle(
+              Text(
+                "pleaseInputTheBabysitterId".tr(),
+                style: const TextStyle(
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -110,16 +125,17 @@ class RegisterBabySisterIdForm extends StatelessWidget {
                         }
                         // context.goNamed("register_baby_sister_infor");
                       },
-                      title: "Search",
+                      title: "search".tr(),
                       vertical: 8,
                       horizontal: 28.5)
                 ],
               ),
               context.select((EmployeeSearchBloc bloc) => bloc.state)
                       is SubmittedError
-                  ? const CustomText(
+                  ? CustomText(
                       title:
-                          "This ID does not match with any babysitter.Please input the correct babysitter ID.",
+                          "thisIdDoesNotMatchWithAnyBabysitterPleaseInputTheCorrectBabysitterId"
+                              .tr(),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                       lineHeight: 16 / 14,

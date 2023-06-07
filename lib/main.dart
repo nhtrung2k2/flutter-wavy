@@ -52,13 +52,14 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
-      saveLocale: true,
+      saveLocale: false,
+      startLocale: const Locale('en', 'US'),
       supportedLocales: const [
-        Locale('en'),
-        Locale('ja'),
-        Locale('vi'),
+        Locale('en', 'US'),
+        Locale('ja', 'JP'),
+        Locale('vi', 'VN'),
       ],
-      fallbackLocale: const Locale('en'),
+      fallbackLocale: const Locale('en', 'US'),
       path: 'assets/translations',
       child: MainApp(),
     ),

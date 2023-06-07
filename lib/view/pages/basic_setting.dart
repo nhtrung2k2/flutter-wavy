@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -34,13 +35,13 @@ class BasicSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-          nameTitle: "Basic setting",
+          nameTitle: "basicSetting".tr(),
           haveBackButton: true,
           textColor: CustomColors.blueDark,
           backgroundColorAppBar: CustomColors.blueLight),
-      body: BasicSettingForm(),
+      body: const BasicSettingForm(),
     );
   }
 }
@@ -83,9 +84,6 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
   Widget build(BuildContext context) {
     return BlocListener<EmployeeChangeSettingBloc, ChangeSettingState>(
       listener: (context, state) {
-        if (state is FetchLoading) {
-          LoadingOverlay.show(context);
-        }
         if (state is SubmittedSuccessChangeSetting) {
           context.pop();
         }
@@ -96,95 +94,86 @@ class _BasicSettingFormState extends State<BasicSettingForm> {
               InitialFetch(inputSalary: state.shiftSalaryEmployee.inputSalary));
         }
       },
-      child: BlocListener<ScheduleCubic, SheduleState>(
-        listener: (context, state) {
-          if (state is ScheduleFetch) {
-            devtool.log(inputSalaryBloc.state.formStatus.name);
-
-            LoadingOverlay.hide();
-          }
-        },
-        child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                  CustomCardInfor(
-                      name: employeeDetail.name,
-                      avatar: employeeDetail.avatar,
-                      id: employeeDetail.id),
-                  SizedBox(
-                    height: 20.resizeheight(context),
-                  ),
-                  const CustomText(
-                    title: "The Basic attendance information",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    lineHeight: (18 / 16),
-                    colorText: CustomColors.blacktext,
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(
-                    height: 16.resizeheight(context),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Column(children: [
-                      CustomText(
-                        title: "Not available",
+      child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                CustomCardInfor(
+                    name: employeeDetail.name,
+                    avatar: employeeDetail.avatar,
+                    id: employeeDetail.id),
+                SizedBox(
+                  height: 20.resizeheight(context),
+                ),
+                CustomText(
+                  title: "theBasicAttendanceInformations".tr(),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  lineHeight: (18 / 16),
+                  colorText: CustomColors.blacktext,
+                  textAlign: TextAlign.start,
+                ),
+                SizedBox(
+                  height: 16.resizeheight(context),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Column(children: [
+                    SizedBox(
+                      width: 90.resizewidth(context),
+                      child: CustomText(
+                        title: "notAvailable".tr(),
                         fontWeight: FontWeight.normal,
                         fontSize: 14,
                         lineHeight: (18 / 14).resizeheight(context),
                         colorText: CustomColors.blacktext,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(
-                        height: 10.resizeheight(context),
-                      ),
-                    ]),
-                  ),
-                  const RegisterBabySisterScheduleForm(),
-                  SizedBox(
-                    height: 36.resizeheight(context),
-                  ),
-                  const CustomText(
-                    title: "Automatic addition",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    lineHeight: (18 / 16),
-                    colorText: CustomColors.blacktext,
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(height: 16.resizeheight(context)),
-                  const InputSalaryForm(),
-                  SizedBox(height: 16.resizeheight(context)),
-                  Center(
-                    child: CustomElevatedButton(
-                        title: 'Update',
-                        vertical: 8,
-                        horizontal: 16,
-                        textColor: Colors.white,
-                        backgroundColor: CustomColors.blueBorder,
-                        borderRadius: 8,
-                        onPressed: () {
-                          devtool.log("shift_id_click");
-                          devtool.log(shiftId.toString());
-                          context.read<EmployeeChangeSettingBloc>().add(
-                              OnSubmmitedChangeSettingEvent(
-                                  shiftId: shiftId,
-                                  babysistterId: (detailEmployeeBloc.state
-                                          as SubmittedEmployeeDetailSuccessState)
-                                      .employeeDetail
-                                      .id,
-                                  inputShifts:
-                                      (scheduleBloc.state.listSchedule),
-                                  inputSalary:
-                                      (inputSalaryBloc.state.inputSalary)));
-                        }),
-                  ),
-                ]))),
-      ),
+                    ),
+                    SizedBox(
+                      height: 10.resizeheight(context),
+                    ),
+                  ]),
+                ),
+                const RegisterBabySisterScheduleForm(),
+                SizedBox(
+                  height: 36.resizeheight(context),
+                ),
+                CustomText(
+                  title: "automaticAddition".tr(),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  lineHeight: (18 / 16),
+                  colorText: CustomColors.blacktext,
+                  textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 16.resizeheight(context)),
+                const InputSalaryForm(),
+                SizedBox(height: 16.resizeheight(context)),
+                Center(
+                  child: CustomElevatedButton(
+                      title: 'update'.tr(),
+                      vertical: 8,
+                      horizontal: 16,
+                      textColor: Colors.white,
+                      backgroundColor: CustomColors.blueBorder,
+                      borderRadius: 8,
+                      onPressed: () {
+                        context.read<EmployeeChangeSettingBloc>().add(
+                            OnSubmmitedChangeSettingEvent(
+                                shiftId: shiftId,
+                                babysistterId: (detailEmployeeBloc.state
+                                        as SubmittedEmployeeDetailSuccessState)
+                                    .employeeDetail
+                                    .id,
+                                inputShifts: (scheduleBloc.state.listSchedule),
+                                inputSalary:
+                                    (inputSalaryBloc.state.inputSalary)));
+                      }),
+                ),
+              ]))),
     );
   }
 }

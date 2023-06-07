@@ -80,31 +80,31 @@ class CardInforDetail extends StatelessWidget {
   final details = [
     {
       "icon": null,
-      "title": "Confirm the schedule",
+      "title": "confirmTheSchedule".tr(),
       "colorText": Colors.black,
       'route': RoutesName.babysisterConfirmTheSchedule.name
     },
     {
       "icon": null,
-      "title": "Payments",
+      "title": "payments".tr(),
       "colorText": Colors.black,
       'route': RoutesName.babysisterPayment.name
     },
     {
       "icon": null,
-      "title": "Basic settings",
+      "title": "basicSetting".tr(),
       "colorText": Colors.black,
       'route': RoutesName.basicSettingRoute.name
     },
     {
       "icon": Icons.star,
-      "title": "Review",
+      "title": "review".tr(),
       "colorText": Colors.black,
       'route': RoutesName.babysisterReview.name
     },
     {
       "icon": null,
-      "title": "Cancel the contracts",
+      "title": "cancelTheContract".tr(),
       "colorText": CustomColors.redText,
       'route': RoutesName.cancelTheContractRoute.name
     }
@@ -118,8 +118,8 @@ class CardInforDetail extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomText(
-            title: "Details",
+          CustomText(
+            title: "details".tr(),
             fontWeight: FontWeight.bold,
             fontSize: 14,
             lineHeight: 16 / 14,
@@ -317,15 +317,15 @@ class CardContact extends StatelessWidget {
   final contacts = [
     {
       "icon": Icons.call,
-      "title": "Call to BabySister",
+      "title": "callToBabysitter".tr(),
     },
     {
       "icon": Icons.file_copy,
-      "title": "Copy Number",
+      "title": "copyNumber".tr(),
     },
     {
       "icon": Icons.email,
-      "title": "Mail to BabySister",
+      "title": "mailToBabysitter".tr(),
     }
   ];
 
@@ -340,8 +340,8 @@ class CardContact extends StatelessWidget {
         SizedBox(
           height: 18.resizeheight(context),
         ),
-        const CustomText(
-          title: "Contacts",
+        CustomText(
+          title: "contacts".tr(),
           fontWeight: FontWeight.bold,
           fontSize: 14,
           lineHeight: 16 / 14,
@@ -366,7 +366,8 @@ class CardContact extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white)),
                   onPressed: () {
-                    if ((contact['title'] as String) == "Call to BabySister") {
+                    if ((contact['title'] as String) ==
+                        "callToBabysitter".tr()) {
                       makePhoneCall(employee.phone);
                     }
                   },
