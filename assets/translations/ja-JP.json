@@ -166,6 +166,6 @@
 "pleaseEnterYourName":"お名前を入力してください",
 "invalidStartDate":"開始日が無効",
 "invalidEndDate":"終了日が無効",
-"pleaseEnterOverallEvaluation":"全体評価 を入力してください"
-
+"pleaseEnterOverallEvaluation":"全体評価 を入力してください",
+"chooseAnOption":"一つの選択をしてください"
 }

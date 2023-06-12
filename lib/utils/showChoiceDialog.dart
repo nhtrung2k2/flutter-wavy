@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +17,7 @@ void showChoiceDialog(BuildContext context, List<ItemSalary> list) {
     builder: (BuildContext dialogcontext) {
       final salaryBloc = context.read<SalaryBloc>();
       return AlertDialog(
-        title: const Text('Choose an Option'),
+        title: Text('chooseAnOption'.tr()),
         content: SingleChildScrollView(
           child: ListBody(
               children: list

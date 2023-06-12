@@ -114,8 +114,8 @@
     "changeLanguage":"Thay đổi ngôn ngữ",
     "logout":"Đăng xuất",
     "cancelMembership":"Hủy tư cách thành viên",
-    "tetBonus":"Tet bonus",
-    "contractEndBonus":"Contract-end bonus",
+    "tetBonus":"Thưởng tết",
+    "contractEndBonus":"Thưởng kết thúc hợp đồng",
     "emailOrPasswordIsNotCorrect":"Email hoặc mật khẩu nhập chưa đúng",
     "emailIsEnteredInvalid":"Vui lòng nhập email hợp lệ",
     "passwordIsRequired":"Vui lòng nhập mật khẩu",
@@ -168,5 +168,6 @@
     "pleaseEnterYourName":"Vui lòng nhập tên của bạn",
 "invalidStartDate":"Ngày bắt đầu không hơp lệ",
 "invalidEndDate":"Ngày kết thúc không hợp lệ",
-"pleaseEnterOverallEvaluation":"Vui lòng nhập đánh giá chung"
+"pleaseEnterOverallEvaluation":"Vui lòng nhập đánh giá chung",
+"chooseAnOption":"Chọn một mục"
  }

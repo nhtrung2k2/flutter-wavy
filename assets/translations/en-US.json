@@ -174,5 +174,6 @@
 "pleaseEnterYourName":"Please enter your name",
 "invalidStartDate":"Invalid Start Date",
 "invalidEndDate":"Invalid End Date",
-"pleaseEnterOverallEvaluation":"Please enter Overall evaluation"
+"pleaseEnterOverallEvaluation":"Please enter Overall evaluation",
+"chooseAnOption":"Choose an option"
 }

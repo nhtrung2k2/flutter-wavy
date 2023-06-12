@@ -178,20 +178,15 @@ class OptionModel {
 }
 
 int convertOption(String option) {
-  devtool.log("convertOption");
   if (option == EnumType.day.content) {
-    devtool.log(EnumType.day.indexEnum.toString());
-    devtool.log(EnumType.day.content);
     return EnumType.day.indexEnum;
   } else {
-    devtool.log(EnumType.month.indexEnum.toString());
-    devtool.log(EnumType.month.content);
     return EnumType.month.indexEnum;
   }
 }
 
 class ItemSalaryRowSlidable extends StatelessWidget {
-  ItemSalaryRowSlidable({
+  const ItemSalaryRowSlidable({
     super.key,
     required this.item,
   });

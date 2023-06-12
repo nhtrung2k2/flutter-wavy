@@ -72,7 +72,7 @@ class _AddMoreItemsComponentsState extends State<AddMoreItemsComponents> {
       context: context,
       builder: (BuildContext dialogcontext) {
         return AlertDialog(
-          title: const Text('Choose an Option'),
+          title: Text('chooseAnOption'.tr()),
           content: SingleChildScrollView(
             child: ListBody(
                 children: list

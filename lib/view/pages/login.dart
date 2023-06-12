@@ -35,16 +35,26 @@ void showErrorDialog(BuildContext context, final String title,
   );
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    context.select((LoginBloc bloc) {
-      if (bloc.state.formStatus == FormSubmissionStatus.initial) {
-        bloc.add(LanguageChanged(language: context.locale.languageCode));
-      }
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
+          .read<LoginBloc>()
+          .add(LanguageChanged(language: context.locale.languageCode));
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -61,7 +71,7 @@ class LoginPage extends StatelessWidget {
                 } else if (state.formStatus ==
                     FormSubmissionStatus.submissionfailed) {
                   LoadingOverlay.hide();
-                  showErrorDialog(context, "Error",
+                  showErrorDialog(context, "error".tr(),
                       state.errorMessage.toString(), "yes".tr(), () {
                     context.pop();
                   });

@@ -8,6 +8,7 @@ import 'package:wavy/event/confirm_schedule_event.dart';
 import 'package:wavy/state/confirm_the_schedule_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/routesName.dart';
+import 'package:wavy/utils/string_extension.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_radius_checkbox.dart';
 import 'package:wavy/view/components/personal_information/user_info.dart';
@@ -107,7 +108,8 @@ class _ConfirmTheScheduleState extends State<ConfirmTheSchedule> {
               ),
               Text(
                 DateFormat('MMMM yyyy', context.locale.toString())
-                    .format(DateTime(state.year, state.month, 1)),
+                    .format(DateTime(state.year, state.month, 1))
+                    .capitalize(),
                 style: const TextStyle(
                     color: CustomColors.bluetext,
                     fontSize: 17,
