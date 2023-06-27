@@ -1,9 +1,16 @@
+import 'package:wavy/state/review_state.dart';
+
 abstract class ReviewEvent {}
 
 class InitDataEvent extends ReviewEvent {
   final String babysistterId;
   final int shiftId;
   InitDataEvent({required this.babysistterId, required this.shiftId});
+}
+
+class ResetValidate extends ReviewEvent {
+  final ReviewValidateStatus status;
+  ResetValidate({required this.status});
 }
 
 abstract class RateEvent extends ReviewEvent {
@@ -13,6 +20,22 @@ abstract class RateEvent extends ReviewEvent {
 
 class ChangeOverallRateEvent extends RateEvent {
   ChangeOverallRateEvent({required rate}) : super(rate: rate);
+}
+
+class ChangeCommunicationRateEvent extends RateEvent {
+  ChangeCommunicationRateEvent({required rate}) : super(rate: rate);
+}
+
+class ChangeAttCleanRateEvent extends RateEvent {
+  ChangeAttCleanRateEvent({required rate}) : super(rate: rate);
+}
+
+class ChangeBabysittingRateEvent extends RateEvent {
+  ChangeBabysittingRateEvent({required rate}) : super(rate: rate);
+}
+
+class ChangeCookingRateEvent extends RateEvent {
+  ChangeCookingRateEvent({required rate}) : super(rate: rate);
 }
 
 class ChangeCleaningRateEvent extends RateEvent {
@@ -29,6 +52,17 @@ class ChangePetcareRateEvent extends RateEvent {
 
 class ChangeShoppingRateEvent extends RateEvent {
   ChangeShoppingRateEvent({required rate}) : super(rate: rate);
+}
+
+class SwitchToogleEvent extends ReviewEvent {
+  final int index;
+  final bool value;
+  SwitchToogleEvent({required this.index, required this.value});
+}
+
+class DisplayReviewEvent extends ReviewEvent {
+  final bool value;
+  DisplayReviewEvent({required this.value});
 }
 
 class SubmitEvent extends ReviewEvent {

@@ -152,6 +152,11 @@
     "laundry":"洗濯",
     "petcare":"ペットケア",
     "shopping":"ショッピング",
+    "communication": "コミュニケーション",
+    "attClean": "態度＆清潔感",
+    "babysitting": "子供の世話",
+    "cooking": "料理",
+    "displayed": "表示された",
 
     "cancel":"削除",
 "submit":"提出",
@@ -167,5 +172,6 @@
 "invalidStartDate":"開始日が無効",
 "invalidEndDate":"終了日が無効",
 "pleaseEnterOverallEvaluation":"全体評価 を入力してください",
-"chooseAnOption":"一つの選択をしてください"
+"chooseAnOption":"一つの選択をしてください",
+    "requiredField": "この項目は必須です"
 }

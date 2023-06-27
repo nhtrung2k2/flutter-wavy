@@ -17,10 +17,15 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ReviewBloc(this._employeesRepository) : super(ReviewState.initial()) {
     on<InitDataEvent>(_onInitData);
     on<ChangeOverallRateEvent>(_onChangeRating);
+    on<ChangeCommunicationRateEvent>(_onChangeRating);
+    on<ChangeAttCleanRateEvent>(_onChangeRating);
+    on<ChangeBabysittingRateEvent>(_onChangeRating);
+    on<ChangeCookingRateEvent>(_onChangeRating);
     on<ChangeCleaningRateEvent>(_onChangeRating);
     on<ChangeLaundryRateEvent>(_onChangeRating);
-    on<ChangePetcareRateEvent>(_onChangeRating);
-    on<ChangeShoppingRateEvent>(_onChangeRating);
+    on<SwitchToogleEvent>(_onSwitchToggle);
+    on<DisplayReviewEvent>(_onDisplayed);
+    on<ResetValidate>(_onResetValidate);
     on<SubmitEvent>(_onSubmit);
   }
 
@@ -32,7 +37,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     emit(state.copyWith(
         review: const Review(),
         reviewStateStatus: ReviewStateStatus.initing,
-        validateStatus: ReviewValidateStatus.empty
+        validateStatus: [],
+        isBabysittingProvided: true,
+        isCookingProvided: true,
+        isLaundryProvided: true,
+        isCleaningProvided: true,
     ));
 
     try {
@@ -49,15 +58,87 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
   }
 
+  Future<void> _onSwitchToggle(
+      SwitchToogleEvent event,
+      Emitter<ReviewState> emit,
+      ) async {
+
+    if(event.index==0){
+      emit(state.copyWith(
+        isBabysittingProvided: event.value
+      ));
+    }
+    else if(event.index==1){
+      emit(state.copyWith(
+          isCookingProvided: event.value
+      ));
+    }
+    else if(event.index==2){
+      emit(state.copyWith(
+          isLaundryProvided: event.value
+      ));
+    }
+    else if(event.index==3){
+      emit(state.copyWith(
+          isCleaningProvided: event.value
+      ));
+    }
+
+  }
+
+  Future<void> _onDisplayed(
+      DisplayReviewEvent event,
+      Emitter<ReviewState> emit,
+      ) async {
+
+    emit(state.copyWith(
+        review: state.review.copyWith(
+            displayed: event.value ? 1 : 0
+        )
+    ));
+
+  }
+
   Future<void> _onChangeRating(
       RateEvent event,
       Emitter<ReviewState> emit,
       ) async {
 
     if(event.runtimeType == ChangeOverallRateEvent){
+      _onResetValidate(ResetValidate(status: ReviewValidateStatus.emptyOverallRatting), emit);
       emit(state.copyWith(
           review: state.review.copyWith(
               overallRating: event.rate
+          )
+      ));
+    }
+    else if(event.runtimeType == ChangeCommunicationRateEvent){
+      _onResetValidate(ResetValidate(status: ReviewValidateStatus.emptyCommunicationRatting), emit);
+      emit(state.copyWith(
+          review: state.review.copyWith(
+              communicationRating: event.rate
+          )
+      ));
+    }
+    else if(event.runtimeType == ChangeAttCleanRateEvent){
+      _onResetValidate(ResetValidate(status: ReviewValidateStatus.emptyAttCleanRatting), emit);
+      emit(state.copyWith(
+          review: state.review.copyWith(
+              attitudeCleanlinessRating: event.rate
+          )
+      ));
+    }
+    else if(event.runtimeType == ChangeBabysittingRateEvent){
+      emit(state.copyWith(
+          review: state.review.copyWith(
+              babysittingRating: event.rate
+          )
+      ));
+    }
+    else if(event.runtimeType == ChangeCookingRateEvent){
+      emit(state.copyWith(
+          review: state.review.copyWith(
+              cookingRating: event.rate
           )
       ));
     }
@@ -75,39 +156,63 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
           )
       ));
     }
-    else if(event.runtimeType == ChangePetcareRateEvent){
-      emit(state.copyWith(
-          review: state.review.copyWith(
-              babysittingRating: event.rate
-          )
-      ));
-    }
-    else if(event.runtimeType == ChangeShoppingRateEvent){
-      emit(state.copyWith(
-          review: state.review.copyWith(
-              communicationRating: event.rate
-          )
-      ));
-    }
 
   }
 
-  ReviewValidateStatus validate(Review review){
-    if(review.name==null || review.name!.isEmpty) return ReviewValidateStatus.emptyName;
+  List<ReviewValidateStatus> validate(Review review) {
+
+    List<ReviewValidateStatus> status = [];
+
+    if(review.name==null || review.name!.trim().isEmpty) {
+      status.add(ReviewValidateStatus.emptyName);
+    }
     try{
       DateFormat('yyyy-MM-dd').parseStrict(review.dateStart ?? '');
     }
     catch(e){
-      return ReviewValidateStatus.startDateFormat;
+      status.add(ReviewValidateStatus.startDateFormat);
     }
     try{
       DateFormat('yyyy-MM-dd').parseStrict(review.dateEnd ?? '');
     }
     catch(e){
-      return ReviewValidateStatus.endDateFormat;
+      status.add(ReviewValidateStatus.endDateFormat);
     }
-    if(review.overallComment.isEmpty) return ReviewValidateStatus.emptyOverallComment;
-    return ReviewValidateStatus.done;
+    if(review.overallComment.trim().isEmpty) {
+      status.add(ReviewValidateStatus.emptyOverallComment);
+    }
+    if(review.overallRating==0) {
+      status.add(ReviewValidateStatus.emptyOverallRatting);
+    }
+    if(review.communicationComment.trim().isEmpty) {
+      status.add(ReviewValidateStatus.emptyCommunationComment);
+    }
+    if(review.communicationRating==0) {
+      status.add(ReviewValidateStatus.emptyCommunicationRatting);
+    }
+    if(review.attitudeCleanliniessComment.trim().isEmpty) {
+      status.add(ReviewValidateStatus.emptyAttCleanComment);
+    }
+    if(review.attitudeCleanlinessRating==0) {
+      status.add(ReviewValidateStatus.emptyAttCleanRatting);
+    }
+
+    return status;
+  }
+
+  Future<void> _onResetValidate(
+      ResetValidate event,
+      Emitter<ReviewState> emit,
+      ) async {
+
+    List<ReviewValidateStatus> list = state.validateStatus;
+    list.remove(event.status);
+
+    emit(state.copyWith(
+        reviewStateStatus: ReviewStateStatus.submitting,
+        validateStatus: list
+    ));
+
   }
 
   Future<void> _onSubmit(
@@ -117,7 +222,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
     emit(state.copyWith(
         reviewStateStatus: ReviewStateStatus.submitting,
-        validateStatus: ReviewValidateStatus.empty
+        validateStatus: []
     ));
 
     Review review = state.review.copyWith(
@@ -133,8 +238,8 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         communicationComment: event.communicationComment
     );
 
-    ReviewValidateStatus validateStatus = validate(review);
-    if(validateStatus==ReviewValidateStatus.done){
+    List<ReviewValidateStatus> validateStatus = validate(review);
+    if(validateStatus.isEmpty){
       try {
         Response response = await _reviewRepository.createReview(review.copyWith(
           dateStart: DateFormat('yyyy-MM-dd').format(DateFormat('yyyy-MM-dd').parse(review.dateStart!)),

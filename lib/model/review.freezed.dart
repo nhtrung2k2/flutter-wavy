@@ -54,6 +54,8 @@ mixin _$Review {
   int get communicationRating => throw _privateConstructorUsedError;
   @JsonKey(name: 'communication_comment')
   String get communicationComment => throw _privateConstructorUsedError;
+  @JsonKey(name: 'displayed')
+  int get displayed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -99,7 +101,9 @@ abstract class $ReviewCopyWith<$Res> {
       @JsonKey(name: 'communication_rating')
           int communicationRating,
       @JsonKey(name: 'communication_comment')
-          String communicationComment});
+          String communicationComment,
+      @JsonKey(name: 'displayed')
+          int displayed});
 }
 
 /// @nodoc
@@ -132,6 +136,7 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
     Object? attitudeCleanliniessComment = null,
     Object? communicationRating = null,
     Object? communicationComment = null,
+    Object? displayed = null,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
@@ -202,6 +207,10 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
           ? _value.communicationComment
           : communicationComment // ignore: cast_nullable_to_non_nullable
               as String,
+      displayed: null == displayed
+          ? _value.displayed
+          : displayed // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -246,7 +255,9 @@ abstract class _$$_ReviewCopyWith<$Res> implements $ReviewCopyWith<$Res> {
       @JsonKey(name: 'communication_rating')
           int communicationRating,
       @JsonKey(name: 'communication_comment')
-          String communicationComment});
+          String communicationComment,
+      @JsonKey(name: 'displayed')
+          int displayed});
 }
 
 /// @nodoc
@@ -276,6 +287,7 @@ class __$$_ReviewCopyWithImpl<$Res>
     Object? attitudeCleanliniessComment = null,
     Object? communicationRating = null,
     Object? communicationComment = null,
+    Object? displayed = null,
   }) {
     return _then(_$_Review(
       name: freezed == name
@@ -346,6 +358,10 @@ class __$$_ReviewCopyWithImpl<$Res>
           ? _value.communicationComment
           : communicationComment // ignore: cast_nullable_to_non_nullable
               as String,
+      displayed: null == displayed
+          ? _value.displayed
+          : displayed // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -361,33 +377,35 @@ class _$_Review implements _Review {
       @JsonKey(name: 'date_end')
           this.dateEnd,
       @JsonKey(name: 'overall_rating')
-          this.overallRating = 5,
+          this.overallRating = 0,
       @JsonKey(name: 'overall_comment')
           this.overallComment = '',
       @JsonKey(name: 'babysitting_rating')
-          this.babysittingRating = 5,
+          this.babysittingRating = 0,
       @JsonKey(name: 'babysitting_comment')
           this.babysittingComment = '',
       @JsonKey(name: 'cooking_rating')
-          this.cookingRating = 5,
+          this.cookingRating = 0,
       @JsonKey(name: 'cooking_comment')
           this.cookingComment = '',
       @JsonKey(name: 'cleaning_rating')
-          this.cleanningRating = 5,
+          this.cleanningRating = 0,
       @JsonKey(name: 'cleaning_comment')
           this.cleaningComment = '',
       @JsonKey(name: 'laundry_rating')
-          this.laundryRating = 5,
+          this.laundryRating = 0,
       @JsonKey(name: 'laundry_comment')
           this.launryComment = '',
       @JsonKey(name: 'attitude_cleanliness_rating')
-          this.attitudeCleanlinessRating = 5,
+          this.attitudeCleanlinessRating = 0,
       @JsonKey(name: 'attitude_cleanliness_comment')
           this.attitudeCleanliniessComment = '',
       @JsonKey(name: 'communication_rating')
-          this.communicationRating = 5,
+          this.communicationRating = 0,
       @JsonKey(name: 'communication_comment')
-          this.communicationComment = ''});
+          this.communicationComment = '',
+      @JsonKey(name: 'displayed')
+          this.displayed = 1});
 
   factory _$_Review.fromJson(Map<String, dynamic> json) =>
       _$$_ReviewFromJson(json);
@@ -443,10 +461,13 @@ class _$_Review implements _Review {
   @override
   @JsonKey(name: 'communication_comment')
   final String communicationComment;
+  @override
+  @JsonKey(name: 'displayed')
+  final int displayed;
 
   @override
   String toString() {
-    return 'Review(name: $name, dateStart: $dateStart, dateEnd: $dateEnd, overallRating: $overallRating, overallComment: $overallComment, babysittingRating: $babysittingRating, babysittingComment: $babysittingComment, cookingRating: $cookingRating, cookingComment: $cookingComment, cleanningRating: $cleanningRating, cleaningComment: $cleaningComment, laundryRating: $laundryRating, launryComment: $launryComment, attitudeCleanlinessRating: $attitudeCleanlinessRating, attitudeCleanliniessComment: $attitudeCleanliniessComment, communicationRating: $communicationRating, communicationComment: $communicationComment)';
+    return 'Review(name: $name, dateStart: $dateStart, dateEnd: $dateEnd, overallRating: $overallRating, overallComment: $overallComment, babysittingRating: $babysittingRating, babysittingComment: $babysittingComment, cookingRating: $cookingRating, cookingComment: $cookingComment, cleanningRating: $cleanningRating, cleaningComment: $cleaningComment, laundryRating: $laundryRating, launryComment: $launryComment, attitudeCleanlinessRating: $attitudeCleanlinessRating, attitudeCleanliniessComment: $attitudeCleanliniessComment, communicationRating: $communicationRating, communicationComment: $communicationComment, displayed: $displayed)';
   }
 
   @override
@@ -488,7 +509,9 @@ class _$_Review implements _Review {
             (identical(other.communicationRating, communicationRating) ||
                 other.communicationRating == communicationRating) &&
             (identical(other.communicationComment, communicationComment) ||
-                other.communicationComment == communicationComment));
+                other.communicationComment == communicationComment) &&
+            (identical(other.displayed, displayed) ||
+                other.displayed == displayed));
   }
 
   @JsonKey(ignore: true)
@@ -511,7 +534,8 @@ class _$_Review implements _Review {
       attitudeCleanlinessRating,
       attitudeCleanliniessComment,
       communicationRating,
-      communicationComment);
+      communicationComment,
+      displayed);
 
   @JsonKey(ignore: true)
   @override
@@ -562,7 +586,9 @@ abstract class _Review implements Review {
       @JsonKey(name: 'communication_rating')
           final int communicationRating,
       @JsonKey(name: 'communication_comment')
-          final String communicationComment}) = _$_Review;
+          final String communicationComment,
+      @JsonKey(name: 'displayed')
+          final int displayed}) = _$_Review;
 
   factory _Review.fromJson(Map<String, dynamic> json) = _$_Review.fromJson;
 
@@ -617,6 +643,9 @@ abstract class _Review implements Review {
   @override
   @JsonKey(name: 'communication_comment')
   String get communicationComment;
+  @override
+  @JsonKey(name: 'displayed')
+  int get displayed;
   @override
   @JsonKey(ignore: true)
   _$$_ReviewCopyWith<_$_Review> get copyWith =>

@@ -10,22 +10,23 @@ _$_Review _$$_ReviewFromJson(Map<String, dynamic> json) => _$_Review(
       name: json['name'] as String?,
       dateStart: json['date_start'] as String?,
       dateEnd: json['date_end'] as String?,
-      overallRating: json['overall_rating'] as int? ?? 5,
+      overallRating: json['overall_rating'] as int? ?? 0,
       overallComment: json['overall_comment'] as String? ?? '',
-      babysittingRating: json['babysitting_rating'] as int? ?? 5,
+      babysittingRating: json['babysitting_rating'] as int? ?? 0,
       babysittingComment: json['babysitting_comment'] as String? ?? '',
-      cookingRating: json['cooking_rating'] as int? ?? 5,
+      cookingRating: json['cooking_rating'] as int? ?? 0,
       cookingComment: json['cooking_comment'] as String? ?? '',
-      cleanningRating: json['cleaning_rating'] as int? ?? 5,
+      cleanningRating: json['cleaning_rating'] as int? ?? 0,
       cleaningComment: json['cleaning_comment'] as String? ?? '',
-      laundryRating: json['laundry_rating'] as int? ?? 5,
+      laundryRating: json['laundry_rating'] as int? ?? 0,
       launryComment: json['laundry_comment'] as String? ?? '',
       attitudeCleanlinessRating:
-          json['attitude_cleanliness_rating'] as int? ?? 5,
+          json['attitude_cleanliness_rating'] as int? ?? 0,
       attitudeCleanliniessComment:
           json['attitude_cleanliness_comment'] as String? ?? '',
-      communicationRating: json['communication_rating'] as int? ?? 5,
+      communicationRating: json['communication_rating'] as int? ?? 0,
       communicationComment: json['communication_comment'] as String? ?? '',
+      displayed: json['displayed'] as int? ?? 1,
     );
 
 Map<String, dynamic> _$$_ReviewToJson(_$_Review instance) => <String, dynamic>{
@@ -46,4 +47,5 @@ Map<String, dynamic> _$$_ReviewToJson(_$_Review instance) => <String, dynamic>{
       'attitude_cleanliness_comment': instance.attitudeCleanliniessComment,
       'communication_rating': instance.communicationRating,
       'communication_comment': instance.communicationComment,
+      'displayed': instance.displayed,
     };

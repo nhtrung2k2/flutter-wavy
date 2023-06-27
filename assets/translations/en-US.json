@@ -160,6 +160,11 @@
 "laundry":"Laundry",
 "petcare":"Petcare",
 "shopping":"Shopping",
+"communication": "Communication",
+"attClean": "Attitude & Cleanliness",
+"babysitting": "Babysitting",
+"cooking": "Cooking",
+"displayed": "Displayed",
 
 "cancel":"Cancel",
 "submit":"Submit",
@@ -175,5 +180,6 @@
 "invalidStartDate":"Invalid Start Date",
 "invalidEndDate":"Invalid End Date",
 "pleaseEnterOverallEvaluation":"Please enter Overall evaluation",
-"chooseAnOption":"Choose an option"
+"chooseAnOption":"Choose an option",
+    "requiredField": "This field is required"
 }

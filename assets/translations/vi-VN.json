@@ -154,6 +154,11 @@
     "laundry":"Giặt sấy đồ",
     "petcare":"Chăm sóc thú cưng",
     "shopping":"Mua sắm",
+     "communication": "Giao tiếp",
+     "attClean": "Thái độ & Sạch sẽ",
+     "babysitting": "Trông trẻ",
+     "cooking": "Nấu ăn",
+     "displayed": "Hiển thị",
 
     "cancel":"Huỷ",
     "submit":"Gửi đi",
@@ -169,5 +174,6 @@
 "invalidStartDate":"Ngày bắt đầu không hơp lệ",
 "invalidEndDate":"Ngày kết thúc không hợp lệ",
 "pleaseEnterOverallEvaluation":"Vui lòng nhập đánh giá chung",
-"chooseAnOption":"Chọn một mục"
+"chooseAnOption":"Chọn một mục",
+     "requiredField": "Phần này bắt buộc điền"
  }

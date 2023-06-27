@@ -16,6 +16,11 @@ enum ReviewValidateStatus {
   startDateFormat,
   endDateFormat,
   emptyOverallComment,
+  emptyCommunationComment,
+  emptyAttCleanComment,
+  emptyOverallRatting,
+  emptyCommunicationRatting,
+  emptyAttCleanRatting,
   done
 }
 
@@ -23,31 +28,51 @@ class ReviewState {
   final Employee_Detail? employee;
   final Review review;
   final ReviewStateStatus reviewStateStatus;
-  final ReviewValidateStatus validateStatus;
+  final List<ReviewValidateStatus> validateStatus;
+  final bool isBabysittingProvided;
+  final bool isCookingProvided;
+  final bool isLaundryProvided;
+  final bool isCleaningProvided;
   const ReviewState({
     required this.employee,
     required this.review,
     required this.reviewStateStatus,
-    required this.validateStatus
+    required this.validateStatus,
+    required this.isBabysittingProvided,
+    required this.isCookingProvided,
+    required this.isLaundryProvided,
+    required this.isCleaningProvided
   });
   factory ReviewState.initial() => const ReviewState(
       employee: null,
       review: Review(),
       reviewStateStatus: ReviewStateStatus.initing,
-      validateStatus: ReviewValidateStatus.empty
+      validateStatus: [],
+      isBabysittingProvided: true,
+      isCookingProvided: true,
+      isLaundryProvided: true,
+      isCleaningProvided: true
   );
 
   ReviewState copyWith({
     Employee_Detail? employee,
     Review? review,
     ReviewStateStatus? reviewStateStatus,
-    ReviewValidateStatus? validateStatus,
+    List<ReviewValidateStatus>? validateStatus,
+    bool? isBabysittingProvided,
+    bool? isCookingProvided,
+    bool? isLaundryProvided,
+    bool? isCleaningProvided,
   }) {
     return ReviewState(
         employee: employee ?? this.employee,
         review: review ?? this.review,
         reviewStateStatus: reviewStateStatus ?? this.reviewStateStatus,
-        validateStatus: validateStatus ?? this.validateStatus
+        validateStatus: validateStatus ?? this.validateStatus,
+        isBabysittingProvided: isBabysittingProvided ?? this.isBabysittingProvided,
+        isCookingProvided: isCookingProvided ?? this.isCookingProvided,
+        isLaundryProvided: isLaundryProvided ?? this.isLaundryProvided,
+        isCleaningProvided: isCleaningProvided ?? this.isCleaningProvided
     );
   }
 

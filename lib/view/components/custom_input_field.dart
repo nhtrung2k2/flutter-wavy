@@ -19,9 +19,11 @@ class CustomInputField extends StatefulWidget{
   final bool isRequiredField;
   final int maxLines;
   final Function(dynamic)? onChanged;
+  final Function? onTap;
   final List<InputDropdownItem>? dropdownItemList;
   final bool isNoDecoration;
   final Widget? child;
+  final bool enable;
 
   const CustomInputField({
     this.controller,
@@ -32,9 +34,11 @@ class CustomInputField extends StatefulWidget{
     this.maxLines = 1,
     this.isRequiredField = false,
     this.onChanged,
+    this.onTap,
     this.dropdownItemList,
     this.isNoDecoration = false,
     this.child,
+    this.enable = true,
     Key? key
   }) : super(key: key);
 
@@ -110,6 +114,12 @@ class _CustomInputFieldState extends State<CustomInputField> {
         ? _showPopupMenu(widget.dropdownItemList ?? [])
         : TextFormField(
           controller: widget.controller,
+          enabled: widget.enable,
+          onTap: (){
+            if(widget.onTap!=null){
+              widget.onTap!();
+            }
+          },
           textAlign: widget.textAlign ?? (widget.inputType == InputType.currency ? TextAlign.end : TextAlign.start),
           inputFormatters: inputFormatter,
           maxLines: widget.maxLines,
