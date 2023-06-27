@@ -45,11 +45,13 @@ import 'view/pages/register_basic_setting.dart';
 import 'dart:developer' as devtool;
 import 'package:wavy/view/pages/review.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.registerAll();
   await EasyLocalization.ensureInitialized();
+
   runApp(
     EasyLocalization(
       saveLocale: false,

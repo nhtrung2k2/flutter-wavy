@@ -9,6 +9,7 @@ import 'package:wavy/bloc/employee_detail.dart';
 import 'package:wavy/state/employee_detail_state.dart';
 
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/launchEmail.dart';
 
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/utils/routesName.dart';
@@ -17,6 +18,7 @@ import 'package:wavy/view/components/custom_text.dart';
 
 import '../../utils/makePhoneCall.dart';
 import '../components/custom_column_infor.dart';
+import 'package:flutter/services.dart';
 
 class BabySisterDetail extends StatelessWidget {
   final String babysisterId;
@@ -369,6 +371,21 @@ class CardContact extends StatelessWidget {
                     if ((contact['title'] as String) ==
                         "callToBabysitter".tr()) {
                       makePhoneCall(employee.phone);
+                    } else if ((contact['title'] as String) ==
+                        "copyNumber".tr()) {
+                      Clipboard.setData(ClipboardData(text: employee.phone))
+                          .then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Number copied ")));
+                      });
+                    } else if ((contact['title'] as String) ==
+                        "mailToBabysitter".tr()) {
+                      try {
+                        launchEmail(employee.email);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())));
+                      }
                     }
                   },
                   icon: Icon(contact['icon'] as IconData,

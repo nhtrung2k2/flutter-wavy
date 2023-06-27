@@ -58,31 +58,38 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-            constraints: const BoxConstraints.expand(),
-            padding: EdgeInsets.fromLTRB(40.resizewidth(context),
-                159.5.resizeheight(context), 40.resizewidth(context), 0),
-            child: BlocListener<LoginBloc, LoginState>(
-              listener: (context, state) {
-                if (state.formStatus ==
-                    FormSubmissionStatus.submissionsuccess) {
-                  LoadingOverlay.hide();
-                  context.goNamed('homePage');
-                } else if (state.formStatus ==
-                    FormSubmissionStatus.submissionfailed) {
-                  LoadingOverlay.hide();
-                  showErrorDialog(context, "error".tr(),
-                      state.errorMessage.toString(), "yes".tr(), () {
-                    context.pop();
-                  });
-                  context.read<LoginBloc>().add(LoginRestart());
-                } else if (state.formStatus ==
-                    FormSubmissionStatus.formsubmitting) {
-                  LoadingOverlay.show(context);
-                }
-              },
-              child: const LoginForm(),
-            )),
+        child: OrientationBuilder(builder: (context, orientation) {
+          return Container(
+              constraints: const BoxConstraints.expand(),
+              padding: EdgeInsets.fromLTRB(
+                  40.resizewidth(context),
+                  orientation == Orientation.landscape
+                      ? 10.resizeheight(context)
+                      : 159.5.resizeheight(context),
+                  40.resizewidth(context),
+                  0),
+              child: BlocListener<LoginBloc, LoginState>(
+                listener: (context, state) {
+                  if (state.formStatus ==
+                      FormSubmissionStatus.submissionsuccess) {
+                    LoadingOverlay.hide();
+                    context.goNamed('homePage');
+                  } else if (state.formStatus ==
+                      FormSubmissionStatus.submissionfailed) {
+                    LoadingOverlay.hide();
+                    showErrorDialog(context, "error".tr(),
+                        state.errorMessage.toString(), "yes".tr(), () {
+                      context.pop();
+                    });
+                    context.read<LoginBloc>().add(LoginRestart());
+                  } else if (state.formStatus ==
+                      FormSubmissionStatus.formsubmitting) {
+                    LoadingOverlay.show(context);
+                  }
+                },
+                child: const LoginForm(),
+              ));
+        }),
       ),
     );
   }
@@ -116,73 +123,100 @@ class LoginForm extends StatelessWidget {
       return null;
     }
 
-    return Form(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      CustomPaint(
-        size: const Size(70, 50),
-        painter: RPSCustomPainter(),
-      ),
-      SizedBox(height: 23.25.resizeheight(context)),
-      CustomInput(
-          title: "email".tr(),
-          hintText: "enterEmail".tr(),
-          inputType: TextInputType.emailAddress,
-          validator: validateEmail,
-          onchanged: (value) {
-            if (value != null) {
-              bloc.add(LoginEmailChanged(email: value));
-            }
-          }),
-      SizedBox(height: 23.25.resizeheight(context)),
-      CustomInput(
-          title: "password".tr(),
-          hintText: "enterPassword".tr(),
-          inputType: TextInputType.visiblePassword,
-          validator: validatePassword,
-          onchanged: (value) {
-            if (value != null) {
-              bloc.add(LoginPasswordChanged(password: value));
-            }
-          }),
-      SizedBox(height: 16.resizeheight(context)),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          CustomTextButton(
-              content: "forgotPassword".tr(),
-              onPressed: () {
-                onViewDetail('https://wavy-wavy.com/forgot-password');
-              })
-        ],
-      ),
-      SizedBox(height: 8.resizeheight(context)),
-      CustomButton(
-        onPressed: () async {
-          bloc.add(Validate(
-              email: bloc.state.email.value,
-              password: bloc.state.password.value));
+    return OrientationBuilder(builder: (context, orientation) {
+      return Form(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        CustomPaint(
+          size: Size(orientation == Orientation.landscape ? 50 : 70,
+              orientation == Orientation.landscape ? 30 : 50),
+          painter: RPSCustomPainter(),
+        ),
+        SizedBox(
+            height: orientation == Orientation.landscape
+                ? 0
+                : 23.25.resizeheight(context)),
+        CustomInput(
+            title: "email".tr(),
+            hintText: "enterEmail".tr(),
+            inputType: TextInputType.emailAddress,
+            validator: validateEmail,
+            onchanged: (value) {
+              if (value != null) {
+                bloc.add(LoginEmailChanged(email: value));
+              }
+            }),
+        SizedBox(
+            height: orientation == Orientation.landscape
+                ? 0
+                : 23.25.resizeheight(context)),
+        CustomInput(
+            title: "password".tr(),
+            hintText: "enterPassword".tr(),
+            inputType: TextInputType.visiblePassword,
+            validator: validatePassword,
+            onchanged: (value) {
+              if (value != null) {
+                bloc.add(LoginPasswordChanged(password: value));
+              }
+            }),
+        SizedBox(
+            height: orientation == Orientation.landscape
+                ? 0
+                : 16.resizeheight(context)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            orientation == Orientation.landscape
+                ? CustomTextButton(
+                    content: "createNewAccount".tr(),
+                    onPressed: () {
+                      onViewDetail('https://wavy-wavy.com/register');
+                    },
+                  )
+                : const SizedBox(),
+            CustomTextButton(
+                content: "forgotPassword".tr(),
+                onPressed: () {
+                  onViewDetail('https://wavy-wavy.com/forgot-password');
+                }),
+          ],
+        ),
+        SizedBox(
+            height: orientation == Orientation.landscape
+                ? 0
+                : 8.resizeheight(context)),
+        CustomButton(
+          onPressed: () async {
+            bloc.add(Validate(
+                email: bloc.state.email.value,
+                password: bloc.state.password.value));
 
-          bloc.add(LoginButtonPressed(
-              email: bloc.state.email.value,
-              password: bloc.state.password.value,
-              language: bloc.state.language));
-        },
-        title: "login".tr(),
-        horizontal: 50,
-        vertical: 10,
-      ),
-      SizedBox(height: 16.resizeheight(context)),
-      CustomTextButton(
-        content: "createNewAccount".tr(),
-        onPressed: () {
-          onViewDetail('https://wavy-wavy.com/register');
-        },
-      ),
-      const Flags(
-        height: 20,
-        width: 30,
-      )
-    ]));
+            bloc.add(LoginButtonPressed(
+                email: bloc.state.email.value,
+                password: bloc.state.password.value,
+                language: bloc.state.language));
+          },
+          title: "login".tr(),
+          horizontal: 50,
+          vertical: 10,
+        ),
+        SizedBox(height: 16.resizeheight(context)),
+        orientation == Orientation.landscape
+            ? const SizedBox()
+            : CustomTextButton(
+                content: "createNewAccount".tr(),
+                onPressed: () {
+                  onViewDetail('https://wavy-wavy.com/register');
+                },
+              ),
+        const Flags(
+          height: 40,
+          width: 30,
+        )
+      ]));
+    });
   }
 }
 
@@ -200,7 +234,7 @@ class Flags extends StatelessWidget {
   Widget build(BuildContext context) {
     final LoginBloc bloc = context.read<LoginBloc>();
     return SizedBox(
-      height: 40,
+      height: 35,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
