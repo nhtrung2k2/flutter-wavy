@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:wavy/state/email.dart';
 import 'package:wavy/state/password.dart';
 
-import '../model/User.dart';
+import '../model/user_model.dart';
 import '../utils/form_submission_status.dart';
 
 enum LoginStatus { pure, valid, invalid }
@@ -17,26 +17,29 @@ class LoginState extends Equatable {
   final String? errorMessage;
   final FormSubmissionStatus formStatus;
   final InvalidError? invalidError;
-  final User? user;
-  const LoginState({
-    required this.email,
-    required this.password,
-    required this.language,
-    required this.status,
-    required this.formStatus,
-    required this.user,
-    required this.invalidError,
-    this.errorMessage,
-  });
+  final UserModel? user;
+  final bool isSavePassword;
+  const LoginState(
+      {required this.email,
+      required this.password,
+      required this.language,
+      required this.status,
+      required this.formStatus,
+      required this.user,
+      required this.invalidError,
+      this.errorMessage,
+      required this.isSavePassword});
   factory LoginState.initial() => const LoginState(
-      email: Email.pure(),
-      password: Password.pure(),
-      language: 'en',
-      status: LoginStatus.pure,
-      invalidError: null,
-      errorMessage: null,
-      user: null,
-      formStatus: FormSubmissionStatus.initial);
+        email: Email.pure(),
+        password: Password.pure(),
+        language: 'en',
+        status: LoginStatus.pure,
+        invalidError: null,
+        errorMessage: null,
+        user: null,
+        formStatus: FormSubmissionStatus.initial,
+        isSavePassword: false,
+      );
   @override
   List<Object?> get props => [
         email,
@@ -46,7 +49,8 @@ class LoginState extends Equatable {
         errorMessage,
         formStatus,
         user,
-        invalidError
+        invalidError,
+        isSavePassword,
       ];
   LoginState copyWith({
     Email? email,
@@ -55,8 +59,9 @@ class LoginState extends Equatable {
     LoginStatus? status,
     String? errorMessage,
     FormSubmissionStatus? formStatus,
-    User? user,
+    UserModel? user,
     InvalidError? invalidError,
+    bool? isSavePassword,
   }) {
     return LoginState(
         email: email ?? this.email,
@@ -66,6 +71,7 @@ class LoginState extends Equatable {
         errorMessage: errorMessage ?? this.errorMessage,
         formStatus: formStatus ?? this.formStatus,
         user: user ?? this.user,
-        invalidError: invalidError);
+        invalidError: invalidError,
+        isSavePassword: isSavePassword ?? this.isSavePassword);
   }
 }

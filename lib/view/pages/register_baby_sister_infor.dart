@@ -42,13 +42,7 @@ class RegisterBabySisterInfor extends StatelessWidget {
   Widget build(BuildContext context) {
     final employee = context.select((EmployeeSearchBloc bloc) =>
         (bloc.state as SubmittedSuccess).employeeDetail);
-    // const employee = Employee(
-    //     id: '1',
-    //     name: 'Nguyen Thi Nhan',
-    //     age: '32 years old',
-    //     city: 'Ho Chi Minh',
-    //     shiftId: 1,
-    //     cancel__contract_date: null);
+
     return Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 26),

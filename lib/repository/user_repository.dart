@@ -6,7 +6,7 @@ import 'package:wavy/service/auth_api.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/service/user_api.dart';
 
-import '../model/User.dart';
+import '../model/user_model.dart';
 import 'dart:developer' as devtool;
 
 class UserRepository {
@@ -15,14 +15,31 @@ class UserRepository {
   UserRepository()
       : _authApi = ServiceLocator.locator.get<AuthApi>(),
         _userApi = ServiceLocator.locator.get<UserApi>();
-  Future<User?> login(String email, String password, String language) async {
+  Future<UserModel?> login(String email, String password, String language,
+      bool isSavePassword) async {
     try {
-      final user = await _authApi.login(email, password, language);
+      final user =
+          await _authApi.login(email, password, language, isSavePassword);
 
       return user;
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  Future<bool> getIsSavePassword() async {
+    return await _authApi.getIsSavePassword();
+  }
+
+  Future<String> getEmail() async {
+    final email = await _authApi.getEmail();
+
+    return email;
+  }
+
+  Future<String> getPassword() async {
+    final password = await _authApi.getPassword();
+    return password;
   }
 
   Future<void> setLanguage(String language) async {
@@ -33,7 +50,7 @@ class UserRepository {
     return _authApi.getUserId();
   }
 
-  Future<User?> getUserInforSetting() async {
+  Future<UserModel?> getUserInforSetting() async {
     return await _userApi.getUserInforSetting();
   }
 

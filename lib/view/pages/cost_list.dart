@@ -12,10 +12,14 @@ import 'package:wavy/event/cost_list_event.dart';
 import 'package:wavy/model/item.dart';
 import 'package:wavy/state/cost_list_state.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
+import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/add_more_items_components/add_more_items_component.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
 import 'package:wavy/view/components/custom_dialog.dart';
 import 'package:wavy/view/components/custom_input_field.dart';
+import 'package:wavy/view/components/custom_ouline_button.dart';
+import 'package:wavy/view/pages/login.dart';
+import 'package:wavy/view/pages/register_baby_sister_schedule.dart';
 
 class CostList extends StatefulWidget {
   final int amountId;
@@ -90,118 +94,129 @@ class _CostListState extends State<CostList> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                          text: '${'date'.tr()} : ',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontFamily: "Roboto",
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: costListState.cost?.amountDate ?? '',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: "Roboto",
-                          ),
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      "costList".tr(),
-                      style: const TextStyle(
-                          color: CustomColors.bluetext,
-                          fontSize: 14,
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    singleCostItem(
-                        'labourCost'.tr(), costListState.cost?.labourCost ?? 0),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    workingTimeCost(costListState),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Column(
-                        children: List.generate(
-                            (costListState.cost?.items ?? []).length,
-                            (index) => Column(
-                                  children: [
-                                    singleCostItem(
-                                      (costListState.cost?.items ?? [])[index]
-                                          .itemName.tr(),
-                                      (costListState.cost?.items ?? [])[index]
-                                          .itemAmount,
-                                      index: index,
-                                      canRemove: true,
-                                    ),
-                                    const SizedBox(
-                                      height: 16.0,
-                                    ),
-                                  ],
-                                ))),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    AddMoreItemsComponents(
-                      itemList: itemCost.sublist(4, 8),
-                      onPicked: (item) {
-                        costListBloc.add(AddNewItemEvent(itemId: item['id']));
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerRight,
-                      child: RichText(
+                child: BlocListener<CostListBloc, CostListState>(
+                  listener: (context, state) {
+                    if (state.errorMessage != null) {
+                      showErrorDialog(context, "error".tr(),
+                          state.errorMessage.toString().tr(), "yes".tr(), () {
+                        context.pop();
+                      });
+                    }
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
                         text: TextSpan(children: [
                           TextSpan(
-                            text: '${'total'.tr()} :',
+                            text: '${'date'.tr()} : ',
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontFamily: "Roboto",
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: costListState.cost?.amountDate ?? '',
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,
                               fontFamily: "Roboto",
                             ),
                           ),
-                          TextSpan(
-                            text: NumberFormat('####,###VND')
-                                .format(costListState.totalCost()),
-                            style: const TextStyle(
-                                color: CustomColors.redText,
-                                fontSize: 14,
-                                fontFamily: "Roboto",
-                                fontWeight: FontWeight.bold),
-                          ),
                         ]),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    _uploadImage(costListState),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    _submitButton(
-                        title: 'confirmSchedule',
-                        onPress: () => _onSubmitSchedule())
-                  ],
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text(
+                        "costList".tr(),
+                        style: const TextStyle(
+                            color: CustomColors.bluetext,
+                            fontSize: 14,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      singleCostItem('labourCost'.tr(),
+                          costListState.cost?.labourCost ?? 0),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      workingTimeCost(costListState),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Column(
+                          children: List.generate(
+                              (costListState.cost?.items ?? []).length,
+                              (index) => Column(
+                                    children: [
+                                      singleCostItem(
+                                        (costListState.cost?.items ?? [])[index]
+                                            .itemName
+                                            .tr(),
+                                        (costListState.cost?.items ?? [])[index]
+                                            .itemAmount,
+                                        index: index,
+                                        canRemove: true,
+                                      ),
+                                      const SizedBox(
+                                        height: 16.0,
+                                      ),
+                                    ],
+                                  ))),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      AddMoreItemsComponents(
+                        itemList: itemCost.sublist(4, 8),
+                        onPicked: (item) {
+                          costListBloc.add(AddNewItemEvent(itemId: item['id']));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerRight,
+                        child: RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                              text: '${'total'.tr()} :',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontFamily: "Roboto",
+                              ),
+                            ),
+                            TextSpan(
+                              text: NumberFormat('####,###VND')
+                                  .format(costListState.totalCost()),
+                              style: const TextStyle(
+                                  color: CustomColors.redText,
+                                  fontSize: 14,
+                                  fontFamily: "Roboto",
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ]),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      _uploadImage(costListState),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      _submitButton(
+                          title: 'confirmSchedule',
+                          onPress: () => _onSubmitSchedule())
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -228,14 +243,71 @@ class _CostListState extends State<CostList> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${'workingTime'.tr()} : ' '${state.cost?.workingTime}',
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: "Roboto",
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              '${'workingTime'.tr()} : ',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: "Roboto",
+              ),
             ),
-          ),
+            SizedBox(
+              width: 50.resizewidth(context),
+              child: CustomOutLineButton(
+                  title: '${state.cost?.from}',
+                  vertical: 0,
+                  horizontal: 0,
+                  textColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  borderSideColor: CustomColors.blueBorder,
+                  borderRadius: 8,
+                  widthRadius: 1,
+                  onPressed: () {
+                    TimeOfDay? timeStart;
+                    customshowTimePicker(context).then((value) => {
+                          timeStart = value,
+                          context.read<CostListBloc>().add(
+                              OnChangeTime(time: Time.start, value: timeStart))
+                        });
+                  }),
+            ),
+            SizedBox(
+              width: 8.resizewidth(context),
+            ),
+            const Text(
+              '~',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: "Roboto",
+              ),
+            ),
+            SizedBox(
+              width: 8.resizewidth(context),
+            ),
+            SizedBox(
+              width: 50.resizewidth(context),
+              child: CustomOutLineButton(
+                  title: '${state.cost?.to}',
+                  vertical: 0,
+                  horizontal: 0,
+                  textColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  borderSideColor: CustomColors.blueBorder,
+                  borderRadius: 8,
+                  widthRadius: 1,
+                  onPressed: () {
+                    TimeOfDay? timeEnd;
+                    customshowTimePicker(context).then((value) => {
+                          timeEnd = value,
+                          context
+                              .read<CostListBloc>()
+                              .add(OnChangeTime(time: Time.end, value: timeEnd))
+                        });
+                  }),
+            ),
+          ]),
           const SizedBox(
             height: 10.0,
           ),
@@ -249,12 +321,13 @@ class _CostListState extends State<CostList> {
           )
         ],
       ),
-      (state.cost?.hourWorking ?? 0) * (state.cost?.hourlyWave ?? 0),
+      ((state.cost?.hourWorking ?? 0) * (state.cost?.hourlyWave ?? 0)).toInt(),
       false);
 
   Widget baseCostItem(Widget content, int price, bool canRemove,
       {Function? onTap, int index = -1}) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(child: content),
         const SizedBox(

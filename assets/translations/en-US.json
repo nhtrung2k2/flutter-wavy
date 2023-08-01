@@ -181,5 +181,15 @@
 "invalidEndDate":"Invalid End Date",
 "pleaseEnterOverallEvaluation":"Please enter Overall evaluation",
 "chooseAnOption":"Choose an option",
-    "requiredField": "This field is required"
+    "requiredField": "This field is required",
+    "copiedToClipboard":"Copied to clipboard",
+    "notice":"Notice",
+"youCanSee":"*You can see IDs under each babysitter's name in profiles.",
+"configuredBabysitters":"Configured Babysitters",
+"thereIsNoBabysitterConfigured":"There is no babysitter configured.\nPlease tap \"Register New Babysitter\" to proceed the registration.",
+"shortCutConfiguredBabysitters":"Babysitters",
+"endOfContract":"End of contract",
+"underContract":"Under contract",
+"rememberPassword":"Remember password ?"
+
 }

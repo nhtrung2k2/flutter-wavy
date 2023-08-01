@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/app_bloc.dart';
 import 'package:wavy/bloc/confirm_the_schedule_bloc.dart';
@@ -49,9 +50,12 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   ServiceLocator.registerAll();
   await EasyLocalization.ensureInitialized();
-
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(
     EasyLocalization(
       saveLocale: false,
@@ -107,8 +111,7 @@ class MainApp extends StatelessWidget {
                           child: MultiBlocProvider(
                         providers: [
                           BlocProvider.value(
-                            value: ServiceLocator.locator.get<EmployeeBloc>()
-                              ..add(FetchEmployees()),
+                            value: ServiceLocator.locator.get<EmployeeBloc>(),
                           ),
                           BlocProvider.value(
                             value: ServiceLocator.locator

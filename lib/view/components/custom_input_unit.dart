@@ -24,6 +24,7 @@ class _CustomInputUnitState extends State<CustomInputUnit> {
   @override
   void initState() {
     super.initState();
+
     _textFieldController.text = widget.inititialValue;
   }
 

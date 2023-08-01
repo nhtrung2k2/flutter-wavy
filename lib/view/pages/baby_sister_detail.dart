@@ -376,7 +376,7 @@ class CardContact extends StatelessWidget {
                       Clipboard.setData(ClipboardData(text: employee.phone))
                           .then((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Number copied ")));
+                            SnackBar(content: Text("copiedToClipboard".tr())));
                       });
                     } else if ((contact['title'] as String) ==
                         "mailToBabysitter".tr()) {

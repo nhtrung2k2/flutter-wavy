@@ -1,4 +1,4 @@
-import 'package:wavy/model/User.dart';
+import 'package:wavy/model/user_model.dart';
 
 abstract class UserInforSettingState {
   UserInforSettingState();
@@ -18,6 +18,6 @@ class UserInforSettingFail extends UserInforSettingState {
 }
 
 class UserInforSettingSuccess extends UserInforSettingState {
-  User userInforSetting;
+  UserModel userInforSetting;
   UserInforSettingSuccess(this.userInforSetting);
 }

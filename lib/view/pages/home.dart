@@ -6,6 +6,7 @@ import 'package:wavy/bloc/employee_bloc.dart';
 import 'package:wavy/bloc/employee_detail.dart';
 
 import 'package:wavy/event/employee_detail_event.dart';
+import 'package:wavy/event/employees_event.dart';
 
 import 'package:wavy/model/employee.dart';
 import 'package:wavy/state/employee_detail_state.dart';
@@ -15,6 +16,7 @@ import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/card_infor_home.dart';
 import 'package:wavy/view/components/custom_app_bar.dart';
+import 'package:wavy/view/components/custom_text.dart';
 import 'package:wavy/view/components/loadingOverlay.dart';
 
 import '../components/custom_button.dart';
@@ -32,23 +34,24 @@ class _HomePageState extends State<HomePage>
 
 {
   late final EmployeeDetailBloc employeeDetailBloc;
-
+  late final EmployeeBloc employeeBloc;
   @override
   void initState() {
     super.initState();
+    // LoadingOverlay.hide();
     employeeDetailBloc = context.read<EmployeeDetailBloc>();
+    employeeBloc = context.read<EmployeeBloc>()..add(FetchEmployees());
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Employee> employees = context.watch<EmployeeBloc>().state.employees;
-    final EmployeeDetailBloc employeeDetailBloc =
-        context.read<EmployeeDetailBloc>();
+    List<Employee> employees =
+        context.select((EmployeeBloc bloc) => bloc.state.employees);
 
     return Scaffold(
         appBar: CustomAppBar(
             textColor: CustomColors.blueDark,
-            nameTitle: "home".tr(),
+            nameTitle: "configuredBabysitters".tr(),
             haveBackButton: false,
             backgroundColorAppBar: CustomColors.blueLight),
         body: BlocListener<EmployeeBloc, EmployeesState>(
@@ -83,6 +86,25 @@ class _HomePageState extends State<HomePage>
                     vertical: 8.resizeheight(context),
                     horizontal: 16.resizewidth(context),
                   ),
+                  BlocBuilder<EmployeeBloc, EmployeesState>(
+                      builder: (context, state) {
+                    if (state.employees.isEmpty && state.isLoading == false) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height -
+                            300.resizeheight(context),
+                        child: Center(
+                          child: CustomText(
+                              title: "thereIsNoBabysitterConfigured".tr(),
+                              fontWeight: FontWeight.normal,
+                              fontSize: 16,
+                              lineHeight: 18 / 16,
+                              colorText: Colors.black,
+                              textAlign: TextAlign.center),
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  }),
                   SizedBox(height: 16.resizeheight(context)),
                   Flexible(
                     child: ListView.builder(

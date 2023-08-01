@@ -2,7 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:wavy/bloc/app_bloc.dart';
 import 'package:wavy/event/login_event.dart';
-import 'package:wavy/model/User.dart';
+
+import 'package:wavy/model/user_model.dart';
 import 'dart:developer' as devtool;
 import 'package:wavy/repository/user_repository.dart';
 import 'package:wavy/service/getit/service_locator.dart';
@@ -25,13 +26,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<Validate>(_validate);
     on<LoginButtonPressed>(_onSubmitted);
     on<LoginRestart>(_loginRestart);
+    on<SavePasswordPressed>(_savePasswordPressed);
   }
 
-  void _loginInitial(
+  void _savePasswordPressed(
+      SavePasswordPressed event, Emitter<LoginState> emit) {
+    emit(state.copyWith(isSavePassword: event.isSavePassword));
+  }
+
+  Future<void> _loginInitial(
     LoginIniTial event,
     Emitter<LoginState> emit,
-  ) {
-    emit(LoginState.initial());
+  ) async {
+    await Future.wait([
+      _userRepository.getEmail(),
+      _userRepository.getPassword(),
+    ]).then((List<dynamic> value) {
+      final emailFresh = Email.dirty(value[0]);
+
+      final passwordFresh = Password.dirty(value[1]);
+
+      final state = LoginState.initial().copyWith(
+          language: event.language,
+          email: emailFresh,
+          password: passwordFresh,
+          isSavePassword: value[1] != '' ? true : false);
+
+      emit(state);
+    });
   }
 
   void _onEmailChanged(
@@ -63,6 +85,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) {
     final language = event.language;
+    devtool.log(language);
     _userRepository.setLanguage(language);
     emit(
       state.copyWith(language: language),
@@ -113,9 +136,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(formStatus: FormSubmissionStatus.formsubmitting));
 
       try {
-        devtool.log(event.language);
-        User? user = await _userRepository.login(
-            state.email.value, state.password.value, state.language);
+        UserModel? user = await _userRepository.login(state.email.value,
+            state.password.value, state.language, event.isSavePassword);
         if (user == null) {
           throw Exception("Some thing went wrong with user infor");
         }

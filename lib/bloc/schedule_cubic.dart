@@ -60,7 +60,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
         final element = el.copyWith(
             timeStart:
                 '${timeStart.hour.toString().padLeft(2, '0')}:${timeStart.minute.toString().padLeft(2, '0')}');
-        // devtool.log(element.toString());
+
         return element;
       } else {
         return el;
@@ -75,7 +75,7 @@ class ScheduleCubic extends Cubit<SheduleState> {
         final elementUpdated = el.copyWith(
             timeEnd:
                 '${timeEnd.hour.toString().padLeft(2, '0')}:${timeEnd.minute.toString().padLeft(2, '0')}');
-        // devtool.log(elementUpdated.toString());
+
         return elementUpdated;
       } else {
         return el;
@@ -96,7 +96,6 @@ class ScheduleCubic extends Cubit<SheduleState> {
           elementUpdated = el.copyWith(notHaveAvailable: notHaveAvailable);
         }
 
-        // devtool.log(elementUpdated.toString());
         return elementUpdated;
       } else {
         return el;

@@ -173,5 +173,14 @@
 "invalidEndDate":"終了日が無効",
 "pleaseEnterOverallEvaluation":"全体評価 を入力してください",
 "chooseAnOption":"一つの選択をしてください",
-    "requiredField": "この項目は必須です"
+    "requiredField": "この項目は必須です",
+    "copiedToClipboard":"クリップボードにコピーされました。",
+    "notice":"通知",
+    "youCanSee":"※ IDは各シッターのプロフィール、名前の下に記載があります。",
+    "configuredBabysitters":"設定済みベビーシッター一覧",
+"thereIsNoBabysitterConfigured":"設定済みのベビーシッターがいません。\n”新規ベビーシッターを登録”をタップし、登録を進めてください。",
+"shortCutConfiguredBabysitters":"ベビーシッター",
+"endOfContract":"契約終了",
+"underContract":"契約中",
+"rememberPassword":"PWを保存しますか？"
 }

@@ -5,7 +5,6 @@ import 'package:wavy/bloc/user_infor_setting.dart';
 import 'package:wavy/state/login_state.dart';
 import 'package:wavy/utils/resize.dart';
 
-import '../../model/User.dart';
 import '../../service/getit/service_locator.dart';
 import '../../state/employee_search_state.dart';
 import '../../state/user_infor_settings.dart';
@@ -14,7 +13,6 @@ import '../../utils/convertBase64Image.dart';
 import '../pages/baby_sister_detail.dart';
 import 'custom_text.dart';
 import 'loadingOverlay.dart';
-import 'dart:developer' as devtool;
 
 class ColumnInfor extends StatelessWidget {
   const ColumnInfor(

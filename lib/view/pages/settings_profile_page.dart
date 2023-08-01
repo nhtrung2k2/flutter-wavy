@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:wavy/bloc/login_bloc.dart';
 import 'package:wavy/event/cancel_membership_event.dart';
 import 'package:wavy/event/login_event.dart';
@@ -11,6 +12,7 @@ import 'package:wavy/state/login_state.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/view/components/custom_row_divide.dart';
 import 'package:wavy/view/components/custom_text.dart';
+import 'package:wavy/view/components/loadingOverlay.dart';
 import 'package:wavy/view/pages/baby_sister_detail.dart';
 
 import '../../bloc/cancel_membership.dart';
@@ -62,6 +64,7 @@ class _SettingFormState extends State<SettingForm> {
   late final LogoutBloc blocLogout;
   @override
   void initState() {
+    LoadingOverlay.hide();
     blocLogout = ServiceLocator.locator.get<LogoutBloc>();
     super.initState();
   }
@@ -125,12 +128,17 @@ class _SettingFormState extends State<SettingForm> {
                               if (state is CancelMembershipStateSuccess) {
                                 showErrorDialog(
                                     context,
-                                    "Message",
+                                    "notice".tr(),
                                     "userSuccessfullyCanceledMembership".tr(),
-                                    "OK", () {
+                                    "yes".tr(), () {
                                   context
                                       .read<CancelMemberShipBloc>()
                                       .add(CancelMembershipConfirmEvent());
+                                });
+                              } else if (state is CancelMembershipStateFail) {
+                                showErrorDialog(context, "notice".tr(),
+                                    state.error, "yes".tr(), () {
+                                  context.pop();
                                 });
                               }
                             },

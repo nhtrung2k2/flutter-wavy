@@ -22,7 +22,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppLogoutRequested>(_logout);
     _logoutBloc.stream.listen((state) {
       if (state is LogoutStateSuccess) {
-        _loginBloc.add(LoginIniTial());
         add(const AppLogoutRequested());
       }
     });

@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../model/User.dart';
-
 enum AuthenticationStatus { unknow, authenticated, unauthenticated }
 
 @immutable

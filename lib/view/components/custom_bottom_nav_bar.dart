@@ -50,7 +50,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: "home".tr(),
+            label: "shortCutConfiguredBabysitters".tr(),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.settings),

@@ -12,20 +12,15 @@ class CostListApi {
   CostListApi()
       : baseUrl = "https://wavy-api.starboardasiavn.com",
         baseAPI = BaseAPI();
-  Future<Cost> fetchCostList({
-    required int amountId
-  }) async {
+  Future<Cost> fetchCostList({required int amountId}) async {
     final url = '$baseUrl/api/cost_list/$amountId';
     try {
       final prefs = await ServiceLocator.locator.getAsync<SharedPreferences>();
       final token = prefs.getString('token');
       final language = prefs.getString('language');
 
-      final response =
-      await baseAPI.get(
-          url,
-          {'Authorization': 'Bearer $token', 'X-Localization': language}
-      );
+      final response = await baseAPI.get(
+          url, {'Authorization': 'Bearer $token', 'X-Localization': language});
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -41,7 +36,7 @@ class CostListApi {
 
   Future<Response> updateCostList({
     required int amountId,
-    required Cost cost
+    required Cost cost,
   }) async {
     final url = '$baseUrl/api/update_cost';
     try {
@@ -52,12 +47,8 @@ class CostListApi {
       var bodyData = cost.toJson();
       bodyData['amount_id'] = amountId;
 
-      final response =
-      await baseAPI.post(
-          url,
-          bodyData,
-          {'Authorization': 'Bearer $token', 'X-Localization': language}
-      );
+      final response = await baseAPI.post(url, bodyData,
+          {'Authorization': 'Bearer $token', 'X-Localization': language});
 
       if (response.statusCode == 200) {
         return response;
@@ -68,5 +59,4 @@ class CostListApi {
       throw e.toString();
     }
   }
-
 }

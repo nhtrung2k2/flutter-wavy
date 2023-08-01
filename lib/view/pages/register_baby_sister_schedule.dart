@@ -122,7 +122,7 @@ class RegisterBabySisterScheduleForm extends StatelessWidget {
   }
 }
 
-Future<TimeOfDay?> _showTimePicker(BuildContext context) async {
+Future<TimeOfDay?> customshowTimePicker(BuildContext context) async {
   final TimeOfDay? time = await showTimePicker(
     context: context,
     initialTime: TimeOfDay.now(),
@@ -148,11 +148,7 @@ class TimePickerRow extends StatelessWidget {
         .select((ScheduleCubic cubit) =>
             cubit.state.listSchedule.where((element) => element.day == day))
         .first;
-    // final bloc = context.read<ScheduleCubic>();
-    // if (row.timeStart != "" && row.timeEnd != "") {
-    //   devtool.log("pick available");
-    //   bloc.pickAvailable(day, true);
-    // }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -189,7 +185,7 @@ class TimePickerRow extends StatelessWidget {
                     widthRadius: 1,
                     onPressed: () {
                       TimeOfDay? timeStart;
-                      _showTimePicker(context).then((value) => {
+                      customshowTimePicker(context).then((value) => {
                             timeStart = value,
                             context.read<ScheduleCubic>().pickTimeStart(
                                 day, timeStart ?? TimeOfDay.now())
@@ -219,7 +215,7 @@ class TimePickerRow extends StatelessWidget {
                     widthRadius: 1,
                     onPressed: () {
                       TimeOfDay? timeEnd;
-                      _showTimePicker(context).then((value) => {
+                      customshowTimePicker(context).then((value) => {
                             timeEnd = value,
                             context
                                 .read<ScheduleCubic>()

@@ -10,19 +10,31 @@ class LoginRestart extends LoginEvent {
 }
 
 class LoginIniTial extends LoginEvent {
-  LoginIniTial();
+  final String language;
+  LoginIniTial(this.language);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [language];
+}
+
+class SavePasswordPressed extends LoginEvent {
+  final bool isSavePassword;
+  SavePasswordPressed({required this.isSavePassword});
+  @override
+  List<Object?> get props => [isSavePassword];
 }
 
 class LoginButtonPressed extends LoginEvent {
   final String email;
   final String password;
   final String language;
+  final bool isSavePassword;
   LoginButtonPressed(
-      {required this.email, required this.password, required this.language});
+      {required this.email,
+      required this.password,
+      required this.language,
+      required this.isSavePassword});
   @override
-  List<Object?> get props => [email, password, language];
+  List<Object?> get props => [email, password, language, isSavePassword];
 }
 
 class LoginEmailChanged extends LoginEvent {

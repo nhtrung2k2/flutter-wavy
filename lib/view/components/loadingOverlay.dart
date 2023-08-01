@@ -16,7 +16,14 @@ class LoadingOverlay {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
+  static bool checkOverLay() {
+    return _overlayEntry != null ? true : false;
+  }
+
   static void hide() {
-    _overlayEntry?.remove();
+    if (_overlayEntry != null && _overlayEntry!.mounted) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
   }
 }

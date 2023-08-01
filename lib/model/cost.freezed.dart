@@ -24,10 +24,12 @@ mixin _$Cost {
   String get amountDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'labour_cost')
   int get labourCost => throw _privateConstructorUsedError;
-  @JsonKey(name: 'working_time')
-  String get workingTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'from')
+  String get from => throw _privateConstructorUsedError;
+  @JsonKey(name: 'to')
+  String get to => throw _privateConstructorUsedError;
   @JsonKey(name: 'hour_woking')
-  int get hourWorking => throw _privateConstructorUsedError;
+  double get hourWorking => throw _privateConstructorUsedError;
   @JsonKey(name: 'hourly_wage')
   int get hourlyWave => throw _privateConstructorUsedError;
   @JsonKey(name: 'amount')
@@ -58,8 +60,9 @@ abstract class $CostCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'amount_date') String amountDate,
       @JsonKey(name: 'labour_cost') int labourCost,
-      @JsonKey(name: 'working_time') String workingTime,
-      @JsonKey(name: 'hour_woking') int hourWorking,
+      @JsonKey(name: 'from') String from,
+      @JsonKey(name: 'to') String to,
+      @JsonKey(name: 'hour_woking') double hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWave,
       @JsonKey(name: 'amount') int amount,
       @JsonKey(name: 'confirm_flag') int confirmFlag,
@@ -85,7 +88,8 @@ class _$CostCopyWithImpl<$Res, $Val extends Cost>
   $Res call({
     Object? amountDate = null,
     Object? labourCost = null,
-    Object? workingTime = null,
+    Object? from = null,
+    Object? to = null,
     Object? hourWorking = null,
     Object? hourlyWave = null,
     Object? amount = null,
@@ -105,14 +109,18 @@ class _$CostCopyWithImpl<$Res, $Val extends Cost>
           ? _value.labourCost
           : labourCost // ignore: cast_nullable_to_non_nullable
               as int,
-      workingTime: null == workingTime
-          ? _value.workingTime
-          : workingTime // ignore: cast_nullable_to_non_nullable
+      from: null == from
+          ? _value.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
               as String,
       hourWorking: null == hourWorking
           ? _value.hourWorking
           : hourWorking // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       hourlyWave: null == hourlyWave
           ? _value.hourlyWave
           : hourlyWave // ignore: cast_nullable_to_non_nullable
@@ -158,8 +166,9 @@ abstract class _$$_CostCopyWith<$Res> implements $CostCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'amount_date') String amountDate,
       @JsonKey(name: 'labour_cost') int labourCost,
-      @JsonKey(name: 'working_time') String workingTime,
-      @JsonKey(name: 'hour_woking') int hourWorking,
+      @JsonKey(name: 'from') String from,
+      @JsonKey(name: 'to') String to,
+      @JsonKey(name: 'hour_woking') double hourWorking,
       @JsonKey(name: 'hourly_wage') int hourlyWave,
       @JsonKey(name: 'amount') int amount,
       @JsonKey(name: 'confirm_flag') int confirmFlag,
@@ -181,7 +190,8 @@ class __$$_CostCopyWithImpl<$Res> extends _$CostCopyWithImpl<$Res, _$_Cost>
   $Res call({
     Object? amountDate = null,
     Object? labourCost = null,
-    Object? workingTime = null,
+    Object? from = null,
+    Object? to = null,
     Object? hourWorking = null,
     Object? hourlyWave = null,
     Object? amount = null,
@@ -201,14 +211,18 @@ class __$$_CostCopyWithImpl<$Res> extends _$CostCopyWithImpl<$Res, _$_Cost>
           ? _value.labourCost
           : labourCost // ignore: cast_nullable_to_non_nullable
               as int,
-      workingTime: null == workingTime
-          ? _value.workingTime
-          : workingTime // ignore: cast_nullable_to_non_nullable
+      from: null == from
+          ? _value.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
               as String,
       hourWorking: null == hourWorking
           ? _value.hourWorking
           : hourWorking // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       hourlyWave: null == hourlyWave
           ? _value.hourlyWave
           : hourlyWave // ignore: cast_nullable_to_non_nullable
@@ -251,7 +265,8 @@ class _$_Cost implements _Cost {
   const _$_Cost(
       {@JsonKey(name: 'amount_date') required this.amountDate,
       @JsonKey(name: 'labour_cost') required this.labourCost,
-      @JsonKey(name: 'working_time') required this.workingTime,
+      @JsonKey(name: 'from') required this.from,
+      @JsonKey(name: 'to') required this.to,
       @JsonKey(name: 'hour_woking') required this.hourWorking,
       @JsonKey(name: 'hourly_wage') required this.hourlyWave,
       @JsonKey(name: 'amount') required this.amount,
@@ -272,11 +287,14 @@ class _$_Cost implements _Cost {
   @JsonKey(name: 'labour_cost')
   final int labourCost;
   @override
-  @JsonKey(name: 'working_time')
-  final String workingTime;
+  @JsonKey(name: 'from')
+  final String from;
+  @override
+  @JsonKey(name: 'to')
+  final String to;
   @override
   @JsonKey(name: 'hour_woking')
-  final int hourWorking;
+  final double hourWorking;
   @override
   @JsonKey(name: 'hourly_wage')
   final int hourlyWave;
@@ -309,7 +327,7 @@ class _$_Cost implements _Cost {
 
   @override
   String toString() {
-    return 'Cost(amountDate: $amountDate, labourCost: $labourCost, workingTime: $workingTime, hourWorking: $hourWorking, hourlyWave: $hourlyWave, amount: $amount, confirmFlag: $confirmFlag, paymentStatus: $paymentStatus, picture1: $picture1, picture2: $picture2, picture3: $picture3, items: $items)';
+    return 'Cost(amountDate: $amountDate, labourCost: $labourCost, from: $from, to: $to, hourWorking: $hourWorking, hourlyWave: $hourlyWave, amount: $amount, confirmFlag: $confirmFlag, paymentStatus: $paymentStatus, picture1: $picture1, picture2: $picture2, picture3: $picture3, items: $items)';
   }
 
   @override
@@ -321,8 +339,8 @@ class _$_Cost implements _Cost {
                 other.amountDate == amountDate) &&
             (identical(other.labourCost, labourCost) ||
                 other.labourCost == labourCost) &&
-            (identical(other.workingTime, workingTime) ||
-                other.workingTime == workingTime) &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to) &&
             (identical(other.hourWorking, hourWorking) ||
                 other.hourWorking == hourWorking) &&
             (identical(other.hourlyWave, hourlyWave) ||
@@ -347,7 +365,8 @@ class _$_Cost implements _Cost {
       runtimeType,
       amountDate,
       labourCost,
-      workingTime,
+      from,
+      to,
       hourWorking,
       hourlyWave,
       amount,
@@ -376,8 +395,9 @@ abstract class _Cost implements Cost {
   const factory _Cost(
       {@JsonKey(name: 'amount_date') required final String amountDate,
       @JsonKey(name: 'labour_cost') required final int labourCost,
-      @JsonKey(name: 'working_time') required final String workingTime,
-      @JsonKey(name: 'hour_woking') required final int hourWorking,
+      @JsonKey(name: 'from') required final String from,
+      @JsonKey(name: 'to') required final String to,
+      @JsonKey(name: 'hour_woking') required final double hourWorking,
       @JsonKey(name: 'hourly_wage') required final int hourlyWave,
       @JsonKey(name: 'amount') required final int amount,
       @JsonKey(name: 'confirm_flag') required final int confirmFlag,
@@ -396,11 +416,14 @@ abstract class _Cost implements Cost {
   @JsonKey(name: 'labour_cost')
   int get labourCost;
   @override
-  @JsonKey(name: 'working_time')
-  String get workingTime;
+  @JsonKey(name: 'from')
+  String get from;
+  @override
+  @JsonKey(name: 'to')
+  String get to;
   @override
   @JsonKey(name: 'hour_woking')
-  int get hourWorking;
+  double get hourWorking;
   @override
   @JsonKey(name: 'hourly_wage')
   int get hourlyWave;

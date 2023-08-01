@@ -175,5 +175,14 @@
 "invalidEndDate":"Ngày kết thúc không hợp lệ",
 "pleaseEnterOverallEvaluation":"Vui lòng nhập đánh giá chung",
 "chooseAnOption":"Chọn một mục",
-     "requiredField": "Phần này bắt buộc điền"
- }
+     "requiredField": "Phần này bắt buộc điền",
+     "copiedToClipboard":"Đã được sao chép vào clipboard",
+     "notice":"Thông báo",
+     "youCanSee":"※ ID được hiển thị dưới tên trong hồ sơ của mỗi người giữ trẻ.",
+     "configuredBabysitters":"Danh sách người giữ trẻ \nđã được thiết lập",
+     "thereIsNoBabysitterConfigured":"Không có người giữ trẻ đã được cài đặt.\nVui lòng nhấp vào 'Đăng ký người giữ trẻ mới' và tiến hành đăng ký.",
+     "shortCutConfiguredBabysitters":"Người trông trẻ",
+     "endOfContract":"Kết thúc hợp đồng",
+"underContract":"Đang trong hợp đồng",
+"rememberPassword":"Lưu mật khẩu?"
+    }

@@ -26,9 +26,10 @@ class EmployeesApi {
       final userId = prefs.getString('userId');
 
       final url = '$baseUrl/api/home/$userId';
+      devtool.log(DateTime.now().millisecond.toString());
       final response = await baseAPI.get(url,
           {'Authorization': 'Bearer $token', 'X-Localization': '$language'});
-
+      devtool.log(DateTime.now().millisecond.toString());
       if (response.statusCode == 200) {
         try {
           List<dynamic> data = response.data;

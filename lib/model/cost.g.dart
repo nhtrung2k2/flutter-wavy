@@ -9,8 +9,9 @@ part of 'cost.dart';
 _$_Cost _$$_CostFromJson(Map<String, dynamic> json) => _$_Cost(
       amountDate: json['amount_date'] as String,
       labourCost: json['labour_cost'] as int,
-      workingTime: json['working_time'] as String,
-      hourWorking: json['hour_woking'] as int,
+      from: json['from'] as String,
+      to: json['to'] as String,
+      hourWorking: (json['hour_woking'] as num).toDouble(),
       hourlyWave: json['hourly_wage'] as int,
       amount: json['amount'] as int,
       confirmFlag: json['confirm_flag'] as int,
@@ -26,7 +27,8 @@ _$_Cost _$$_CostFromJson(Map<String, dynamic> json) => _$_Cost(
 Map<String, dynamic> _$$_CostToJson(_$_Cost instance) => <String, dynamic>{
       'amount_date': instance.amountDate,
       'labour_cost': instance.labourCost,
-      'working_time': instance.workingTime,
+      'from': instance.from,
+      'to': instance.to,
       'hour_woking': instance.hourWorking,
       'hourly_wage': instance.hourlyWave,
       'amount': instance.amount,

@@ -1,5 +1,3 @@
-import '../model/User.dart';
-
 abstract class AppEvent {
   const AppEvent();
 }

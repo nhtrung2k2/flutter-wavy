@@ -7,6 +7,7 @@ import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/resize.dart';
 import 'package:wavy/utils/svg/CustomPaintIcon.dart';
 import 'package:wavy/view/components/custom_button.dart';
+import 'package:wavy/view/components/custom_text.dart';
 import 'package:wavy/view/components/loadingOverlay.dart';
 import '../../bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,9 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<LoginBloc>()
-          .add(LanguageChanged(language: context.locale.languageCode));
+      context.read<LoginBloc>().add(LoginIniTial(context.locale.languageCode));
     });
   }
 
@@ -103,8 +102,8 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<LoginBloc>();
-    final state = context.watch<LoginBloc>().state;
 
+    final state = context.select((LoginBloc blocb) => blocb.state);
     String? validateEmail() {
       if (state.invalidError == InvalidError.invalidEmailAndPassword) {
         return 'emailIsEnteredInvalid'.tr();
@@ -137,6 +136,7 @@ class LoginForm extends StatelessWidget {
                 ? 0
                 : 23.25.resizeheight(context)),
         CustomInput(
+            inititialValue: state.email.value,
             title: "email".tr(),
             hintText: "enterEmail".tr(),
             inputType: TextInputType.emailAddress,
@@ -151,6 +151,7 @@ class LoginForm extends StatelessWidget {
                 ? 0
                 : 23.25.resizeheight(context)),
         CustomInput(
+            inititialValue: state.password.value,
             title: "password".tr(),
             hintText: "enterPassword".tr(),
             inputType: TextInputType.visiblePassword,
@@ -165,8 +166,7 @@ class LoginForm extends StatelessWidget {
                 ? 0
                 : 16.resizeheight(context)),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: [
             orientation == Orientation.landscape
                 ? CustomTextButton(
@@ -175,12 +175,23 @@ class LoginForm extends StatelessWidget {
                       onViewDetail('https://wavy-wavy.com/register');
                     },
                   )
-                : const SizedBox(),
-            CustomTextButton(
-                content: "forgotPassword".tr(),
-                onPressed: () {
-                  onViewDetail('https://wavy-wavy.com/forgot-password');
-                }),
+                : const SizedBox(
+                    width: 0,
+                  ),
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SavePasswordCheckBox(),
+                  CustomTextButton(
+                      content: "forgotPassword".tr(),
+                      onPressed: () {
+                        onViewDetail('https://wavy-wavy.com/forgot-password');
+                      }),
+                ],
+              ),
+            )
           ],
         ),
         SizedBox(
@@ -194,9 +205,11 @@ class LoginForm extends StatelessWidget {
                 password: bloc.state.password.value));
 
             bloc.add(LoginButtonPressed(
-                email: bloc.state.email.value,
-                password: bloc.state.password.value,
-                language: bloc.state.language));
+              email: bloc.state.email.value,
+              password: bloc.state.password.value,
+              language: bloc.state.language,
+              isSavePassword: bloc.state.isSavePassword,
+            ));
           },
           title: "login".tr(),
           horizontal: 50,
@@ -217,6 +230,43 @@ class LoginForm extends StatelessWidget {
         )
       ]));
     });
+  }
+}
+
+class SavePasswordCheckBox extends StatelessWidget {
+  const SavePasswordCheckBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final stateLogin = context.watch<LoginBloc>().state;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 20,
+          child: Checkbox(
+              value: stateLogin.isSavePassword,
+              onChanged: (bool? value) {
+                if (value != null) {
+                  context
+                      .read<LoginBloc>()
+                      .add(SavePasswordPressed(isSavePassword: value));
+                }
+              }),
+        ),
+        SizedBox(
+          width: 4.resizewidth(context),
+        ),
+        CustomText(
+            title: "rememberPassword".tr(),
+            fontWeight: FontWeight.normal,
+            fontSize: 13,
+            lineHeight: 16 / 14,
+            colorText: CustomColors.blueSea,
+            textAlign: TextAlign.start)
+      ],
+    );
   }
 }
 
@@ -310,7 +360,7 @@ class CustomTextButton extends StatelessWidget {
         style: const TextStyle(
           color: CustomColors.blueSea,
           fontFamily: "Roboto",
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -318,14 +368,45 @@ class CustomTextButton extends StatelessWidget {
   }
 }
 
+class CustomInputStateless extends StatelessWidget {
+  const CustomInputStateless(
+      {required this.inititialValue,
+      required this.title,
+      required this.hintText,
+      required this.inputType,
+      required this.validator,
+      required this.onchanged,
+      super.key});
+  final String inititialValue;
+  final String title;
+  final String hintText;
+  final TextInputType inputType;
+  final StringValidator validator;
+  final Function(String?) onchanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomInput(
+      inititialValue: inititialValue,
+      title: title,
+      hintText: hintText,
+      inputType: inputType,
+      validator: validator,
+      onchanged: onchanged,
+    );
+  }
+}
+
 class CustomInput extends StatefulWidget {
+  final String inititialValue;
   final String title;
   final String hintText;
   final TextInputType inputType;
   final StringValidator validator;
   final Function(String?) onchanged;
   const CustomInput(
-      {required this.title,
+      {required this.inititialValue,
+      required this.title,
       required this.hintText,
       required this.inputType,
       required this.validator,
@@ -336,7 +417,15 @@ class CustomInput extends StatefulWidget {
 }
 
 class _CustomInputState extends State<CustomInput> {
+  final TextEditingController _textFieldController = TextEditingController();
   bool _visible = false;
+  late LoginBloc loginBloc;
+  @override
+  void initState() {
+    super.initState();
+    loginBloc = context.read<LoginBloc>();
+  }
+
   Widget togglePassword() {
     return IconButton(
       alignment: Alignment.bottomRight,
@@ -363,38 +452,54 @@ class _CustomInputState extends State<CustomInput> {
                 fontWeight: FontWeight.bold)),
         SizedBox(height: 8.resizeheight(context)),
         Stack(alignment: Alignment.topRight, children: [
-          TextField(
-            onChanged: (value) {
-              widget.onchanged(value);
-            },
-            obscureText: widget.title == "password".tr() ? !_visible : false,
-            style: const TextStyle(height: 1, fontStyle: FontStyle.normal),
-            keyboardType: widget.inputType,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              errorText: widget.validator(),
-              suffixIconConstraints: BoxConstraints(
-                  minHeight: 16.resizeheight(context),
-                  minWidth: 16.resizewidth(context)),
-              isCollapsed: true,
-              contentPadding: widget.title == "password".tr()
-                  ? const EdgeInsets.fromLTRB(16.0, 16, 50, 16)
-                  : const EdgeInsets.fromLTRB(16.0, 16, 16, 16),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(color: CustomColors.blueBorder),
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: CustomColors.blueBorder),
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              hintText: widget.hintText,
-              hintStyle: const TextStyle(
-                  color: CustomColors.gray,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w200),
-            ),
-          ),
+          StreamBuilder(
+              stream: loginBloc.stream,
+              builder: (context, snapshot) {
+                if (widget.title == "password".tr()) {
+                  _textFieldController.value = _textFieldController.value
+                      .copyWith(text: snapshot.data?.password.value);
+                } else {
+                  _textFieldController.value = _textFieldController.value
+                      .copyWith(text: snapshot.data?.email.value);
+                }
+                return TextField(
+                  controller: _textFieldController,
+                  onChanged: (value) {
+                    widget.onchanged(value);
+                  },
+                  obscureText:
+                      widget.title == "password".tr() ? !_visible : false,
+                  style:
+                      const TextStyle(height: 1, fontStyle: FontStyle.normal),
+                  keyboardType: widget.inputType,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    errorText: widget.validator(),
+                    suffixIconConstraints: BoxConstraints(
+                        minHeight: 16.resizeheight(context),
+                        minWidth: 16.resizewidth(context)),
+                    isCollapsed: true,
+                    contentPadding: widget.title == "password".tr()
+                        ? const EdgeInsets.fromLTRB(16.0, 16, 50, 16)
+                        : const EdgeInsets.fromLTRB(16.0, 16, 16, 16),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: CustomColors.blueBorder),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: CustomColors.blueBorder),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    hintText: widget.hintText,
+                    hintStyle: const TextStyle(
+                        color: CustomColors.gray,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w200),
+                  ),
+                );
+              }),
           widget.title == "password".tr()
               ? togglePassword()
               : const SizedBox(

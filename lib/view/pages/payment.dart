@@ -207,7 +207,10 @@ class _PaymentState extends State<Payment> {
                                             item,
                                             (paymentState.payment?.items ?? [])
                                                 .indexOf(item),
-                                            true),
+                                            paymentState.canPayStatus ==
+                                                    CanPayStatus.paid
+                                                ? false
+                                                : true),
                                         // child: _item(item, (paymentState.payment?.items ?? []).indexOf(item), paymentState.canPayStatus == CanPayStatus.payNow),
                                       ))
                                   .toList(),
@@ -219,6 +222,9 @@ class _PaymentState extends State<Payment> {
                         )),
                     AddMoreItemsComponents(
                       itemList: itemCost.sublist(8),
+                      enable: paymentState.canPayStatus == CanPayStatus.paid
+                          ? false
+                          : true,
                       onPicked: (item) {
                         paymentBloc.add(AddNewItemEvent(itemId: item['id']));
                       },
@@ -267,22 +273,25 @@ class _PaymentState extends State<Payment> {
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: CustomColors
-              .bluetext, //state.canPayStatus == CanPayStatus.paid ? Colors.green : (state.canPayStatus == CanPayStatus.payNow ? CustomColors.bluetext : Colors.grey),
+          color: state.canPayStatus == CanPayStatus.paid
+              ? CustomColors.greenButton
+              : CustomColors
+                  .bluetext, //state.canPayStatus == CanPayStatus.paid ? Colors.green : (state.canPayStatus == CanPayStatus.payNow ? CustomColors.bluetext : Colors.grey),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // state.canPayStatus == CanPayStatus.paid
-            //   ? const Padding(
-            //     padding: EdgeInsets.only(right: 5.0),
-            //     child: Icon(
-            //       Icons.check_circle,
-            //       color: Colors.white,
-            //       size: 20,
-            //     ),
-            //   )
+            state.canPayStatus == CanPayStatus.paid
+                ? const Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  )
+                : const SizedBox(),
             //   : state.canPayStatus == CanPayStatus.beingCalculated
             //       ? const Padding(
             //         padding: EdgeInsets.only(right: 5.0),
@@ -294,7 +303,9 @@ class _PaymentState extends State<Payment> {
             //       )
             //       : Container(),
             Text(
-              'payNow'.tr(),
+              state.canPayStatus == CanPayStatus.paid
+                  ? 'paid'.tr()
+                  : 'payNow'.tr(),
               // state.canPayStatus == CanPayStatus.paid ? 'Paid' : (state.canPayStatus == CanPayStatus.payNow ? 'Pay Now' : 'Being calculated'),
               style: const TextStyle(
                 color: Colors.white,

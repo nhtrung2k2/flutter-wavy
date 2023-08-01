@@ -1,6 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class CostListEvent {}
+
+enum Time { start, end }
+
+class OnChangeTime extends CostListEvent {
+  final Time time;
+  final TimeOfDay? value;
+  OnChangeTime({required this.time, required this.value});
+}
 
 class FetchCostListDataEvent extends CostListEvent {
   final int amountId;

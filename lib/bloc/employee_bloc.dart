@@ -22,7 +22,6 @@ class EmployeeBloc extends Bloc<EmployeesEvent, EmployeesState> {
 
       final employees = await employeeRepository.fetchEmployees();
 
-      devtool.log("fetch");
       emit(EmployeesState.loaded(employees));
     } catch (e) {
       emit(EmployeesState.error(e.toString()));

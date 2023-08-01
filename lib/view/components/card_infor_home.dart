@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:wavy/utils/colors/custom_colors.dart';
 import 'package:wavy/utils/convertBase64Image.dart';
@@ -30,7 +31,7 @@ class CardInforHome extends StatelessWidget {
         elevation: 16,
         shadowColor: CustomColors.grayShadow,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Image.memory(
               convertBase64Image(avatar),
@@ -42,14 +43,31 @@ class CardInforHome extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                      color: CustomColors.blueTextDark,
-                      fontSize: 14,
-                      height: (16 / 14),
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          color: CustomColors.blueTextDark,
+                          fontSize: 14,
+                          height: (16 / 14),
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '(${cancelDateTime == null ? "underContract".tr() : "endOfContract".tr()})',
+                      style: TextStyle(
+                          color: cancelDateTime == null
+                              ? CustomColors.blueTextDark
+                              : Colors.red,
+                          fontSize: 14,
+                          height: (16 / 14),
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 4.resizeheight(context)),
                 Text(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +10,20 @@ import 'package:wavy/model/item.dart';
 import 'package:wavy/repository/cost_list_repository.dart';
 import 'package:wavy/service/getit/service_locator.dart';
 import 'package:wavy/state/cost_list_state.dart';
+import 'dart:developer' as devtool;
 
 const maxUploadImageCount = 3;
 
-class CostListBloc extends Bloc<CostListEvent, CostListState> {
+extension Ex on double {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
+}
 
-  final CostListRepository _costListRepository = ServiceLocator.locator.get<CostListRepository>();
+class CostListBloc extends Bloc<CostListEvent, CostListState> {
+  final CostListRepository _costListRepository =
+      ServiceLocator.locator.get<CostListRepository>();
 
   CostListBloc() : super(CostListState.initial()) {
+    on<OnChangeTime>(_onChangeTime);
     on<FetchCostListDataEvent>(_onFetchingData);
     on<UploadImagesEvent>(_onUploadImages);
     on<RemoveImageEvent>(_onRemoveImage);
@@ -26,189 +33,205 @@ class CostListBloc extends Bloc<CostListEvent, CostListState> {
     on<RemoveItemEvent>(_onRemoveItem);
   }
 
+  void _onChangeTime(OnChangeTime event, Emitter<CostListState> emit) {
+    switch (event.time) {
+      case Time.start:
+        if (event.value != null) {
+          Cost? newCost = state.cost?.copyWith(
+              from:
+                  '${event.value?.hour.toString().padLeft(2, '0')}:${event.value?.minute.toString().padLeft(2, '0')}');
+          if (newCost?.from != "" && newCost?.to != "") {
+            double value = caculateTimeWorking(newCost);
+            if (value < 0) {
+              emit(
+                  state.copyWith(cost: newCost, errorMessage: "Time Invalid!"));
+            } else {
+              newCost = newCost?.copyWith(hourWorking: value.toPrecision(1));
+              emit(state.copyWith(cost: newCost, errorMessage: null));
+            }
+          } else {
+            emit(state.copyWith(cost: newCost, errorMessage: null));
+          }
+        }
+
+        break;
+      case Time.end:
+        if (event.value != null) {
+          Cost? newCost = state.cost?.copyWith(
+              to: '${event.value?.hour.toString().padLeft(2, '0')}:${event.value?.minute.toString().padLeft(2, '0')}');
+          if (newCost?.from != "" && newCost?.to != "") {
+            double value = caculateTimeWorking(newCost);
+
+            if (value < 0) {
+              emit(
+                  state.copyWith(cost: newCost, errorMessage: "Time Invalid!"));
+            } else {
+              newCost = newCost?.copyWith(hourWorking: value.toPrecision(1));
+              emit(state.copyWith(cost: newCost, errorMessage: null));
+            }
+          } else {
+            emit(state.copyWith(cost: newCost, errorMessage: null));
+          }
+        }
+
+        break;
+    }
+  }
+
+  double caculateTimeWorking(Cost? cost) {
+    devtool.log(cost.toString());
+    List<int> fromTime =
+        cost!.from.split(":").map((e) => int.parse(e)).toList();
+    List<int> toTime = cost.to.split(":").map((e) => int.parse(e)).toList();
+    int gapHour = toTime[0] - fromTime[0];
+    int gapMinute = toTime[1] - fromTime[1];
+    double gapTime = 0;
+    if (gapHour < 0) {
+      gapTime = -1;
+    } else {
+      gapTime = gapHour + gapMinute / 60;
+    }
+
+    return gapTime;
+  }
+
   Future<void> _onFetchingData(
     FetchCostListDataEvent event,
     Emitter<CostListState> emit,
   ) async {
-
-    emit(state.copyWith(
-      costListStatus: CostListStatus.loading
-    ));
+    emit(state.copyWith(costListStatus: CostListStatus.loading));
 
     try {
-
       Cost costData = await _costListRepository.fetchCost(event.amountId);
 
       emit(state.copyWith(
-        cost: costData,
-        newImages: [],
-        costListStatus: CostListStatus.success
-      ));
+          cost: costData,
+          newImages: [],
+          costListStatus: CostListStatus.success));
     } catch (e) {
-      emit(state.copyWith(
-        newImages: [],
-        costListStatus: CostListStatus.failure
-      ));
+      emit(state
+          .copyWith(newImages: [], costListStatus: CostListStatus.failure));
     }
-
   }
 
   Future<void> _onUploadImages(
-      UploadImagesEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
-    if((state.getImages().where((element) => element!=null).length + event.files.length)>maxUploadImageCount){
+    UploadImagesEvent event,
+    Emitter<CostListState> emit,
+  ) async {
+    if ((state.getImages().where((element) => element != null).length +
+            event.files.length) >
+        maxUploadImageCount) {
       emit(state.copyWith(
-        costListStatus: CostListStatus.failedUploadImageMore3
-      ));
-    }
-    else{
+          costListStatus: CostListStatus.failedUploadImageMore3));
+    } else {
       emit(state.copyWith(
-        newImages: state.newImages + event.files,
-        costListStatus: CostListStatus.uploadedImage
-      ));
+          newImages: state.newImages + event.files,
+          costListStatus: CostListStatus.uploadedImage));
     }
-
   }
 
   Future<void> _onRemoveImage(
-      RemoveImageEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
-    if(event.index<state.getOnlyOldImage().length){
+    RemoveImageEvent event,
+    Emitter<CostListState> emit,
+  ) async {
+    if (event.index < state.getOnlyOldImage().length) {
       Cost newCost = state.cost!;
       int whichPicture = state.indexOfPicture(event.index);
-      if(whichPicture==1) {
-        newCost = state.cost!.copyWith(
-          picture1: null
-        );
+      if (whichPicture == 1) {
+        newCost = state.cost!.copyWith(picture1: null);
+      } else if (whichPicture == 2) {
+        newCost = state.cost!.copyWith(picture2: null);
+      } else if (whichPicture == 3) {
+        newCost = state.cost!.copyWith(picture3: null);
       }
-      else if(whichPicture==2){
-        newCost = state.cost!.copyWith(
-            picture2: null
-        );
-      }
-      else if(whichPicture==3){
-        newCost = state.cost!.copyWith(
-            picture3: null
-        );
-      }
-      emit(state.copyWith(
-        cost: newCost
-      ));
-    }
-    else{
+      emit(state.copyWith(cost: newCost));
+    } else {
       var newList = state.newImages;
-      newList.removeAt(event.index-state.getOnlyOldImage().length);
+      newList.removeAt(event.index - state.getOnlyOldImage().length);
       emit(state.copyWith(
-        newImages: newList,
-        costListStatus: CostListStatus.removedImage
-      ));
+          newImages: newList, costListStatus: CostListStatus.removedImage));
     }
-
   }
 
   Future<void> _onUpdateCostList(
-      UpdateCostListEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
-    emit(state.copyWith(
-      costListStatus: CostListStatus.updating
-    ));
+    UpdateCostListEvent event,
+    Emitter<CostListState> emit,
+  ) async {
+    emit(state.copyWith(costListStatus: CostListStatus.updating));
 
     try {
       List<String?> images = [];
 
-      for(var image in state.getImagesToUpload()){
-        if(image.runtimeType == XFile){
-          images.add('data:image/png;base64,${base64Encode(await (image as XFile).readAsBytes())}');
-        }
-        else{
-          images.add(image==null?null:'$image');
+      for (var image in state.getImagesToUpload()) {
+        if (image.runtimeType == XFile) {
+          images.add(
+              'data:image/png;base64,${base64Encode(await (image as XFile).readAsBytes())}');
+        } else {
+          images.add(image == null ? null : '$image');
         }
       }
 
       Cost newCost = state.cost!.copyWith(
-        picture1: images[0],
-        picture2: images[1],
-        picture3: images[2]
-      );
-      
-      Response updateCostListResponse = await _costListRepository.updateCostList(event.amountId, newCost);
+          picture1: images[0], picture2: images[1], picture3: images[2]);
+
+      Response updateCostListResponse =
+          await _costListRepository.updateCostList(event.amountId, newCost);
 
       emit(state.copyWith(
-          costListStatus: updateCostListResponse.statusCode==200 ? CostListStatus.updated : CostListStatus.failedUpdated
-      ));
+          costListStatus: updateCostListResponse.statusCode == 200
+              ? CostListStatus.updated
+              : CostListStatus.failedUpdated));
     } catch (e) {
-      emit(state.copyWith(
-          costListStatus: CostListStatus.failedUpdated
-      ));
+      emit(state.copyWith(costListStatus: CostListStatus.failedUpdated));
     }
-
   }
 
   Future<void> _onAddNewItem(
-      AddNewItemEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
+    AddNewItemEvent event,
+    Emitter<CostListState> emit,
+  ) async {
     List<Item> items = [];
     items.addAll(state.cost?.items ?? []);
-    items.add(Item(itemId: event.itemId, itemName: itemCost.singleWhere((element) => element['id']==event.itemId)['name'], itemAmount: 0));
-    
-    emit(state.copyWith(
-      cost: state.cost!.copyWith(
-        items: items
-      ),
-      costListStatus: CostListStatus.updatedItem
-    ));
+    items.add(Item(
+        itemId: event.itemId,
+        itemName: itemCost
+            .singleWhere((element) => element['id'] == event.itemId)['name'],
+        itemAmount: 0));
 
+    emit(state.copyWith(
+        cost: state.cost!.copyWith(items: items),
+        costListStatus: CostListStatus.updatedItem));
   }
 
   Future<void> _onChangePrice(
-      ChangePriceItemEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
+    ChangePriceItemEvent event,
+    Emitter<CostListState> emit,
+  ) async {
     List<Item> items = [];
     List<Item> oldItems = state.cost?.items ?? [];
-    for(int i = 0; i < oldItems.length; i++){
-      if(event.index == i){
+    for (int i = 0; i < oldItems.length; i++) {
+      if (event.index == i) {
         items.add(oldItems[i].copyWith(itemAmount: event.price));
-      }
-      else {
+      } else {
         items.add(oldItems[i]);
       }
     }
 
     emit(state.copyWith(
-        cost: state.cost!.copyWith(
-            items: items
-        ),
-        costListStatus: CostListStatus.priceChanging
-    ));
-
+        cost: state.cost!.copyWith(items: items),
+        costListStatus: CostListStatus.priceChanging));
   }
 
   Future<void> _onRemoveItem(
-      RemoveItemEvent event,
-      Emitter<CostListState> emit,
-      ) async {
-
+    RemoveItemEvent event,
+    Emitter<CostListState> emit,
+  ) async {
     List<Item> items = [];
     items.addAll(state.cost?.items ?? []);
     items.removeAt(event.index);
 
     emit(state.copyWith(
-        cost: state.cost!.copyWith(
-            items: items
-        ),
-        costListStatus: CostListStatus.updatedItem
-    ));
-
+        cost: state.cost!.copyWith(items: items),
+        costListStatus: CostListStatus.updatedItem));
   }
-
 }

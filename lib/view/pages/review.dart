@@ -31,10 +31,12 @@ class _ReviewState extends State<Review> {
 
   final TextEditingController nameTextController = TextEditingController();
   final TextEditingController overallEvaluationTextController =
-  TextEditingController();
-  final TextEditingController communicationTextController = TextEditingController();
+      TextEditingController();
+  final TextEditingController communicationTextController =
+      TextEditingController();
   final TextEditingController attCleanTextController = TextEditingController();
-  final TextEditingController babysittingTextController = TextEditingController();
+  final TextEditingController babysittingTextController =
+      TextEditingController();
   final TextEditingController cookingTextController = TextEditingController();
   final TextEditingController laundryTextController = TextEditingController();
   final TextEditingController cleaningTextController = TextEditingController();
@@ -55,7 +57,7 @@ class _ReviewState extends State<Review> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       reviewBloc.stream.listen((state) {
         if (state.reviewStateStatus == ReviewStateStatus.submitted) {
-          _showToast('Successfully');
+          _showToast(state.message!);
           if (mounted) context.pop();
         } else if (state.reviewStateStatus == ReviewStateStatus.cannotSubmit) {
           _showToast('Failed');
@@ -92,18 +94,18 @@ class _ReviewState extends State<Review> {
                     children: [
                       reviewState.reviewStateStatus == ReviewStateStatus.initing
                           ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                              child: CircularProgressIndicator(),
+                            )
                           : UserInfo(
-                        infoType: const [
-                          UserInfoType.avatar,
-                          UserInfoType.name,
-                          UserInfoType.id
-                        ],
-                        avatarBase64: reviewState.employee?.avatar ?? '',
-                        name: reviewState.employee?.name ?? '',
-                        id: reviewState.employee?.id ?? '',
-                      ),
+                              infoType: const [
+                                UserInfoType.avatar,
+                                UserInfoType.name,
+                                UserInfoType.id
+                              ],
+                              avatarBase64: reviewState.employee?.avatar ?? '',
+                              name: reviewState.employee?.name ?? '',
+                              id: reviewState.employee?.id ?? '',
+                            ),
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -117,15 +119,17 @@ class _ReviewState extends State<Review> {
                         hintText: 'enterYourName'.tr(),
                         verticalLabel: 'yourName'.tr(),
                         isRequiredField: true,
-                        onTap: (){
-                          reviewBloc.add(ResetValidate(status: ReviewValidateStatus.emptyName));
+                        onTap: () {
+                          reviewBloc.add(ResetValidate(
+                              status: ReviewValidateStatus.emptyName));
                         },
                       ),
                       const SizedBox(
                         height: 5.0,
                       ),
                       Visibility(
-                        visible: reviewState.validateStatus.contains(ReviewValidateStatus.emptyName),
+                        visible: reviewState.validateStatus
+                            .contains(ReviewValidateStatus.emptyName),
                         child: Text(
                           'pleaseEnterYourName'.tr(),
                           style: const TextStyle(
@@ -157,13 +161,13 @@ class _ReviewState extends State<Review> {
                           fromDayTextController,
                           fromMonthTextController,
                           fromYearTextController,
-                          ReviewValidateStatus.startDateFormat
-                      ),
+                          ReviewValidateStatus.startDateFormat),
                       const SizedBox(
                         height: 5.0,
                       ),
                       Visibility(
-                        visible: reviewState.validateStatus.contains(ReviewValidateStatus.startDateFormat),
+                        visible: reviewState.validateStatus
+                            .contains(ReviewValidateStatus.startDateFormat),
                         child: Text(
                           'invalidStartDate'.tr(),
                           style: const TextStyle(
@@ -180,13 +184,13 @@ class _ReviewState extends State<Review> {
                           toDayTextController,
                           toMonthTextController,
                           toYearTextController,
-                          ReviewValidateStatus.endDateFormat
-                      ),
+                          ReviewValidateStatus.endDateFormat),
                       const SizedBox(
                         height: 5.0,
                       ),
                       Visibility(
-                        visible: reviewState.validateStatus.contains(ReviewValidateStatus.endDateFormat),
+                        visible: reviewState.validateStatus
+                            .contains(ReviewValidateStatus.endDateFormat),
                         child: Text(
                           'invalidEndDate'.tr(),
                           style: const TextStyle(
@@ -213,11 +217,11 @@ class _ReviewState extends State<Review> {
                             ),
                           ),
                           Switch(
-                              value: reviewState.review.displayed==1,
-                              onChanged: (value){
-                                reviewBloc.add(DisplayReviewEvent(value: value));
-                              }
-                          )
+                              value: reviewState.review.displayed == 1,
+                              onChanged: (value) {
+                                reviewBloc
+                                    .add(DisplayReviewEvent(value: value));
+                              })
                         ],
                       )
                     ],
@@ -227,7 +231,7 @@ class _ReviewState extends State<Review> {
             ),
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: _submitButton(onPress: () => _submit()),
             )
           ],
@@ -263,7 +267,7 @@ class _ReviewState extends State<Review> {
           width: 50.resizewidth(context),
           child: CustomInputField(
             controller: dayController,
-            onTap: (){
+            onTap: () {
               reviewBloc.add(ResetValidate(status: status));
             },
           ),
@@ -283,7 +287,7 @@ class _ReviewState extends State<Review> {
           width: 50.resizewidth(context),
           child: CustomInputField(
             controller: monthController,
-            onTap: (){
+            onTap: () {
               reviewBloc.add(ResetValidate(status: status));
             },
           ),
@@ -303,7 +307,7 @@ class _ReviewState extends State<Review> {
           width: 70.resizewidth(context),
           child: CustomInputField(
             controller: yearController,
-            onTap: (){
+            onTap: () {
               reviewBloc.add(ResetValidate(status: status));
             },
           ),
@@ -332,16 +336,18 @@ class _ReviewState extends State<Review> {
               reviewBloc.add(ChangeOverallRateEvent(rate: ratingNumber));
             },
             isRequired: true,
-            onTap: (){
-              reviewBloc.add(ResetValidate(status: ReviewValidateStatus.emptyOverallComment));
+            onTap: () {
+              reviewBloc.add(ResetValidate(
+                  status: ReviewValidateStatus.emptyOverallComment));
             },
-            isShowValidate: state.validateStatus.contains(ReviewValidateStatus.emptyOverallRatting)
-        ),
+            isShowValidate: state.validateStatus
+                .contains(ReviewValidateStatus.emptyOverallRatting)),
         const SizedBox(
           height: 5.0,
         ),
         Visibility(
-          visible: state.validateStatus.contains(ReviewValidateStatus.emptyOverallComment),
+          visible: state.validateStatus
+              .contains(ReviewValidateStatus.emptyOverallComment),
           child: Text(
             'requiredField'.tr(),
             style: const TextStyle(
@@ -373,20 +379,22 @@ class _ReviewState extends State<Review> {
               fontFamily: "Roboto",
             ),
             communicationTextController,
-                (ratingNumber) {
+            (ratingNumber) {
               reviewBloc.add(ChangeCommunicationRateEvent(rate: ratingNumber));
             },
             isRequired: true,
-            onTap: (){
-              reviewBloc.add(ResetValidate(status: ReviewValidateStatus.emptyCommunationComment));
+            onTap: () {
+              reviewBloc.add(ResetValidate(
+                  status: ReviewValidateStatus.emptyCommunationComment));
             },
-            isShowValidate: state.validateStatus.contains(ReviewValidateStatus.emptyCommunicationRatting)
-        ),
+            isShowValidate: state.validateStatus
+                .contains(ReviewValidateStatus.emptyCommunicationRatting)),
         const SizedBox(
           height: 5.0,
         ),
         Visibility(
-          visible: state.validateStatus.contains(ReviewValidateStatus.emptyCommunationComment),
+          visible: state.validateStatus
+              .contains(ReviewValidateStatus.emptyCommunationComment),
           child: Text(
             'requiredField'.tr(),
             style: const TextStyle(
@@ -407,20 +415,22 @@ class _ReviewState extends State<Review> {
               fontFamily: "Roboto",
             ),
             attCleanTextController,
-                (ratingNumber) {
+            (ratingNumber) {
               reviewBloc.add(ChangeAttCleanRateEvent(rate: ratingNumber));
             },
             isRequired: true,
-            onTap: (){
-              reviewBloc.add(ResetValidate(status: ReviewValidateStatus.emptyAttCleanComment));
+            onTap: () {
+              reviewBloc.add(ResetValidate(
+                  status: ReviewValidateStatus.emptyAttCleanComment));
             },
-            isShowValidate: state.validateStatus.contains(ReviewValidateStatus.emptyAttCleanRatting)
-        ),
+            isShowValidate: state.validateStatus
+                .contains(ReviewValidateStatus.emptyAttCleanRatting)),
         const SizedBox(
           height: 5.0,
         ),
         Visibility(
-          visible: state.validateStatus.contains(ReviewValidateStatus.emptyAttCleanComment),
+          visible: state.validateStatus
+              .contains(ReviewValidateStatus.emptyAttCleanComment),
           child: Text(
             'requiredField'.tr(),
             style: const TextStyle(
@@ -440,13 +450,9 @@ class _ReviewState extends State<Review> {
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            babysittingTextController,
-                (ratingNumber) {
-              reviewBloc.add(ChangeBabysittingRateEvent(rate: ratingNumber));
-            },
-            index: 0,
-            toggleValue: state.isBabysittingProvided
-        ),
+            babysittingTextController, (ratingNumber) {
+          reviewBloc.add(ChangeBabysittingRateEvent(rate: ratingNumber));
+        }, index: 0, toggleValue: state.isBabysittingProvided),
         const SizedBox(
           height: 10.0,
         ),
@@ -458,13 +464,9 @@ class _ReviewState extends State<Review> {
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            cookingTextController,
-                (ratingNumber) {
-              reviewBloc.add(ChangeCookingRateEvent(rate: ratingNumber));
-            },
-            index: 1,
-            toggleValue: state.isCookingProvided
-        ),
+            cookingTextController, (ratingNumber) {
+          reviewBloc.add(ChangeCookingRateEvent(rate: ratingNumber));
+        }, index: 1, toggleValue: state.isCookingProvided),
         const SizedBox(
           height: 10.0,
         ),
@@ -476,73 +478,73 @@ class _ReviewState extends State<Review> {
               fontSize: 14,
               fontFamily: "Roboto",
             ),
-            laundryTextController,
-                (ratingNumber) {
-              reviewBloc.add(ChangeLaundryRateEvent(rate: ratingNumber));
-            },
-            index: 2,
-            toggleValue: state.isLaundryProvided
-        ),
+            laundryTextController, (ratingNumber) {
+          reviewBloc.add(ChangeLaundryRateEvent(rate: ratingNumber));
+        }, index: 2, toggleValue: state.isLaundryProvided),
         const SizedBox(
           height: 10.0,
         ),
-        _rattingSection('cleaning'.tr(),
-            state.review.cleanningRating,
-            cleaningTextController,
-                (ratingNumber) {
-              reviewBloc.add(ChangeCleaningRateEvent(rate: ratingNumber));
-            },
+        _rattingSection('cleaning'.tr(), state.review.cleanningRating,
+            cleaningTextController, (ratingNumber) {
+          reviewBloc.add(ChangeCleaningRateEvent(rate: ratingNumber));
+        },
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: "Roboto",
             ),
             index: 3,
-            toggleValue: state.isCleaningProvided
-        ),
+            toggleValue: state.isCleaningProvided),
       ],
     );
   }
 
   Widget _rattingSection(String title, int rate,
       TextEditingController controller, Function(int) onRating,
-      {TextStyle? style, bool? toggleValue, int? index, bool isRequired = false, Function? onTap, bool isShowValidate = false}) {
+      {TextStyle? style,
+      bool? toggleValue,
+      int? index,
+      bool isRequired = false,
+      Function? onTap,
+      bool isShowValidate = false}) {
     return Column(
       children: [
         Row(
           children: [
-            RichText(text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: title,
-                    style: style ??
-                        const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: "Roboto",
-                            fontWeight: FontWeight.bold),
-                  ),
-                  isRequired ? const TextSpan(
-                    text: ' *',
-                    style: TextStyle(
-                        color: Colors.red,
+            RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                text: title,
+                style: style ??
+                    const TextStyle(
+                        color: Colors.black,
                         fontSize: 16,
                         fontFamily: "Roboto",
                         fontWeight: FontWeight.bold),
-                  ): const TextSpan(),
-                ]
-            )),
+              ),
+              isRequired
+                  ? const TextSpan(
+                      text: ' *',
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.bold),
+                    )
+                  : const TextSpan(),
+            ])),
             Visibility(
-              visible: toggleValue!=null,
+              visible: toggleValue != null,
               child: Switch(
                   value: toggleValue ?? true,
-                  onChanged: (value){
-                    reviewBloc.add(SwitchToogleEvent(index: index??0, value: value));
-                  }
-              ),
+                  onChanged: (value) {
+                    reviewBloc.add(
+                        SwitchToogleEvent(index: index ?? 0, value: value));
+                  }),
             ),
             const Spacer(),
-            _ratingComponent(rate, (index) => onRating(index + 1), enable: toggleValue ?? true)
+            _ratingComponent(rate, (index) => onRating(index + 1),
+                enable: toggleValue ?? true)
           ],
         ),
         const SizedBox(
@@ -568,8 +570,8 @@ class _ReviewState extends State<Review> {
         ),
         CustomInputField(
           controller: controller,
-          onTap: (){
-            if(onTap!=null) onTap();
+          onTap: () {
+            if (onTap != null) onTap();
           },
           enable: toggleValue ?? true,
           maxLines: 5,
@@ -578,13 +580,14 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  Widget _ratingComponent(int rate, Function(int) onChanged, {int max = 5, bool enable = true}) {
+  Widget _ratingComponent(int rate, Function(int) onChanged,
+      {int max = 5, bool enable = true}) {
     return Row(
       children: List.generate(
           max,
-              (index) => InkWell(
+          (index) => InkWell(
               onTap: () {
-                if(enable){
+                if (enable) {
                   onChanged(index);
                 }
               },
@@ -593,7 +596,9 @@ class _ReviewState extends State<Review> {
                     ? Icons.star_border_rounded
                     : Icons.star_rate_rounded,
                 size: 35.0,
-                color: enable ? CustomColors.blueBorder : CustomColors.backgroundGray,
+                color: enable
+                    ? CustomColors.blueBorder
+                    : CustomColors.backgroundGray,
               ))),
     );
   }
@@ -640,7 +645,6 @@ class _ReviewState extends State<Review> {
         laundryComment: laundryTextController.text,
         communicationComment: communicationTextController.text,
         attitudeCleanlinessComment: attCleanTextController.text,
-        cookingComment: cookingTextController.text
-    ));
+        cookingComment: cookingTextController.text));
   }
 }

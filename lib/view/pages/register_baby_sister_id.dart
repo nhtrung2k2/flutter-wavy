@@ -12,7 +12,6 @@ import 'package:wavy/view/components/custom_text.dart';
 
 import '../../event/search_event.dart';
 import '../../utils/colors/custom_colors.dart';
-import 'dart:developer' as devtool;
 
 class RegisterBabySisterId extends StatelessWidget {
   const RegisterBabySisterId({super.key});
@@ -82,6 +81,13 @@ class _RegisterBabySisterIdFormState extends State<RegisterBabySisterIdForm> {
                     height: (16 / 14),
                     color: CustomColors.gray),
               ),
+              CustomText(
+                  title: "youCanSee".tr(),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  lineHeight: (16 / 14),
+                  colorText: CustomColors.gray,
+                  textAlign: TextAlign.center),
               SizedBox(height: 16.resizeheight(context)),
               Row(
                 children: [
